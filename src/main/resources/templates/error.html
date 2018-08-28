@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.springframework.org/schema/data/jaxb">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" th:href="@{~/img/favicon.png}">
+
+    <title>非常抱歉</title>
+
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css">
+
+    <!-- 博客模板 -->
+    <link th:href="@{~/css/blog.css}" rel="stylesheet">
+    <!-- 消息提示 -->
+    <link th:href="@{~/css/messenger.css}" rel="stylesheet">
+    <link th:href="@{~/css/messenger-theme-flat.css}" rel="stylesheet">
+    <link th:href="@{~/css/base.css}" rel="stylesheet">
+
+
+</head>
+<body>
+<div class="container">
+    <h3>
+        <br>
+        非常抱歉,
+        <br>
+        该页面已被删除或发生错误。
+        </br>
+        </br>
+    </h3>
+    <p>错误信息：</p>
+    <p th:text="'错误:' + ${error}"/>
+    <p th:text="'状态:' + ${status}"/>
+    <p th:text="'时间:' + ${timestamp}"/>
+    <a href="../index.html">返回首页</a>
+</div>
+
+</body>
+</html>

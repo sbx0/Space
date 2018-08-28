@@ -1,0 +1,59 @@
+body {
+    font-family: Tahoma, "Times New Roman",
+    "Microsoft YaHei", "微软雅黑",
+    STXihei, "华文细黑",
+    serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: Tahoma, "Times New Roman",
+    "Microsoft YaHei", "微软雅黑",
+    STXihei, "华文细黑",
+    serif;
+}
+
+a, a:focus, a:hover {
+    text-decoration: none;
+}
+
+main {
+    margin-top: 20px;
+}
+
+@media (min-width: 768px) {
+    .h-md-250 {
+        height: auto;
+    }
+}
+
+.blog-pagination {
+    margin-top: 20px;
+}
+
+.blog-sidebar {
+    margin-top: 50px;
+}
+
+.blog-footer {
+    margin-top: 10px;
+}
+
+.blog-post-title {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.blog-post {
+    margin-bottom: 2rem;
+}
+
+.blog-post-meta {
+    margin-bottom: 0rem;
+}
+
+.continue-read {
+    margin-top: 2px;
+    display: block;
+    font-size: 15px;
+    font-weight: bolder;
+}

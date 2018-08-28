@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="img/favicon.png">
+
+    <title>登陆</title>
+
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css">
+
+    <!-- 登陆模板 -->
+    <link href="css/signin.css" rel="stylesheet">
+    <!-- 消息提示 -->
+    <link href="css/messenger.css" rel="stylesheet">
+    <link href="css/messenger-theme-flat.css" rel="stylesheet">
+    <link href="css/base.css" rel="stylesheet">
+</head>
+
+<body>
+<div id="login_div" class="form-signin">
+    <div v-if="info_seen" class="alert alert-warning" role="alert">
+        <a id="logout" href="javascript:void(0)" class="text-danger" onclick="logout()">
+            {{logout}}
+        </a>
+        <a href="post.html">
+            {{post}}
+        </a>
+        <br>用户名：{{info_username}}
+        <br>等级：{{info_level}}
+        <br>经验：{{info_exp}}
+        <br>积分：{{info_integral}}
+    </div>
+    <form v-if="form_seen" id="loginForm" action="/user/login" method="post">
+        <h2 class="h2 mb-3 font-weight-normal">{{website}}</h2>
+        <label for="username" class="sr-only">{{username}}</label>
+        <input type="text" id="username" name="name" class="form-control" :placeholder="username" required autofocus>
+        <label for="password" class="sr-only">{{password}}</label>
+        <input type="password" id="password" name="password" class="form-control" :placeholder="password" required>
+        <div class="checkbox mb-3" hidden>
+            <label>
+                <input type="checkbox" value="remember-me">
+                记住我
+            </label>
+        </div>
+        <button id="login" class="btn btn-md btn-primary btn-block" type="submit">登陆</button>
+        <small id="passwordHelpBlock" class="form-text text-muted">
+            若您是第一次使用本站，登陆即注册。登陆有效期默认为30天。
+        </small>
+        <p class="mt-5 mb-3 text-muted">&copy; <a href="index.html">Ducsr.cn</a> 2017-2018</p>
+    </form>
+
+</div>
+</body>
+
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://cdn.bootcss.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script src="js/messenger.min.js"></script>
+<script src="js/messenger-theme-flat.js"></script>
+<script src="js/i18N_zh_CN.js"></script>
+<script src="js/base.js"></script>
+<script src="js/login.js"></script>
+</body>
+</html>
