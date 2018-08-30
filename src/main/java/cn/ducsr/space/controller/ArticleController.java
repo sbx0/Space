@@ -4,7 +4,6 @@ import cn.ducsr.space.entity.Article;
 import cn.ducsr.space.entity.User;
 import cn.ducsr.space.service.ArticleService;
 import cn.ducsr.space.service.BaseService;
-import cn.ducsr.space.service.LogService;
 import cn.ducsr.space.service.UserService;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.data.domain.Page;
@@ -31,8 +30,6 @@ public class ArticleController extends BaseController {
     private ArticleService articleService;
     @Resource
     private UserService userService;
-    @Resource
-    private LogService logService;
 
     @ResponseBody
     @RequestMapping(value = "/post", method = RequestMethod.POST)
@@ -71,17 +68,14 @@ public class ArticleController extends BaseController {
      * @return JSON串
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public String one(HttpServletRequest request, Map<String, Object> map, @PathVariable("id") Integer id) {
-        Article article = articleService.one(id);
+    public String one(Map<String, Object> map, @PathVariable("id") Integer id) {
+        Article article = articleService.findById(id);
         if (article == null) {
             article = new Article();
             article.setTitle("该篇文章不存在或已被删除");
             article.setContent("很抱歉。");
         }
         map.put("article", article);
-
-        // 日志记录
-        logService.log(null, request, true);
 
         return "article";
     }
@@ -93,11 +87,7 @@ public class ArticleController extends BaseController {
      */
     @ResponseBody
     @RequestMapping(value = "/top", method = RequestMethod.GET)
-    public List top(HttpServletRequest request, Integer size) {
-
-        // 日志记录
-        logService.log(null, request, true);
-
+    public List top(Integer size) {
         return articleService.top(size);
     }
 
@@ -110,13 +100,9 @@ public class ArticleController extends BaseController {
      */
     @ResponseBody
     @RequestMapping(value = "/index", method = RequestMethod.GET)
-    public List index(HttpServletRequest request, Integer page, Integer size) {
+    public List index(Integer page, Integer size) {
         Page<Article> articlePage = articleService.findAll(page - 1, size);
         List<Article> articles = articleService.filter(articlePage.getContent());
-
-        // 日志记录
-        logService.log(null, request, true);
-
         return articles;
     }
 
@@ -129,7 +115,7 @@ public class ArticleController extends BaseController {
      * @return list.html
      */
     @RequestMapping(value = "/list")
-    public String list(HttpServletRequest request, Map<String, Object> map, Integer page, Integer size) {
+    public String list(Map<String, Object> map, Integer page, Integer size) {
         // 分页查询
         Page<Article> articlePage = articleService.findAll(page - 1, size);
         // 取出文章列表
@@ -148,10 +134,7 @@ public class ArticleController extends BaseController {
         // 判断上下页
         if (page + 1 <= articlePage.getTotalPages()) map.put("next_page", page + 1);
         if (page - 1 > 0) map.put("prev_page", page - 1);
-
-        // 日志记录
-        logService.log(null, request, true);
-
+        if (page - 1 > articlePage.getTotalPages()) map.put("prev_page", null);
         return "list";
     }
 
@@ -161,17 +144,13 @@ public class ArticleController extends BaseController {
      * @return 字符串
      */
     @RequestMapping(value = "/save")
-    public String save(HttpServletRequest request) {
+    public String save() {
         Article article = new Article();
         article.setTitle("标题");
         article.setContent("内容");
         article.setTime(new Date());
         article.setLastChangeTime(new Date());
         articleService.save(article);
-
-        // 日志记录
-        logService.log(null, request, true);
-
         return "success";
     }
 

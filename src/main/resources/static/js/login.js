@@ -21,6 +21,8 @@ var login_div = new Vue({
         password: '密码',
         logout: '退出登陆',
         post: '发布博文',
+        home: '用户首页',
+        user_home: '../user/1?page=1&size=10',
         info_username: i18N.loading,
         info_level: i18N.loading,
         info_exp: i18N.loading,
@@ -41,6 +43,7 @@ if (login()) {
                 login_div.info_level = data.level;
                 login_div.info_exp = data.exp;
                 login_div.info_integral = data.integral;
+                login_div.user_home = "../user/" + data.id + "?page=1&size=10";
             }
         }
     })

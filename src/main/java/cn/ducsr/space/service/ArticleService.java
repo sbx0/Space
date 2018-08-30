@@ -24,12 +24,34 @@ public class ArticleService extends BaseService {
     private ArticleDao articleDao;
 
     /**
+     * 用户文章列表
+     *
+     * @param id
+     * @param page
+     * @param size
+     * @return
+     */
+    public Page<Article> findByUser(Integer id, Integer page, Integer size) {
+        // 页数控制
+        if (page > 9999) page = 9999;
+        if (page < 0) page = 0;
+        // 条数控制
+        if (size > 1000) size = 1000;
+        if (size < 1) size = 1;
+        // 分页配置
+        Sort sort = new Sort(Sort.Direction.DESC, "id");
+        Pageable pageable = PageRequest.of(page, size, sort);
+        if (id < 1) return null;
+        return articleDao.findByUser(id, pageable);
+    }
+
+    /**
      * 查询一篇博文
      *
      * @param id 博文ID
      * @return 博文
      */
-    public Article one(Integer id) {
+    public Article findById(Integer id) {
         try {
             return articleDao.findById(id).get();
         } catch (Exception e) {

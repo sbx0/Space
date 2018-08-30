@@ -46,11 +46,13 @@
             <h3>
                 <p th:text="${article.title}"></p>
             </h3>
+            <span th:text="${article.time}"></span>
+            <a th:href="'../user/'+${article.author.id}+'?page=1&size=10'" th:text="${article.author.name}"></a>
             <div>
                 <div th:utext="${article.content}"></div>
             </div>
 
-            <nav class="blog-pagination">
+            <nav class="blog-pagination" hidden>
                 <a class="btn btn-outline-secondary disabled" href="#">{{prev}}</a>
                 <a class="btn btn-outline-primary float-right" href="#">{{next}}</a>
             </nav>

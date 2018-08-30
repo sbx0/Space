@@ -1,11 +1,15 @@
 package cn.ducsr.space.controller;
 
+import cn.ducsr.space.entity.Article;
 import cn.ducsr.space.entity.User;
+import cn.ducsr.space.service.ArticleService;
 import cn.ducsr.space.service.BaseService;
 import cn.ducsr.space.service.LogService;
 import cn.ducsr.space.service.UserService;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -15,6 +19,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 用户控制类
@@ -25,7 +31,45 @@ public class UserController extends BaseController {
     @Resource
     private UserService userService;
     @Resource
-    private LogService logService;
+    private ArticleService articleService;
+
+    /**
+     * 获取用户详情
+     *
+     * @param map 返回页面的数据
+     * @param id  ID
+     * @return JSON串
+     */
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    public String one(Map<String, Object> map, @PathVariable("id") Integer id, Integer page, Integer size) {
+        // 分页查询
+        Page<Article> articlePage = articleService.findByUser(id, page - 1, size);
+        // 取出文章列表
+        List<Article> articles = articleService.filter(articlePage.getContent());
+        // 当页数大于总页数时，查询最后一页的数据
+        if (page > articlePage.getTotalPages()) {
+            articlePage = articleService.findAll(articlePage.getTotalPages() - 1, size);
+            articles = articleService.filter(articlePage.getContent());
+        }
+        // 将数据返回到页面
+        map.put("articles", articles);
+        map.put("size", articlePage.getPageable().getPageSize());
+        map.put("page", articlePage.getPageable().getPageNumber() + 1);
+        map.put("totalPages", articlePage.getTotalPages());
+        map.put("totalElements", articlePage.getTotalElements());
+        // 判断上下页
+        if (page + 1 <= articlePage.getTotalPages()) map.put("next_page", page + 1);
+        if (page - 1 > 0) map.put("prev_page", page - 1);
+        if (page - 1 > articlePage.getTotalPages()) map.put("prev_page", null);
+        User user = userService.findById(id);
+        if (user == null) {
+            user = new User();
+            user.setName("该用户不存在");
+        }
+        map.put("user", user);
+
+        return "user";
+    }
 
     /**
      * 获取登陆用户信息
@@ -47,6 +91,7 @@ public class UserController extends BaseController {
                     user = userService.findById(user.getId());
 
                     // 用户信息
+                    objectNode.put("id", user.getId());
                     objectNode.put("username", user.getName());
                     objectNode.put("level", user.getLevel());
                     objectNode.put("exp", user.getExp());
@@ -170,8 +215,6 @@ public class UserController extends BaseController {
             session.setAttribute("user", user);
             // 操作状态保存
             objectNode.put("status", "0");
-            // 日志记录
-            logService.log(user, request, true);
         } else {
             // 清除Cookie
             String[] names = {"ID", "NAME", "KEY"};
@@ -179,8 +222,6 @@ public class UserController extends BaseController {
             BaseService.removeCookies(cookies, response);
             // 操作状态保存
             objectNode.put("status", "1");
-            // 日志记录
-            logService.log(null, request, false);
         }
         // 返回json串
         return objectNode;

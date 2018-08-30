@@ -7,7 +7,7 @@
     <meta name="author" content="">
     <link rel="icon" th:href="@{~/img/favicon.png}">
 
-    <title>航行日志</title>
+    <title>用户页</title>
 
     <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css">
 
@@ -42,21 +42,27 @@
     <div class="row">
         <div class="col-md-8 blog-main">
 
+            <div class="pb-3">
+                <input id="user_id" type="hidden" th:value="${user.id}">
+                <h3 th:text="${user.name}" class="font-italic"></h3>
+                <h6 th:text="${user.signature}"></h6>
+            </div>
+
             <div class="blog-post" th:each="article,stat:${articles}">
                 <h2 th:text="${article.title}" class="blog-post-title"></h2>
                 <p class="blog-post-meta">
                     <span th:text="${article.time}"></span>
-                    <a th:text="${article.author.name}" th:href="'../user/' + ${article.author.id} + '?page=1&size=10'"></a>
+                    <a th:text="${article.author.name}" href="javascript:void(0)"></a>
                 </p>
                 <div th:utext="${article.content}"></div>
-                <a th:href="${article.id}" class="continue-read btn btn-light">
+                <a th:href="'../article/' +${article.id}" class="continue-read btn btn-light">
                     继续阅读
                 </a>
             </div>
 
             <nav class="blog-pagination text-center">
                 <a th:if="${prev_page != null}"
-                   th:href="'list?page=' + ${prev_page} + '&size=' + ${size}"
+                   th:href="'../user/' + ${user.id} + '?page=' + ${prev_page} + '&size=' + ${size}"
                    class="btn btn-outline-primary float-left">
                     {{prev}}
                 </a>
@@ -66,7 +72,7 @@
                 </a>
                 <a href="javascript:void(0)" th:text="${page} + '/' + ${totalPages}"></a>
                 <a th:if="${next_page != null}"
-                   th:href="'list?page=' + ${next_page} + '&size=' + ${size}"
+                   th:href="'../user/' + ${user.id} + '?page=' + ${next_page} + '&size=' + ${size}"
                    class="btn btn-outline-primary float-right">
                     {{next}}
                 </a>
@@ -160,9 +166,10 @@
     <script>
         // 跳页
         function jump_page() {
+            var id = $("#user_id").val()
             var page = $("#page").val()
             var size = $("#size").val()
-            var url = "list?page=" + page + "&size=" + size
+            var url = "../user/" + id + "?page=" + page + "&size=" + size
             location.replace(url)
         }
 
@@ -174,6 +181,19 @@
                 next: i18N.next,
             },
         })
+
+        // 自动登陆
+        if (login()) {
+            $.ajax({
+                url: '../user/info',
+                type: 'GET',
+                success: function (data) {
+                    if (data.status == 0) {
+                        blog_header.login = data.username;
+                    }
+                }
+            })
+        }
     </script>
 </section>
 </body>

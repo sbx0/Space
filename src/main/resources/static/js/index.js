@@ -16,7 +16,7 @@ Vue.component('article-list', {
     props: ['article'],
     template: '<div class="blog-post">' +
         '<h2 class="blog-post-title"><a :href="article.id" class="text-dark">{{article.title}}</a></h2>' +
-        '<p class="blog-post-meta">{{article.time}}&nbsp;<a href="#">{{article.author.name}}</a></p>' +
+        '<p class="blog-post-meta">{{article.time}}&nbsp;<a :href ="article.author.id">{{article.author.name}}</a></p>' +
         '<div v-html="article.content"></div>' +
         '<a class="continue-read btn btn-light" :href ="article.id">' +
         i18N.continue + i18N.read + '</a>',
@@ -104,6 +104,7 @@ new Vue({
 function formate(data) {
     for (var i = 0; i < data.length; i++) {
         data[i].id = i18N.json.article.one + data[i].id
+        data[i].author.id = "../user/" + data[i].author.id + "?page=1&size=10"
         data[i].time = Format(getDate(data[i].time.toString()), "yyyy-MM-dd HH:mm")
     }
     return data
