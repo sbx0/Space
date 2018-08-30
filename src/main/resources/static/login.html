@@ -21,17 +21,30 @@
 
 <body>
 <div id="login_div" class="form-signin">
-    <div v-if="info_seen" class="alert alert-warning" role="alert">
-        <a id="logout" href="javascript:void(0)" class="text-danger" onclick="logout()">
-            {{logout}}
-        </a>
-        <a href="post.html">
-            {{post}}
-        </a>
-        <br>用户名：{{info_username}}
-        <br>等级：{{info_level}}
-        <br>经验：{{info_exp}}
-        <br>积分：{{info_integral}}
+    <div v-if="info_seen">
+        <div class="my-3 p-3 bg-white rounded shadow-sm">
+            <h5 class="border-bottom border-gray pb-2 mb-0">已登录</h5>
+            <div class="media text-muted pt-3">
+                <p class="media-body pb-3 mb-0 lh-125 border-bottom border-gray">
+                    <strong class="d-block text-gray-dark">@{{info_username}}</strong>
+                    等级：{{info_level}}<br>
+                    经验：{{info_exp}}<br>
+                    积分：{{info_integral}}
+                </p>
+            </div>
+            <div class="media text-muted pt-3">
+                <p class="media-body pb-3 mb-0 lh-125 border-bottom border-gray">
+                    <a href="post.html">
+                        {{post}}
+                    </a>
+                </p>
+            </div>
+            <div class="d-block text-right mt-3">
+                <a id="logout" href="javascript:void(0)" class="text-danger" onclick="logout()">
+                    {{logout}}
+                </a>
+            </div>
+        </div>
     </div>
     <form v-if="form_seen" id="loginForm" action="/user/login" method="post">
         <h2 class="h2 mb-3 font-weight-normal">{{website}}</h2>
