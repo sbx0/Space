@@ -14,6 +14,14 @@ import java.util.List;
 public interface ArticleDao extends PagingAndSortingRepository<Article, Integer> {
 
     /**
+     * 获取最大置顶
+     *
+     * @return
+     */
+    @Query(value = "select top from articles a order by a.top desc limit 1", nativeQuery = true)
+    Integer getMaxTop();
+
+    /**
      * 查询用户文章
      *
      * @param id

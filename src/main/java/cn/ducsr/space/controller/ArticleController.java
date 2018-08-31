@@ -31,35 +31,110 @@ public class ArticleController extends BaseController {
     @Resource
     private UserService userService;
 
-    @RequestMapping(value = "/updateOne", method = RequestMethod.GET)
-    public String updateOne(Map<String, Object> map, Integer id) {
+    /**
+     * 移除置顶
+     *
+     * @param request
+     * @param id
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/moveTop", method = RequestMethod.GET)
+    public ObjectNode removeTop(HttpServletRequest request, Integer id) {
+        User user = userService.getCookieUser(request);
         Article article = articleService.findById(id);
+        // 判断权限
+        if (user.getAuthority() > 0)
+            // 操作状态保存
+            objectNode.put("status", "1");
+        else {
+            article.setTop(0);
+            articleService.save(article);
+            // 操作状态保存
+            objectNode.put("status", "0");
+        }
+        return objectNode;
+    }
+
+    /**
+     * 设置置顶
+     *
+     * @param request
+     * @param id
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/setTop", method = RequestMethod.GET)
+    public ObjectNode setTop(HttpServletRequest request, Integer id) {
+        User user = userService.getCookieUser(request);
+        Article article = articleService.findById(id);
+        // 判断权限
+        if (user.getAuthority() > 0)
+            // 操作状态保存
+            objectNode.put("status", "1");
+        else {
+            int max = articleService.getMaxTop();
+            article.setTop(max + 1);
+            articleService.save(article);
+            // 操作状态保存
+            objectNode.put("status", "0");
+        }
+        return objectNode;
+    }
+
+    /**
+     * 显示修改文章
+     *
+     * @param map
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/updateOne", method = RequestMethod.GET)
+    public String updateOne(HttpServletRequest request, Map<String, Object> map, Integer id) {
+        User user = userService.getCookieUser(request);
+        Article article = articleService.findById(id);
+        // 判断权限
+        if (user.getId() != article.getAuthor().getId() && user.getAuthority() > 0)
+            return "error";
         map.put("article", article);
         return "update";
     }
 
+    /**
+     * 发布文章
+     *
+     * @param request
+     * @param article
+     * @return
+     */
     @ResponseBody
     @RequestMapping(value = "/post", method = RequestMethod.POST)
     public ObjectNode post(HttpServletRequest request, Article article) {
-        String[] names = {"ID"};
-        Cookie[] cookies = BaseService.getCookiesByName(names, request.getCookies());
-        int id = Integer.parseInt(cookies[0].getValue());
-        User user = userService.findById(id);
+        User user = userService.getCookieUser(request);
 //        try {
-        article.setTitle(article.getTitle().trim());
-        article.setContent(article.getContent().trim());
-        article.setTime(new Date());
-        article.setComments(0);
-        article.setLikes(0);
-        article.setDislikes(0);
-        article.setTop(0);
-        article.setViews(0);
-        article.setAuthor(user);
-        article.setPassword(null);
-        article.setLastChangeTime(null);
-        articleService.save(article);
-        // 操作状态保存
-        objectNode.put("status", "0");
+            // 修改文章
+            if (article.getId() != null) {
+                Article a = articleService.findById(article.getId());
+                a.setTitle(article.getTitle().trim());
+                a.setContent(article.getContent().trim());
+                a.setLastChangeTime(new Date());
+                articleService.save(a);
+            } else {
+                article.setTitle(article.getTitle().trim());
+                article.setContent(article.getContent().trim());
+                article.setTime(new Date());
+                article.setComments(0);
+                article.setLikes(0);
+                article.setDislikes(0);
+                article.setTop(0);
+                article.setViews(0);
+                article.setAuthor(user);
+                article.setPassword(null);
+                article.setLastChangeTime(null);
+                articleService.save(article);
+            }
+            // 操作状态保存
+            objectNode.put("status", "0");
 //        } catch (Exception e) {
 //            // 操作状态保存
 //            objectNode.put("status", "1");

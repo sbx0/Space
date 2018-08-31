@@ -8,6 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Date;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 用户服务层
@@ -85,6 +87,30 @@ public class UserService extends BaseService {
         String result = userDao.existsByName(name);
         if (result != null) return true;
         else return false;
+    }
+
+    /**
+     * 根据cookie查找User
+     *
+     * @param request
+     * @return
+     */
+    public User getCookieUser(HttpServletRequest request) {
+        // 查找是否存在cookie
+        User user = new User();
+        String[] names = {"ID", "KEY"};
+        Cookie[] cookies = BaseService.getCookiesByName(names, request.getCookies());
+        try {
+            Cookie cookieId = cookies[0];
+            Cookie cookieKey = cookies[1];
+            if (cookieId.getValue() != null && !cookieId.getValue().equals("")
+                    || cookieKey.getValue() != null || !cookieKey.getValue().equals(""))
+                if (BaseService.getKey(Integer.parseInt(cookieId.getValue())).equals(cookieKey.getValue()))
+                    user = findById(Integer.parseInt(cookieId.getValue()));
+            return user;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
 

@@ -1,3 +1,36 @@
+function setTop() {
+    var id = $("#id").val()
+    $.ajax({
+        url: '../article/setTop?id=' + id,
+        type: 'GET',
+        success: function (data) {
+            if (data.status == 0) {
+                alert("设置成功");
+                location.replace(location.href)
+            }
+            else
+                alert("无权限");
+
+        }
+    })
+}
+
+function moveTop() {
+    var id = $("#id").val()
+    $.ajax({
+        url: '../article/moveTop?id=' + id,
+        type: 'GET',
+        success: function (data) {
+            if (data.status == 0) {
+                alert("设置成功");
+                location.replace(location.href)
+            }
+            else
+                alert("无权限");
+        }
+    })
+}
+
 // 自动登陆
 if (login()) {
     $.ajax({

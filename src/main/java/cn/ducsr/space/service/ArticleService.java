@@ -24,6 +24,17 @@ public class ArticleService extends BaseService {
     private ArticleDao articleDao;
 
     /**
+     * 获取最大置顶
+     *
+     * @return
+     */
+    public Integer getMaxTop() {
+        int max = articleDao.getMaxTop();
+        if(max < 0) max = 0;
+        return max;
+    }
+
+    /**
      * 用户文章列表
      *
      * @param id

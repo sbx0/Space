@@ -80,29 +80,17 @@ public class UserController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/info", method = RequestMethod.GET)
     public ObjectNode info(HttpServletRequest request) {
-        String[] names = {"ID", "KEY"};
-        Cookie[] cookies = BaseService.getCookiesByName(names, request.getCookies());
-        int id = Integer.parseInt(cookies[0].getValue());
-        User user = userService.findById(id);
+        User user = userService.getCookieUser(request);
         if (user != null) {
             try {
-                // 验证cookie
-                if (BaseService.getKey(id).equals(cookies[1].getValue())) {
-                    user = userService.findById(user.getId());
-
-                    // 用户信息
-                    objectNode.put("id", user.getId());
-                    objectNode.put("username", user.getName());
-                    objectNode.put("level", user.getLevel());
-                    objectNode.put("exp", user.getExp());
-                    objectNode.put("integral", user.getIntegral());
-
-                    // 操作状态保存
-                    objectNode.put("status", "0");
-                } else {
-                    // 操作状态保存
-                    objectNode.put("status", "1");
-                }
+                // 用户信息
+                objectNode.put("id", user.getId());
+                objectNode.put("username", user.getName());
+                objectNode.put("level", user.getLevel());
+                objectNode.put("exp", user.getExp());
+                objectNode.put("integral", user.getIntegral());
+                // 操作状态保存
+                objectNode.put("status", "0");
             } catch (Exception e) {
                 // 操作状态保存
                 objectNode.put("status", "1");
@@ -143,43 +131,16 @@ public class UserController extends BaseController {
      * 若登陆过将用户信息保存在session中
      *
      * @param request
-     * @param session
      * @return json
      */
     @ResponseBody
     @RequestMapping(value = "/cookie", method = RequestMethod.GET)
-    public ObjectNode cookie(HttpServletRequest request, HttpSession session) {
-        // 查找是否存在cookie
-        String[] names = {"ID", "KEY"};
-        Cookie[] cookies = BaseService.getCookiesByName(names, request.getCookies());
-        try {
-            Cookie cookieId = cookies[0];
-            Cookie cookieKey = cookies[1];
-            if (cookieId.getValue() != null && !cookieId.getValue().equals("")
-                    || cookieKey.getValue() != null || !cookieKey.getValue().equals("")) {
-                if (BaseService.getKey(Integer.parseInt(cookieId.getValue())).equals(cookieKey.getValue())) {
-                    User user = userService.findById(Integer.parseInt(cookieId.getValue()));
-                    // 获取session中的user
-                    User sessionUser = (User) session.getAttribute("user");
-                    if (user != null) {
-                        // 操作状态保存
-                        objectNode.put("status", "0");
-                        if (sessionUser != null && sessionUser.getId() != user.getId())
-                            session.setAttribute("user", user);
-                    } else {
-                        // 操作状态保存
-                        objectNode.put("status", "0");
-                        // cookie不存在
-                        session.removeAttribute("user");
-                    }
-                } else {
-                    objectNode.put("status", "1");
-                }
-            } else {
-                // 操作状态保存
-                objectNode.put("status", "1");
-            }
-        } catch (Exception e) {
+    public ObjectNode cookie(HttpServletRequest request) {
+        User user = userService.getCookieUser(request);
+        if (user != null) {
+            // 操作状态保存
+            objectNode.put("status", "0");
+        } else {
             // 操作状态保存
             objectNode.put("status", "1");
         }

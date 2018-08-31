@@ -54,7 +54,12 @@
                 <div id="editor" class="form-group"></div>
 
                 <button type="button" class="btn btn-secondary">密码</button>
-                <button type="button" class="btn btn-secondary">置顶</button>
+                <button th:if="${article.top == 0}" onclick="setTop()" type="button" class="btn btn-secondary">
+                    置顶
+                </button>
+                <button th:if="${article.top > 0}" onclick="moveTop()" type="button" class="btn btn-secondary">
+                    取消置顶
+                </button>
 
                 <button type="button" class="btn btn-primary float-right" onclick="post()">发布博文</button>
             </form>

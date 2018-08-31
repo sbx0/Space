@@ -24,17 +24,24 @@
 <div class="container">
     <h3>
         <br>
-        非常抱歉,
-        <br>
-        该页面已被删除或发生错误。
-        </br>
-        </br>
+        非常抱歉，该页面无法正常显示
     </h3>
-    <p>错误信息：</p>
-    <p th:text="'错误:' + ${error}"/>
-    <p th:text="'状态:' + ${status}"/>
-    <p th:text="'时间:' + ${timestamp}"/>
+    <p>
+        <br>
+        可能原因：
+        <br>
+        1.发生错误
+        <br>
+        2.该页面已被删除或不存在
+        <br>
+        3.您无权限操作此页
+    </p>
     <a href="../index.html">返回首页</a>
+    <br><br>
+    <p>错误信息：</p>
+    <p th:text="'错误:' + ${error}"></p>
+    <p th:text="'状态:' + ${status}"></p>
+    <p th:text="'时间:' + ${timestamp}"></p>
 </div>
 
 </body>
