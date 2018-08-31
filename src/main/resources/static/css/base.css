@@ -1,8 +1,10 @@
 body {
+    font-size: 15px;
     font-family: Tahoma, "Times New Roman",
     "Microsoft YaHei", "微软雅黑",
     STXihei, "华文细黑",
     serif;
+    line-height: 1.5;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -20,10 +22,30 @@ main {
     margin-top: 20px;
 }
 
+p {
+    margin-bottom: 1px;
+}
+
+ol {
+    margin-bottom: 1px;
+}
+
 @media (min-width: 768px) {
     .h-md-250 {
         height: auto;
     }
+}
+
+.blog-header-logo {
+    font-family: Tahoma, "Times New Roman",
+    "Microsoft YaHei", "微软雅黑",
+    STXihei, "华文细黑",
+    serif;
+    font-size: 1.50rem;
+}
+
+.card-body {
+    padding: 0.40rem;
 }
 
 .blog-pagination {
@@ -44,7 +66,7 @@ main {
 }
 
 .blog-post {
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
 }
 
 .blog-post-meta {

@@ -43,16 +43,16 @@
 <main id="article" role="main" class="container">
     <div class="row">
         <div class="col-md-8 blog-main">
-            <h3>
-                <p th:text="${article.title}"></p>
-            </h3>
-            <span th:text="${article.time}"></span>
-            <a th:href="'../user/'+${article.author.id}+'?page=1&size=10'" th:text="${article.author.name}"></a>
+            <h2 class="blog-post-title" th:text="${article.title}"></h2>
+            <p class="blog-post-meta">
+                <span th:text="${#dates.format(article.time,'yyyy-MM-dd HH:mm:ss')}"></span>
+                <a th:href="'../user/'+${article.author.id}+'?page=1&size=10'" th:text="${article.author.name}"></a>
+            <p>
             <div>
                 <div th:utext="${article.content}"></div>
             </div>
 
-            <nav class="blog-pagination" hidden>
+            <nav class="blog-pagination">
                 <a class="btn btn-outline-secondary disabled" href="#">{{prev}}</a>
                 <a class="btn btn-outline-primary float-right" href="#">{{next}}</a>
             </nav>

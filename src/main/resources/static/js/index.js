@@ -48,13 +48,12 @@ var list_article = new Vue({
 Vue.component('article-top', {
     props: ['article'],
     template: '<div class="col-md-6"><a :href="article.id">' +
-        '<div class="card flex-md-row mb-4 box-shadow-lg h-md-250">' +
+        '<div class="card flex-md-row mb-2 box-shadow-lg h-md-250">' +
         '<div class="card-body d-flex flex-column align-items-start">' +
         '<strong class="d-inline-block mb-2 text-info">' + i18N.top + '</strong>' +
-        '<h3 class="mb-0">' +
+        '<h5 class="mb-0">' +
         '<a class="text-dark" :href="article.id">{{article.title}}</a>' +
-        '</h3>' +
-        '<div class="mb-1 text-muted">{{article.time}}</div>' +
+        '</h5>' +
         '</div></a></div>',
 })
 
@@ -101,9 +100,11 @@ new Vue({
 // 格式化文章列表的阅读链接与日期格式
 function formate(data) {
     for (var i = 0; i < data.length; i++) {
-        data[i].id = i18N.json.article.one + data[i].id
-        data[i].author.id = "../user/" + data[i].author.id + "?page=1&size=10"
-        data[i].time = Format(getDate(data[i].time.toString()), "yyyy-MM-dd HH:mm")
+        data[i].id = i18N.json.article.one + data[i].id;
+        data[i].author.id = "../user/" + data[i].author.id + "?page=1&size=10";
+        var d = new Date(data[i].time);
+        var times = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + ' ' + d.getHours() + ':' + d.getMinutes();
+        data[i].time = times;
     }
     return data
 }
