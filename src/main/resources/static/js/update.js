@@ -1,7 +1,7 @@
 // 自动登陆
 if (login()) {
     $.ajax({
-        url: 'user/info',
+        url: '../user/info',
         type: 'GET',
         success: function (data) {
             if (data.status == 0) {
@@ -13,16 +13,17 @@ if (login()) {
 
 // 发布文章
 function post() {
+    var id = $("#id").val()
     var html = editor.txt.html();
     $("#content").val(html);
     $.ajax({
         type: "post",
-        url: "article/post",
+        url: "../article/post",
         data: $("#article-form").serialize(),
         success: function (data) {
             if (data.status == 0) {
                 alert("发布成功！");
-                location.replace("../index.html");
+                location.replace("../article/" + id);
             }
         }
     })

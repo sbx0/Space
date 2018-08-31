@@ -28,6 +28,6 @@ public interface ArticleDao extends PagingAndSortingRepository<Article, Integer>
      * @param size
      * @return
      */
-    @Query(value = "select * from articles a order by a.top desc, a.id desc limit ?1", nativeQuery = true)
+    @Query(value = "select * from articles a where a.top > 0 order by a.top desc, a.id desc limit ?1", nativeQuery = true)
     List<Article> top(Integer size);
 }

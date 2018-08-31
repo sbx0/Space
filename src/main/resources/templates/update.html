@@ -7,7 +7,7 @@
     <meta name="author" content="">
     <link rel="icon" th:href="@{~/img/favicon.png}">
 
-    <title>文章详情</title>
+    <title>发布博文</title>
 
     <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css">
 
@@ -18,6 +18,8 @@
     <link th:href="@{~/css/messenger-theme-flat.css}" rel="stylesheet">
     <link th:href="@{~/css/base.css}" rel="stylesheet">
 
+    <!-- wangEditor -->
+    <script type="text/javascript" th:src="@{~/js/wangEditor.min.js}"></script>
 
 </head>
 
@@ -29,60 +31,66 @@
             <div class="col-4 pt-1">
                 <a class="blog-header-logo text-dark" th:href="@{~/index.html}">{{space}}</a>
             </div>
-            <div class="col-4 text-center">
-
-            </div>
+            <div class="col-4 text-center"></div>
             <div class="col-4 d-flex justify-content-end align-items-center">
                 <a class="btn btn-sm btn-outline-secondary" th:href="@{~/login.html}">{{login}}</a>
             </div>
         </div>
     </header>
-
 </div>
 
-<main id="article" role="main" class="container">
+<main role="main" class="container">
     <div class="row">
         <div class="col-md-8 blog-main">
-            <h3>
-                <p th:text="${article.title}"></p>
-            </h3>
-            <span th:text="${article.time}"></span>
-            <a th:href="'../user/'+${article.author.id}+'?page=1&size=10'" th:text="${article.author.name}"></a>
-            <div>
-                <div th:utext="${article.content}"></div>
-            </div>
-
-            <nav class="blog-pagination" hidden>
-                <a class="btn btn-outline-secondary disabled" href="#">{{prev}}</a>
-                <a class="btn btn-outline-primary float-right" href="#">{{next}}</a>
-            </nav>
-
-            <div class="row">
-                <div class="col-sm-12">
-                    <div>
-                        <h4>{{comment}}</h4>
-                        <form>
-                            <div class="form-group">
-                            <textarea class="form-control">
-                            </textarea>
-                            </div>
-                            <button class="btn btn-primary">
-                                {{comment}}
-                            </button>
-                        </form>
-                    </div>
+            <form id="article-form">
+                <div class="form-group">
+                    <label for="title">标题</label>
+                    <input type="text" class="form-control" id="title" name="title" th:value="${article.title}">
                 </div>
-            </div>
+
+                <input type="hidden" class="form-control" id="id" name="id" th:value="${article.id}">
+                <input type="hidden" class="form-control" id="content" name="content" th:value="${article.content}">
+
+                <div id="editor" class="form-group"></div>
+
+                <button type="button" class="btn btn-secondary">密码</button>
+                <button type="button" class="btn btn-secondary">置顶</button>
+
+                <button type="button" class="btn btn-primary float-right" onclick="post()">发布博文</button>
+            </form>
         </div>
 
         <aside id="blog-about" class="col-md-4 blog-sidebar">
             <div class="p-3 mb-3 bg-light rounded">
-                <h4 class="font-italic">管理</h4>
-                <a th:href="'../article/updateOne?id='+${article.id}">修改文章</a>
-            </div>
-            <div class="p-3 mb-3 bg-light rounded">
                 <h4 class="font-italic">{{about}}</h4>
                 <p class="mb-0"><span v-html="about_content"></span></p>
+            </div>
+
+            <div class="p-3" hidden>
+                <h4 class="font-italic">Archives</h4>
+                <ol class="list-unstyled mb-0">
+                    <li><a href="#">March 2014</a></li>
+                    <li><a href="#">February 2014</a></li>
+                    <li><a href="#">January 2014</a></li>
+                    <li><a href="#">December 2013</a></li>
+                    <li><a href="#">November 2013</a></li>
+                    <li><a href="#">October 2013</a></li>
+                    <li><a href="#">September 2013</a></li>
+                    <li><a href="#">August 2013</a></li>
+                    <li><a href="#">July 2013</a></li>
+                    <li><a href="#">June 2013</a></li>
+                    <li><a href="#">May 2013</a></li>
+                    <li><a href="#">April 2013</a></li>
+                </ol>
+            </div>
+
+            <div class="p-3" hidden>
+                <h4 class="font-italic">Elsewhere</h4>
+                <ol class="list-unstyled">
+                    <li><a href="#">GitHub</a></li>
+                    <li><a href="#">Twitter</a></li>
+                    <li><a href="#">Facebook</a></li>
+                </ol>
             </div>
         </aside>
 
@@ -107,6 +115,6 @@
 <script th:src="@{~/js/messenger-theme-flat.js}"></script>
 <script th:src="@{~/js/i18N_zh_CN.js}"></script>
 <script th:src="@{~/js/base.js}"></script>
-<script th:src="@{~/js/article.js}"></script>
+<script th:src="@{~/js/update.js}"></script>
 </body>
 </html>

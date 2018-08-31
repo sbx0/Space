@@ -71,8 +71,6 @@ var top_article = new Vue({
             success: function (data) {
                 if (data.length > 0) {
                     top_article.articles = formate(data)
-                } else {
-                    alert(i18N.query + i18N.result + i18N.null)
                 }
             }
         })

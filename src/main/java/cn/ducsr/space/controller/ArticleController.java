@@ -31,6 +31,13 @@ public class ArticleController extends BaseController {
     @Resource
     private UserService userService;
 
+    @RequestMapping(value = "/updateOne", method = RequestMethod.GET)
+    public String updateOne(Map<String, Object> map, Integer id) {
+        Article article = articleService.findById(id);
+        map.put("article", article);
+        return "update";
+    }
+
     @ResponseBody
     @RequestMapping(value = "/post", method = RequestMethod.POST)
     public ObjectNode post(HttpServletRequest request, Article article) {
@@ -39,20 +46,20 @@ public class ArticleController extends BaseController {
         int id = Integer.parseInt(cookies[0].getValue());
         User user = userService.findById(id);
 //        try {
-            article.setTitle(article.getTitle().trim());
-            article.setContent(article.getContent().trim());
-            article.setTime(new Date());
-            article.setComments(0);
-            article.setLikes(0);
-            article.setDislikes(0);
-            article.setTop(0);
-            article.setViews(0);
-            article.setAuthor(user);
-            article.setPassword(null);
-            article.setLastChangeTime(null);
-            articleService.save(article);
-            // 操作状态保存
-            objectNode.put("status", "0");
+        article.setTitle(article.getTitle().trim());
+        article.setContent(article.getContent().trim());
+        article.setTime(new Date());
+        article.setComments(0);
+        article.setLikes(0);
+        article.setDislikes(0);
+        article.setTop(0);
+        article.setViews(0);
+        article.setAuthor(user);
+        article.setPassword(null);
+        article.setLastChangeTime(null);
+        articleService.save(article);
+        // 操作状态保存
+        objectNode.put("status", "0");
 //        } catch (Exception e) {
 //            // 操作状态保存
 //            objectNode.put("status", "1");
