@@ -122,6 +122,22 @@ public class BaseService {
     // 公用方法
 
     /**
+     * 检测字符串是否为空
+     *
+     * @param str
+     * @return
+     */
+    public static boolean checkNullStr(String str) {
+        if (str == null) return true;
+        if (str.length() == 0) return true;
+        if (str.trim() == "") return true;
+        if (str.trim().length() == 0) return true;
+        // wangEditor默认
+        if (str == "<p><br></p>") return true;
+        return false;
+    }
+
+    /**
      * 密码哈希
      *
      * @param source

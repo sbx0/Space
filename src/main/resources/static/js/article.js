@@ -11,7 +11,6 @@ if (login()) {
     })
 }
 
-var id = getQueryVariable("id").toString()
 
 // 文章列表
 var article = new Vue({
@@ -22,3 +21,21 @@ var article = new Vue({
         comment: i18N.comment,
     },
 })
+
+// 删除
+function del() {
+    $.ajax({
+        url: '/article/delete?id=' + $("#id").val() + "&type=0",
+        type: 'GET',
+        success: function (data) {
+            if (data.status == 0) {
+                alert("删除成功");
+                location.replace("../index.html")
+            } else {
+                alert(i18N.network + i18N.error);
+            }
+            return false;
+        }
+    })
+    return false;
+}

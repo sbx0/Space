@@ -69,7 +69,6 @@ public class Article {
     }
 
     public void setTitle(String title) {
-        title = title.replace(" ", "");
         if (title.length() > 30) title = title.substring(0, 30);
         this.title = title.trim();
     }

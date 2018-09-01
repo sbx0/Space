@@ -16,7 +16,7 @@ Vue.component('article-list', {
     props: ['article'],
     template: '<div class="blog-post">' +
         '<h2 class="blog-post-title"><a :href="article.id" class="text-dark">{{article.title}}</a></h2>' +
-        '<p class="blog-post-meta">{{article.time}}&nbsp;<a :href ="article.author.id">{{article.author.name}}</a></p>' +
+        '<p class="blog-post-meta"><a :href ="article.author.id">{{article.author.name}}</a>&nbsp;{{article.time}}</p>' +
         '<div v-html="article.content"></div>' +
         '<a class="continue-read btn btn-light" :href ="article.id">' +
         i18N.continue + i18N.read + '</a>',

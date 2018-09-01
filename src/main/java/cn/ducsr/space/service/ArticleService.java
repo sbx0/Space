@@ -24,13 +24,22 @@ public class ArticleService extends BaseService {
     private ArticleDao articleDao;
 
     /**
+     * 真的删除文章
+     *
+     * @param id
+     */
+    public void delete(Integer id) {
+        articleDao.deleteById(id);
+    }
+
+    /**
      * 获取最大置顶
      *
      * @return
      */
     public Integer getMaxTop() {
         int max = articleDao.getMaxTop();
-        if(max < 0) max = 0;
+        if (max < 0) max = 0;
         return max;
     }
 
@@ -62,9 +71,12 @@ public class ArticleService extends BaseService {
      * @param id 博文ID
      * @return 博文
      */
-    public Article findById(Integer id) {
+    public Article findById(Integer id, Integer type) {
         try {
-            return articleDao.findById(id).get();
+            if (type == 0)
+                return articleDao.findById(id).get();
+            else
+                return articleDao.adminFindById(id).get();
         } catch (Exception e) {
             return null;
         }
@@ -86,7 +98,7 @@ public class ArticleService extends BaseService {
      *
      * @return 文章列表
      */
-    public Page<Article> findAll(Integer page, Integer size) {
+    public Page<Article> findAll(Integer page, Integer size, Integer type) {
         // 页数控制
         if (page > 9999) page = 9999;
         if (page < 0) page = 0;
@@ -98,7 +110,10 @@ public class ArticleService extends BaseService {
         Pageable pageable = PageRequest.of(page, size, sort);
         try {
             // 分页查询
-            return articleDao.findAll(pageable);
+            if (type == 0)
+                return articleDao.findAll(pageable);
+            else
+                return articleDao.adminFindAll(pageable);
         } catch (Exception e) {
             return null;
         }

@@ -45,8 +45,8 @@
             <div class="blog-post" th:each="article,stat:${articles}">
                 <h2 th:text="${article.title}" class="blog-post-title"></h2>
                 <p class="blog-post-meta">
-                    <span th:text="${article.time}"></span>
                     <a th:text="${article.author.name}" th:href="'../user/' + ${article.author.id} + '?page=1&size=10'"></a>
+                    <span th:text="${#dates.format(article.time,'yyyy-MM-dd HH:mm')}"></span>
                 </p>
                 <div th:utext="${article.content}"></div>
                 <a th:href="${article.id}" class="continue-read btn btn-light">

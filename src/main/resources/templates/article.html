@@ -43,10 +43,15 @@
 <main id="article" role="main" class="container">
     <div class="row">
         <div class="col-md-8 blog-main">
+            <h4 th:if="${article.top < 0}" class="text-danger mb-2">
+                <strong>
+                    该文章已被隐藏
+                </strong>
+            </h4>
             <h2 class="blog-post-title" th:text="${article.title}"></h2>
             <p class="blog-post-meta">
-                <span th:text="${#dates.format(article.time,'yyyy-MM-dd HH:mm:ss')}"></span>
                 <a th:href="'../user/'+${article.author.id}+'?page=1&size=10'" th:text="${article.author.name}"></a>
+                <span th:text="${#dates.format(article.time,'yyyy-MM-dd HH:mm:ss')}"></span>
             <p>
             <div>
                 <div th:utext="${article.content}"></div>
@@ -76,9 +81,20 @@
         </div>
 
         <aside id="blog-about" class="col-md-4 blog-sidebar">
+            <div th:if="${article.lastChangeTime != null}" class="p-3 mb-3 bg-light rounded">
+                <h4 class="font-italic">改动</h4>
+                <p class="text-danger">
+                    修改于
+                    <strong>
+                        <span th:text="${#dates.format(article.lastChangeTime,'yyyy-MM-dd HH:mm:ss')}"></span>
+                    </strong>
+                </p>
+            </div>
             <div class="p-3 mb-3 bg-light rounded">
+                <input id="id" type="hidden" th:value="${article.id}">
                 <h4 class="font-italic">管理</h4>
-                <a th:href="'../article/updateOne?id='+${article.id}">修改文章</a>
+                <a th:href="'../article/updateOne?id='+${article.id}">修改</a>
+                <a onclick="del()" href="javascript:void(0)">删除</a>
             </div>
             <div class="p-3 mb-3 bg-light rounded">
                 <h4 class="font-italic">{{about}}</h4>

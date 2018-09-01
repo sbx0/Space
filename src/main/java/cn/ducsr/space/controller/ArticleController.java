@@ -1,10 +1,7 @@
 package cn.ducsr.space.controller;
 
-import cn.ducsr.space.entity.Article;
-import cn.ducsr.space.entity.User;
-import cn.ducsr.space.service.ArticleService;
-import cn.ducsr.space.service.BaseService;
-import cn.ducsr.space.service.UserService;
+import cn.ducsr.space.entity.*;
+import cn.ducsr.space.service.*;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -14,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
@@ -32,6 +28,45 @@ public class ArticleController extends BaseController {
     private UserService userService;
 
     /**
+     * 删除/隐藏文章
+     *
+     * @param request
+     * @param id
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/delete", method = RequestMethod.GET)
+    public ObjectNode delete(HttpServletRequest request, Integer id, Integer type) {
+        User user = userService.getCookieUser(request);
+        Article article = articleService.findById(id, 1);
+        // 判断权限
+        if (user.getAuthority() > 0 && type == 1) {
+            try {
+                articleService.delete(id);
+                // 操作状态保存
+                objectNode.put("status", "0");
+            } catch (Exception e) {
+                // 操作状态保存
+                objectNode.put("status", "1");
+            }
+        } else if (article.getAuthor().getId() == user.getId() && type == 0) {
+            article.setTop(-1);
+            try {
+                articleService.save(article);
+                // 操作状态保存
+                objectNode.put("status", "0");
+            } catch (Exception e) {
+                // 操作状态保存
+                objectNode.put("status", "1");
+            }
+        } else {
+            // 操作状态保存
+            objectNode.put("status", "1");
+        }
+        return objectNode;
+    }
+
+    /**
      * 移除置顶
      *
      * @param request
@@ -39,10 +74,10 @@ public class ArticleController extends BaseController {
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "/moveTop", method = RequestMethod.GET)
+    @RequestMapping(value = "/removeTop", method = RequestMethod.GET)
     public ObjectNode removeTop(HttpServletRequest request, Integer id) {
         User user = userService.getCookieUser(request);
-        Article article = articleService.findById(id);
+        Article article = articleService.findById(id, 1);
         // 判断权限
         if (user.getAuthority() > 0)
             // 操作状态保存
@@ -67,7 +102,7 @@ public class ArticleController extends BaseController {
     @RequestMapping(value = "/setTop", method = RequestMethod.GET)
     public ObjectNode setTop(HttpServletRequest request, Integer id) {
         User user = userService.getCookieUser(request);
-        Article article = articleService.findById(id);
+        Article article = articleService.findById(id, 1);
         // 判断权限
         if (user.getAuthority() > 0)
             // 操作状态保存
@@ -92,7 +127,11 @@ public class ArticleController extends BaseController {
     @RequestMapping(value = "/updateOne", method = RequestMethod.GET)
     public String updateOne(HttpServletRequest request, Map<String, Object> map, Integer id) {
         User user = userService.getCookieUser(request);
-        Article article = articleService.findById(id);
+        Article article;
+        if (user.getAuthority() == 0)
+            article = articleService.findById(id, 1);
+        else
+            article = articleService.findById(id, 0);
         // 判断权限
         if (user.getId() != article.getAuthor().getId() && user.getAuthority() > 0)
             return "error";
@@ -111,10 +150,20 @@ public class ArticleController extends BaseController {
     @RequestMapping(value = "/post", method = RequestMethod.POST)
     public ObjectNode post(HttpServletRequest request, Article article) {
         User user = userService.getCookieUser(request);
-//        try {
+        // 检测是否为空
+        if (BaseService.checkNullStr(article.getTitle()) || BaseService.checkNullStr(article.getContent())) {
+            // 操作状态保存
+            objectNode.put("status", "1");
+            return objectNode;
+        }
+        try {
             // 修改文章
             if (article.getId() != null) {
-                Article a = articleService.findById(article.getId());
+                Article a;
+                if (user.getAuthority() == 0)
+                    a = articleService.findById(article.getId(), 1);
+                else
+                    a = articleService.findById(article.getId(), 0);
                 a.setTitle(article.getTitle().trim());
                 a.setContent(article.getContent().trim());
                 a.setLastChangeTime(new Date());
@@ -135,10 +184,10 @@ public class ArticleController extends BaseController {
             }
             // 操作状态保存
             objectNode.put("status", "0");
-//        } catch (Exception e) {
-//            // 操作状态保存
-//            objectNode.put("status", "1");
-//        }
+        } catch (Exception e) {
+            // 操作状态保存
+            objectNode.put("status", "1");
+        }
         return objectNode;
     }
 
@@ -150,8 +199,13 @@ public class ArticleController extends BaseController {
      * @return JSON串
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public String one(Map<String, Object> map, @PathVariable("id") Integer id) {
-        Article article = articleService.findById(id);
+    public String one(HttpServletRequest request, Map<String, Object> map, @PathVariable("id") Integer id) {
+        User user = userService.getCookieUser(request);
+        Article article;
+        if (user != null && user.getAuthority() == 0)
+            article = articleService.findById(id, 1);
+        else
+            article = articleService.findById(id, 0);
         if (article == null) {
             article = new Article();
             article.setTitle("该篇文章不存在或已被删除");
@@ -183,7 +237,7 @@ public class ArticleController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/index", method = RequestMethod.GET)
     public List index(Integer page, Integer size) {
-        Page<Article> articlePage = articleService.findAll(page - 1, size);
+        Page<Article> articlePage = articleService.findAll(page - 1, size, 0);
         List<Article> articles = articleService.filter(articlePage.getContent());
         return articles;
     }
@@ -199,12 +253,12 @@ public class ArticleController extends BaseController {
     @RequestMapping(value = "/list")
     public String list(Map<String, Object> map, Integer page, Integer size) {
         // 分页查询
-        Page<Article> articlePage = articleService.findAll(page - 1, size);
+        Page<Article> articlePage = articleService.findAll(page - 1, size, 0);
         // 取出文章列表
         List<Article> articles = articleService.filter(articlePage.getContent());
         // 当页数大于总页数时，查询最后一页的数据
         if (page > articlePage.getTotalPages()) {
-            articlePage = articleService.findAll(articlePage.getTotalPages() - 1, size);
+            articlePage = articleService.findAll(articlePage.getTotalPages() - 1, size, 0);
             articles = articleService.filter(articlePage.getContent());
         }
         // 将数据返回到页面
@@ -218,22 +272,6 @@ public class ArticleController extends BaseController {
         if (page - 1 > 0) map.put("prev_page", page - 1);
         if (page - 1 > articlePage.getTotalPages()) map.put("prev_page", null);
         return "list";
-    }
-
-    /**
-     * 保存文章
-     *
-     * @return 字符串
-     */
-    @RequestMapping(value = "/save")
-    public String save() {
-        Article article = new Article();
-        article.setTitle("标题");
-        article.setContent("内容");
-        article.setTime(new Date());
-        article.setLastChangeTime(new Date());
-        articleService.save(article);
-        return "success";
     }
 
 }

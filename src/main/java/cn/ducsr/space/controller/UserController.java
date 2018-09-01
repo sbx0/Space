@@ -1,11 +1,7 @@
 package cn.ducsr.space.controller;
 
-import cn.ducsr.space.entity.Article;
-import cn.ducsr.space.entity.User;
-import cn.ducsr.space.service.ArticleService;
-import cn.ducsr.space.service.BaseService;
-import cn.ducsr.space.service.LogService;
-import cn.ducsr.space.service.UserService;
+import cn.ducsr.space.entity.*;
+import cn.ducsr.space.service.*;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -48,7 +44,7 @@ public class UserController extends BaseController {
         List<Article> articles = articleService.filter(articlePage.getContent());
         // 当页数大于总页数时，查询最后一页的数据
         if (page > articlePage.getTotalPages()) {
-            articlePage = articleService.findAll(articlePage.getTotalPages() - 1, size);
+            articlePage = articleService.findAll(articlePage.getTotalPages() - 1, size,0);
             articles = articleService.filter(articlePage.getContent());
         }
         // 将数据返回到页面
@@ -159,8 +155,8 @@ public class UserController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ObjectNode login(HttpServletRequest request, HttpServletResponse response, HttpSession session, User user) {
-        if (user.getName() == null || user.getPassword() == null
-                || user.getName().trim().length() == 0 || user.getPassword().trim().length() == 0) {
+        // 判断是否为空
+        if (BaseService.checkNullStr(user.getName()) || BaseService.checkNullStr(user.getPassword())) {
             // 操作状态保存
             objectNode.put("status", "1");
             return objectNode;
