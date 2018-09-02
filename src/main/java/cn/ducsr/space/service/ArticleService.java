@@ -24,6 +24,72 @@ public class ArticleService extends BaseService {
     private ArticleDao articleDao;
 
     /**
+     * 查询被隐藏的文章列表 根据用户
+     *
+     * @return 文章列表
+     */
+    public Page<Article> findTrashByUser(Integer id, Integer page, Integer size) {
+        // 页数控制
+        if (page > 9999) page = 9999;
+        if (page < 0) page = 0;
+        // 条数控制
+        if (size > 1000) size = 1000;
+        if (size < 1) size = 1;
+        if (size == 0) size = 10;
+        // 分页配置
+        Sort sort = new Sort(Sort.Direction.DESC, "id");
+        Pageable pageable = PageRequest.of(page, size, sort);
+//        try {
+            // 分页查询
+            return articleDao.findTrashByUser(id, pageable);
+//        } catch (Exception e) {
+//            return null;
+//        }
+    }
+
+    /**
+     * 查询被隐藏的文章列表
+     *
+     * @return 文章列表
+     */
+    public Page<Article> findTrash(Integer page, Integer size) {
+        // 页数控制
+        if (page > 9999) page = 9999;
+        if (page < 0) page = 0;
+        // 条数控制
+        if (size > 1000) size = 1000;
+        if (size < 1) size = 1;
+        if (size == 0) size = 10;
+        // 分页配置
+        Sort sort = new Sort(Sort.Direction.DESC, "id");
+        Pageable pageable = PageRequest.of(page, size, sort);
+        try {
+            // 分页查询
+            return articleDao.findTrash(pageable);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * 设置置顶
+     *
+     * @param article
+     * @return
+     */
+    public boolean setTop(Article article) {
+        if (articleDao.getTopNumber() > 2) return false;
+        int max = getMaxTop();
+        article.setTop(max + 1);
+        try {
+            save(article);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /**
      * 真的删除文章
      *
      * @param id
@@ -58,6 +124,7 @@ public class ArticleService extends BaseService {
         // 条数控制
         if (size > 1000) size = 1000;
         if (size < 1) size = 1;
+        if (size == 0) size = 10;
         // 分页配置
         Sort sort = new Sort(Sort.Direction.DESC, "id");
         Pageable pageable = PageRequest.of(page, size, sort);
@@ -105,6 +172,7 @@ public class ArticleService extends BaseService {
         // 条数控制
         if (size > 1000) size = 1000;
         if (size < 1) size = 1;
+        if (size == 0) size = 10;
         // 分页配置
         Sort sort = new Sort(Sort.Direction.DESC, "id");
         Pageable pageable = PageRequest.of(page, size, sort);

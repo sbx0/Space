@@ -43,7 +43,7 @@ if (login()) {
                 login_div.info_level = data.level;
                 login_div.info_exp = data.exp;
                 login_div.info_integral = data.integral;
-                login_div.user_home = "../user/" + data.id + "?page=1&size=10";
+                login_div.user_home = "../user/" + data.id;
             }
         }
     })

@@ -38,13 +38,15 @@ public class UserController extends BaseController {
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public String one(Map<String, Object> map, @PathVariable("id") Integer id, Integer page, Integer size) {
+        if (page == null) page = 1;
+        if (size == null) size = 10;
         // 分页查询
         Page<Article> articlePage = articleService.findByUser(id, page - 1, size);
         // 取出文章列表
         List<Article> articles = articleService.filter(articlePage.getContent());
         // 当页数大于总页数时，查询最后一页的数据
         if (page > articlePage.getTotalPages()) {
-            articlePage = articleService.findAll(articlePage.getTotalPages() - 1, size,0);
+            articlePage = articleService.findAll(articlePage.getTotalPages() - 1, size, 0);
             articles = articleService.filter(articlePage.getContent());
         }
         // 将数据返回到页面

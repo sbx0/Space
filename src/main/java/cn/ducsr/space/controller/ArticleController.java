@@ -28,46 +28,90 @@ public class ArticleController extends BaseController {
     private UserService userService;
 
     /**
+     * 回收站
+     *
+     * @param id
+     * @param page
+     * @param size
+     * @param map
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/trash", method = RequestMethod.GET)
+    public String trash(Integer page, Integer size, Map<String, Object> map, HttpServletRequest request) {
+        User user = userService.getCookieUser(request);
+        if (user == null) return "error";
+        int id = user.getId();
+        // 分页查询
+        if (page == null) page = 1;
+        if (size == null) size = 10;
+        Page<Article> articlePage = articleService.findTrashByUser(id, page - 1, size);
+        // 取出文章列表
+        List<Article> articles = articleService.filter(articlePage.getContent());
+        // 当页数大于总页数时，查询最后一页的数据
+        if (page > articlePage.getTotalPages()) {
+            articlePage = articleService.findAll(articlePage.getTotalPages() - 1, size, 0);
+            articles = articleService.filter(articlePage.getContent());
+        }
+        // 将数据返回到页面
+        map.put("articles", articles);
+        map.put("size", articlePage.getPageable().getPageSize());
+        map.put("page", articlePage.getPageable().getPageNumber() + 1);
+        map.put("totalPages", articlePage.getTotalPages());
+        map.put("totalElements", articlePage.getTotalElements());
+        // 判断上下页
+        if (page + 1 <= articlePage.getTotalPages()) map.put("next_page", page + 1);
+        if (page - 1 > 0) map.put("prev_page", page - 1);
+        if (page - 1 > articlePage.getTotalPages()) map.put("prev_page", null);
+        return "trash";
+    }
+
+    /**
      * 删除/隐藏文章
      *
      * @param request
-     * @param id
+     * @param id      文章ID
+     * @param type    0为隐藏，1为删除
      * @return
      */
     @ResponseBody
     @RequestMapping(value = "/delete", method = RequestMethod.GET)
     public ObjectNode delete(HttpServletRequest request, Integer id, Integer type) {
+        objectNode.put("status", "1");
         User user = userService.getCookieUser(request);
         Article article = articleService.findById(id, 1);
-        // 判断权限
-        if (user.getAuthority() > 0 && type == 1) {
-            try {
-                articleService.delete(id);
-                // 操作状态保存
-                objectNode.put("status", "0");
-            } catch (Exception e) {
-                // 操作状态保存
-                objectNode.put("status", "1");
-            }
-        } else if (article.getAuthor().getId() == user.getId() && type == 0) {
-            article.setTop(-1);
-            try {
-                articleService.save(article);
-                // 操作状态保存
-                objectNode.put("status", "0");
-            } catch (Exception e) {
-                // 操作状态保存
-                objectNode.put("status", "1");
-            }
-        } else {
-            // 操作状态保存
-            objectNode.put("status", "1");
+        switch (type) {
+            // 不是真的删除，只是隐藏文章
+            case 0:
+                if (userService.checkAuthority(user, article.getAuthor().getId(), 0)) {
+                    article.setTop(-1);
+                    try {
+                        articleService.save(article);
+                        objectNode.put("status", "0");
+                    } catch (Exception e) {
+                        objectNode.put("status", "1");
+                    }
+                }
+                break;
+            // 真删除
+            case 1:
+                if (userService.checkAuthority(user, article.getAuthor().getId(), 0)) {
+                    try {
+                        articleService.delete(id);
+                        objectNode.put("status", "0");
+                    } catch (Exception e) {
+                        objectNode.put("status", "1");
+                    }
+                    break;
+                }
+            default:
+                objectNode.put("status", 1);
         }
         return objectNode;
     }
 
     /**
-     * 移除置顶
+     * 移除置顶 只有最高权限管理员可以做
      *
      * @param request
      * @param id
@@ -80,19 +124,17 @@ public class ArticleController extends BaseController {
         Article article = articleService.findById(id, 1);
         // 判断权限
         if (user.getAuthority() > 0)
-            // 操作状态保存
             objectNode.put("status", "1");
         else {
             article.setTop(0);
             articleService.save(article);
-            // 操作状态保存
             objectNode.put("status", "0");
         }
         return objectNode;
     }
 
     /**
-     * 设置置顶
+     * 设置置顶 只有最高权限管理员可以做
      *
      * @param request
      * @param id
@@ -105,14 +147,12 @@ public class ArticleController extends BaseController {
         Article article = articleService.findById(id, 1);
         // 判断权限
         if (user.getAuthority() > 0)
-            // 操作状态保存
             objectNode.put("status", "1");
         else {
-            int max = articleService.getMaxTop();
-            article.setTop(max + 1);
-            articleService.save(article);
-            // 操作状态保存
-            objectNode.put("status", "0");
+            if (articleService.setTop(article))
+                objectNode.put("status", "0");
+            else
+                objectNode.put("status", "2");
         }
         return objectNode;
     }
@@ -128,14 +168,18 @@ public class ArticleController extends BaseController {
     public String updateOne(HttpServletRequest request, Map<String, Object> map, Integer id) {
         User user = userService.getCookieUser(request);
         Article article;
-        if (user.getAuthority() == 0)
-            article = articleService.findById(id, 1);
-        else
-            article = articleService.findById(id, 0);
-        // 判断权限
-        if (user.getId() != article.getAuthor().getId() && user.getAuthority() > 0)
+        if (user != null) {
+            if (user.getAuthority() == 0)
+                article = articleService.findById(id, 1);
+            else
+                article = articleService.findById(id, 0);
+            // 判断权限
+            if (!userService.checkAuthority(user, article.getAuthor().getId(), 0))
+                return "error";
+            map.put("article", article);
+        } else {
             return "error";
-        map.put("article", article);
+        }
         return "update";
     }
 
@@ -206,13 +250,8 @@ public class ArticleController extends BaseController {
             article = articleService.findById(id, 1);
         else
             article = articleService.findById(id, 0);
-        if (article == null) {
-            article = new Article();
-            article.setTitle("该篇文章不存在或已被删除");
-            article.setContent("很抱歉。");
-        }
+        if (article == null) return "error";
         map.put("article", article);
-
         return "article";
     }
 

@@ -44,8 +44,7 @@ function moveTop() {
             if (data.status == 0) {
                 alert("设置成功");
                 location.replace(location.href)
-            }
-            else
+            } else
                 alert("无权限");
         }
     })

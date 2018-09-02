@@ -15,6 +15,26 @@ import java.util.Optional;
 public interface ArticleDao extends PagingAndSortingRepository<Article, Integer> {
 
     /**
+     * 查询被隐藏的文章列表
+     */
+    @Query(value = "select  * from articles a where a.top < 0", nativeQuery = true)
+    Page<Article> findTrash(Pageable pageable);
+
+    /**
+     * 查询被隐藏的文章列表 根据用户
+     */
+    @Query(value = "select  * from articles a where a.top < 0 and a.author_id = ?1", nativeQuery = true)
+    Page<Article> findTrashByUser(Integer id, Pageable pageable);
+
+    /**
+     * 获取当前置顶文章数
+     *
+     * @return
+     */
+    @Query(value = "select  count(*) from articles a where a.top > 0", nativeQuery = true)
+    Integer getTopNumber();
+
+    /**
      * 查询文章
      */
     @Query(value = "select  * from articles a where a.id = ?1", nativeQuery = true)

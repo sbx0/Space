@@ -18,7 +18,7 @@ var i18N = {
     more: '更多',
     loading: '加载中',
     continue: '继续',
-    read: '查看',
+    read: '阅读',
     query: '查询',
     no: '没有',
     result: '结果',

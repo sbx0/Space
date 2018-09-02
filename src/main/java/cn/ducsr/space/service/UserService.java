@@ -78,6 +78,25 @@ public class UserService extends BaseService {
     // 辅助方法
 
     /**
+     * 判断用户是否有权限操作
+     */
+    public boolean checkAuthority(User user, int id, int type) {
+        if (user == null) return false;
+        if (id <= 0) return false;
+        if (type < 0) return false;
+        switch (type) {
+            // 文章
+            case 0:
+                if (user.getAuthority() == 0) return true;
+                if (user.getId() == id) return true;
+                break;
+            default:
+                return false;
+        }
+        return false;
+    }
+
+    /**
      * 根据用户名判断用户是否存在
      *
      * @param name
