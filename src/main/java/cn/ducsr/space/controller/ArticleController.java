@@ -30,9 +30,8 @@ public class ArticleController extends BaseController {
     /**
      * 回收站
      *
-     * @param id
-     * @param page
-     * @param size
+     * @param page    页码
+     * @param size    条数
      * @param map
      * @param request
      * @return
@@ -47,22 +46,26 @@ public class ArticleController extends BaseController {
         if (size == null) size = 10;
         Page<Article> articlePage = articleService.findTrashByUser(id, page - 1, size);
         // 取出文章列表
-        List<Article> articles = articleService.filter(articlePage.getContent());
-        // 当页数大于总页数时，查询最后一页的数据
-        if (page > articlePage.getTotalPages()) {
-            articlePage = articleService.findAll(articlePage.getTotalPages() - 1, size, 0);
-            articles = articleService.filter(articlePage.getContent());
+        if (articlePage != null) {
+            List<Article> articles = articleService.filter(articlePage.getContent());
+            // 当页数大于总页数时，查询最后一页的数据
+            if (page > articlePage.getTotalPages()) {
+                articlePage = articleService.findTrashByUser(id, articlePage.getTotalPages() - 1, size);
+                articles = articleService.filter(articlePage.getContent());
+            }
+            // 将数据返回到页面
+            map.put("articles", articles);
+            map.put("size", articlePage.getPageable().getPageSize());
+            map.put("page", articlePage.getPageable().getPageNumber() + 1);
+            map.put("totalPages", articlePage.getTotalPages());
+            map.put("totalElements", articlePage.getTotalElements());
+            // 判断上下页
+            if (page + 1 <= articlePage.getTotalPages()) map.put("next_page", page + 1);
+            if (page - 1 > 0) map.put("prev_page", page - 1);
+            if (page - 1 > articlePage.getTotalPages()) map.put("prev_page", null);
+        } else {
+            map.put("articles", null);
         }
-        // 将数据返回到页面
-        map.put("articles", articles);
-        map.put("size", articlePage.getPageable().getPageSize());
-        map.put("page", articlePage.getPageable().getPageNumber() + 1);
-        map.put("totalPages", articlePage.getTotalPages());
-        map.put("totalElements", articlePage.getTotalElements());
-        // 判断上下页
-        if (page + 1 <= articlePage.getTotalPages()) map.put("next_page", page + 1);
-        if (page - 1 > 0) map.put("prev_page", page - 1);
-        if (page - 1 > articlePage.getTotalPages()) map.put("prev_page", null);
         return "trash";
     }
 
@@ -293,23 +296,27 @@ public class ArticleController extends BaseController {
     public String list(Map<String, Object> map, Integer page, Integer size) {
         // 分页查询
         Page<Article> articlePage = articleService.findAll(page - 1, size, 0);
-        // 取出文章列表
-        List<Article> articles = articleService.filter(articlePage.getContent());
-        // 当页数大于总页数时，查询最后一页的数据
-        if (page > articlePage.getTotalPages()) {
-            articlePage = articleService.findAll(articlePage.getTotalPages() - 1, size, 0);
-            articles = articleService.filter(articlePage.getContent());
+        if (articlePage != null) {
+            // 取出文章列表
+            List<Article> articles = articleService.filter(articlePage.getContent());
+            // 当页数大于总页数时，查询最后一页的数据
+            if (page > articlePage.getTotalPages()) {
+                articlePage = articleService.findAll(articlePage.getTotalPages() - 1, size, 0);
+                articles = articleService.filter(articlePage.getContent());
+            }
+            // 将数据返回到页面
+            map.put("articles", articles);
+            map.put("size", articlePage.getPageable().getPageSize());
+            map.put("page", articlePage.getPageable().getPageNumber() + 1);
+            map.put("totalPages", articlePage.getTotalPages());
+            map.put("totalElements", articlePage.getTotalElements());
+            // 判断上下页
+            if (page + 1 <= articlePage.getTotalPages()) map.put("next_page", page + 1);
+            if (page - 1 > 0) map.put("prev_page", page - 1);
+            if (page - 1 > articlePage.getTotalPages()) map.put("prev_page", null);
+        } else {
+            map.put("articles", null);
         }
-        // 将数据返回到页面
-        map.put("articles", articles);
-        map.put("size", articlePage.getPageable().getPageSize());
-        map.put("page", articlePage.getPageable().getPageNumber() + 1);
-        map.put("totalPages", articlePage.getTotalPages());
-        map.put("totalElements", articlePage.getTotalElements());
-        // 判断上下页
-        if (page + 1 <= articlePage.getTotalPages()) map.put("next_page", page + 1);
-        if (page - 1 > 0) map.put("prev_page", page - 1);
-        if (page - 1 > articlePage.getTotalPages()) map.put("prev_page", null);
         return "list";
     }
 

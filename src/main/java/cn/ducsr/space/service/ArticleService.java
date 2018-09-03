@@ -39,12 +39,16 @@ public class ArticleService extends BaseService {
         // 分页配置
         Sort sort = new Sort(Sort.Direction.DESC, "id");
         Pageable pageable = PageRequest.of(page, size, sort);
-//        try {
+        try {
             // 分页查询
-            return articleDao.findTrashByUser(id, pageable);
-//        } catch (Exception e) {
-//            return null;
-//        }
+            Page<Article> articlePage = articleDao.findTrashByUser(id, pageable);
+            if (articlePage.getContent().size() != 0)
+                return articleDao.findTrashByUser(id, pageable);
+            else
+                return null;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     /**
@@ -128,8 +132,13 @@ public class ArticleService extends BaseService {
         // 分页配置
         Sort sort = new Sort(Sort.Direction.DESC, "id");
         Pageable pageable = PageRequest.of(page, size, sort);
+        // 分页查询
+        Page<Article> articlePage = articleDao.findByUser(id, pageable);
         if (id < 1) return null;
-        return articleDao.findByUser(id, pageable);
+        if (articlePage.getContent().size() != 0)
+            return articleDao.findByUser(id, pageable);
+        else
+            return null;
     }
 
     /**
@@ -178,10 +187,15 @@ public class ArticleService extends BaseService {
         Pageable pageable = PageRequest.of(page, size, sort);
         try {
             // 分页查询
+            Page<Article> articlePage;
             if (type == 0)
-                return articleDao.findAll(pageable);
+                articlePage = articleDao.findAll(pageable);
             else
-                return articleDao.adminFindAll(pageable);
+                articlePage = articleDao.adminFindAll(pageable);
+            if (articlePage.getContent().size() > 0)
+                return articlePage;
+            else
+                return null;
         } catch (Exception e) {
             return null;
         }

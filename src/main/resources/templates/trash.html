@@ -40,16 +40,23 @@
 
 <main id="list-article" role="main" class="container">
     <div class="row">
-        <div class="col-md-8 blog-main">
 
+        <div class="col-md-12 blog-main" th:if="${totalElements == null}">
+            <div class="blog-post text-center">
+                <h2 class="blog-post-title">暂时没有可以回收的文章</h2>
+            </div>
+        </div>
+
+        <div class="col-md-8 blog-main">
             <div class="blog-post" th:each="article,stat:${articles}">
-                <h2 th:text="${article.title}" class="blog-post-title"></h2>
+                <h2 th:text="${article?.title}" class="blog-post-title"></h2>
                 <p class="blog-post-meta">
-                    <a th:text="${article.author.name}" th:href="'../user/' + ${article.author.id} + '?page=1&size=10'"></a>
-                    <span th:text="${#dates.format(article.time,'yyyy-MM-dd HH:mm')}"></span>
+                    <a th:text="${article?.author?.name}"
+                       th:href="'../user/' + ${article?.author?.id} + '?page=1&size=10'"></a>
+                    <span th:text="${#dates.format(article?.time,'yyyy-MM-dd HH:mm')}"></span>
                 </p>
-                <div th:utext="${article.content}"></div>
-                <a th:href="${article.id}" class="continue-read btn btn-light">
+                <div th:utext="${article?.content}"></div>
+                <a th:href="${article?.id}" class="continue-read btn btn-light">
                     申请恢复
                 </a>
             </div>
@@ -60,18 +67,10 @@
                    class="btn btn-outline-primary float-left">
                     {{prev}}
                 </a>
-                <a th:if="${prev_page == null}"
-                   class="btn btn-outline-secondary float-left disable">
-                    {{prev}}
-                </a>
-                <a href="javascript:void(0)" th:text="${page} + '/' + ${totalPages}"></a>
+                <a th:if="${page != null}" href="javascript:void(0)" th:text="${page} + '/' + ${totalPages}"></a>
                 <a th:if="${next_page != null}"
                    th:href="'trash?page=' + ${next_page} + '&size=' + ${size}"
                    class="btn btn-outline-primary float-right">
-                    {{next}}
-                </a>
-                <a th:if="${next_page == null}"
-                   class="btn btn-outline-secondary float-right disable">
                     {{next}}
                 </a>
             </nav>
@@ -80,7 +79,7 @@
 
         <aside id="blog-about" class="col-md-4 blog-sidebar">
 
-            <div class="p-3 mb-3 bg-light rounded">
+            <div class="p-3 mb-3 bg-light rounded" th:if="${totalElements != null}">
                 <h4 class="font-italic">数据</h4>
                 <p class="mb-0" th:text="'共 ' + ${totalElements} + ' 篇日志'"></p>
                 <br>
@@ -174,6 +173,19 @@
                 next: i18N.next,
             },
         })
+
+        // 自动登陆
+        if (login()) {
+            $.ajax({
+                url: '/user/info',
+                type: 'GET',
+                success: function (data) {
+                    if (data.status == 0) {
+                        blog_header.login = data.username;
+                    }
+                }
+            })
+        }
     </script>
 </section>
 </body>

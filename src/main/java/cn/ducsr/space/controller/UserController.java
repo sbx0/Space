@@ -42,30 +42,33 @@ public class UserController extends BaseController {
         if (size == null) size = 10;
         // 分页查询
         Page<Article> articlePage = articleService.findByUser(id, page - 1, size);
-        // 取出文章列表
-        List<Article> articles = articleService.filter(articlePage.getContent());
-        // 当页数大于总页数时，查询最后一页的数据
-        if (page > articlePage.getTotalPages()) {
-            articlePage = articleService.findAll(articlePage.getTotalPages() - 1, size, 0);
-            articles = articleService.filter(articlePage.getContent());
-        }
-        // 将数据返回到页面
-        map.put("articles", articles);
-        map.put("size", articlePage.getPageable().getPageSize());
-        map.put("page", articlePage.getPageable().getPageNumber() + 1);
-        map.put("totalPages", articlePage.getTotalPages());
-        map.put("totalElements", articlePage.getTotalElements());
-        // 判断上下页
-        if (page + 1 <= articlePage.getTotalPages()) map.put("next_page", page + 1);
-        if (page - 1 > 0) map.put("prev_page", page - 1);
-        if (page - 1 > articlePage.getTotalPages()) map.put("prev_page", null);
         User user = userService.findById(id);
-        if (user == null) {
-            user = new User();
-            user.setName("该用户不存在");
+        if (articlePage != null) {
+            // 取出文章列表
+            List<Article> articles = articleService.filter(articlePage.getContent());
+            // 当页数大于总页数时，查询最后一页的数据
+            if (page > articlePage.getTotalPages()) {
+                articlePage = articleService.findAll(articlePage.getTotalPages() - 1, size, 0);
+                articles = articleService.filter(articlePage.getContent());
+            }
+            // 将数据返回到页面
+            map.put("articles", articles);
+            map.put("size", articlePage.getPageable().getPageSize());
+            map.put("page", articlePage.getPageable().getPageNumber() + 1);
+            map.put("totalPages", articlePage.getTotalPages());
+            map.put("totalElements", articlePage.getTotalElements());
+            // 判断上下页
+            if (page + 1 <= articlePage.getTotalPages()) map.put("next_page", page + 1);
+            if (page - 1 > 0) map.put("prev_page", page - 1);
+            if (page - 1 > articlePage.getTotalPages()) map.put("prev_page", null);
+            if (user == null) {
+                user = new User();
+                user.setName("该用户不存在");
+            }
+        } else {
+            map.put("articles", null);
         }
         map.put("user", user);
-
         return "user";
     }
 
