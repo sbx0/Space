@@ -40,7 +40,10 @@ function login() {
             if (status == 0) {
                 isLogin = true;
                 console.log("Login success.");
+            } else {
+                console.log("no user.")
             }
+
         },
     })
     if (isLogin) return true;
@@ -203,6 +206,7 @@ var blog_about = new Vue({
     data: {
         about: i18N.about,
         about_content: i18N.about_content,
+        isAuthority: false,
     }
 })
 

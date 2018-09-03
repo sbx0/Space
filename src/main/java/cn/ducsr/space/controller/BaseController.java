@@ -6,5 +6,5 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 public class BaseController {
     // 为了返回json
     ObjectMapper mapper = new ObjectMapper();
-    ObjectNode objectNode = mapper.createObjectNode();
+    ObjectNode objectNode;
 }

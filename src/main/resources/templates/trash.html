@@ -56,7 +56,7 @@
                     <span th:text="${#dates.format(article?.time,'yyyy-MM-dd HH:mm')}"></span>
                 </p>
                 <div th:utext="${article?.content}"></div>
-                <a th:href="${article?.id}" class="continue-read btn btn-light">
+                <a th:id="${article?.id}" onclick="recover(this.id)" class="continue-read btn btn-light">
                     申请恢复
                 </a>
             </div>
@@ -155,38 +155,6 @@
 <script th:src="@{~/js/messenger-theme-flat.js}"></script>
 <script th:src="@{~/js/i18N_zh_CN.js}"></script>
 <script th:src="@{~/js/base.js}"></script>
-<section>
-    <script>
-        // 跳页
-        function jump_page() {
-            var page = $("#page").val()
-            var size = $("#size").val()
-            var url = "trash?page=" + page + "&size=" + size
-            location.replace(url)
-        }
-
-        // 上一页 下一页
-        new Vue({
-            el: '#list-article',
-            data: {
-                prev: i18N.prev,
-                next: i18N.next,
-            },
-        })
-
-        // 自动登陆
-        if (login()) {
-            $.ajax({
-                url: '/user/info',
-                type: 'GET',
-                success: function (data) {
-                    if (data.status == 0) {
-                        blog_header.login = data.username;
-                    }
-                }
-            })
-        }
-    </script>
-</section>
+<script th:src="@{~/js/trash.js}"></script>
 </body>
 </html>

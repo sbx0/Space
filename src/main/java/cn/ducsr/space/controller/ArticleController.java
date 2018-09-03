@@ -28,6 +28,32 @@ public class ArticleController extends BaseController {
     private UserService userService;
 
     /**
+     * 恢复文章
+     *
+     * @param id
+     * @param request
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/recover", method = RequestMethod.GET)
+    public ObjectNode recover(Integer id, HttpServletRequest request) {
+        objectNode = mapper.createObjectNode();
+        User user = userService.getCookieUser(request);
+        if (user == null) objectNode.put("status", 1);
+        Article article = articleService.findById(id, 1);
+        if (userService.checkAuthority(user, article.getAuthor().getId(), 0)) {
+            try {
+                article.setTop(0);
+                articleService.save(article);
+                objectNode.put("status", 0);
+            } catch (Exception e) {
+                objectNode.put("status", 1);
+            }
+        }
+        return objectNode;
+    }
+
+    /**
      * 回收站
      *
      * @param page    页码
@@ -80,6 +106,7 @@ public class ArticleController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/delete", method = RequestMethod.GET)
     public ObjectNode delete(HttpServletRequest request, Integer id, Integer type) {
+        objectNode = mapper.createObjectNode();
         objectNode.put("status", "1");
         User user = userService.getCookieUser(request);
         Article article = articleService.findById(id, 1);
@@ -123,6 +150,7 @@ public class ArticleController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/removeTop", method = RequestMethod.GET)
     public ObjectNode removeTop(HttpServletRequest request, Integer id) {
+        objectNode = mapper.createObjectNode();
         User user = userService.getCookieUser(request);
         Article article = articleService.findById(id, 1);
         // 判断权限
@@ -146,6 +174,7 @@ public class ArticleController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/setTop", method = RequestMethod.GET)
     public ObjectNode setTop(HttpServletRequest request, Integer id) {
+        objectNode = mapper.createObjectNode();
         User user = userService.getCookieUser(request);
         Article article = articleService.findById(id, 1);
         // 判断权限
@@ -196,6 +225,7 @@ public class ArticleController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/post", method = RequestMethod.POST)
     public ObjectNode post(HttpServletRequest request, Article article) {
+        objectNode = mapper.createObjectNode();
         User user = userService.getCookieUser(request);
         // 检测是否为空
         if (BaseService.checkNullStr(article.getTitle()) || BaseService.checkNullStr(article.getContent())) {
@@ -280,8 +310,11 @@ public class ArticleController extends BaseController {
     @RequestMapping(value = "/index", method = RequestMethod.GET)
     public List index(Integer page, Integer size) {
         Page<Article> articlePage = articleService.findAll(page - 1, size, 0);
-        List<Article> articles = articleService.filter(articlePage.getContent());
-        return articles;
+        if (articlePage != null) {
+            List<Article> articles = articleService.filter(articlePage.getContent());
+            return articles;
+        } else
+            return null;
     }
 
     /**
@@ -294,6 +327,8 @@ public class ArticleController extends BaseController {
      */
     @RequestMapping(value = "/list")
     public String list(Map<String, Object> map, Integer page, Integer size) {
+        if (page == null) page = 1;
+        if (size == null) size = 10;
         // 分页查询
         Page<Article> articlePage = articleService.findAll(page - 1, size, 0);
         if (articlePage != null) {
