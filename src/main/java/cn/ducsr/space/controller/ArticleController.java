@@ -38,10 +38,6 @@ public class ArticleController extends BaseController {
      */
     @RequestMapping(value = "/checkPassword", method = RequestMethod.POST)
     public String checkPassword(Integer id, String password, Map<String, Object> map, HttpServletRequest request) {
-        User user = userService.getCookieUser(request);
-        if (user == null) {
-            return "error";
-        }
         if (BaseService.checkNullStr(password)) {
             return "error";
         }
