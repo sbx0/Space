@@ -48,6 +48,8 @@
                     <input type="text" class="form-control" id="title" name="title" th:value="${article.title}">
                 </div>
 
+                <input type="hidden" class="form-control" id="id" name="id" th:value="${article.id}">
+
                 <input type="hidden" class="form-control" id="content" name="content" th:value="${article.content}">
 
                 <div id="editor" class="form-group"></div>
@@ -128,7 +130,7 @@
 
             <div class="modal-body">
                 <form id="add_password_form" class="mt-3">
-                    <input id="id" name="id" type="hidden" th:value="${article.id}">
+                    <input name="id" type="hidden" th:value="${article.id}">
                     <div class="form-group">
                         <input type="text" class="form-control" id="password" name="password" placeholder="密码">
                     </div>
