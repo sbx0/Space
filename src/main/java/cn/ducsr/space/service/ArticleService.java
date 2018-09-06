@@ -229,7 +229,8 @@ public class ArticleService extends BaseService {
         List<Article> articles = new ArrayList();
         for (int i = 0; i < articleList.size(); i++) {
             Article article = filter(articleList.get(i));
-            articles.add(article);
+            if (article.getPassword() == null)
+                articles.add(article);
         }
         return articles;
     }
@@ -241,6 +242,7 @@ public class ArticleService extends BaseService {
      * @return 文章
      */
     public Article filter(Article article) {
+
         Article simpleArticle = new Article();
         User simpleUser = new User();
 
@@ -250,8 +252,15 @@ public class ArticleService extends BaseService {
         simpleArticle.setLikes(article.getLikes());
         simpleArticle.setComments(article.getComments());
         simpleArticle.setViews(article.getViews());
-        simpleArticle.setContent(article.getContent());
-        simpleArticle.setTitle(article.getTitle());
+
+        if (article.getPassword() == null) {
+            simpleArticle.setContent(article.getContent());
+            simpleArticle.setTitle(article.getTitle());
+        } else {
+            simpleArticle.setContent("请输入密码后查看");
+            simpleArticle.setTitle("私密文章");
+        }
+
         simpleArticle.setTime(article.getTime());
         simpleArticle.setLastChangeTime(article.getLastChangeTime());
 

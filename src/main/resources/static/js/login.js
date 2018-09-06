@@ -1,3 +1,4 @@
+// 人机检测
 function logout() {
     $.ajax({
         type: "get",
@@ -19,6 +20,7 @@ var login_div = new Vue({
         website: '空间站',
         username: '用户名',
         password: '密码',
+        code: '邀请码（可不填）',
         logout: '退出登陆',
         post: '发布博文',
         home: '用户首页',

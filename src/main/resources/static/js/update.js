@@ -18,6 +18,24 @@ editor.customConfig.zIndex = 1;
 editor.create();
 editor.txt.html($("#content").val());
 
+// 添加密码
+function addPassword() {
+    $.ajax({
+        url: '../article/addPassword',
+        data: $("#add_password_form").serialize(),
+        type: 'POST',
+        success: function (data) {
+            if (data.status == 0) {
+                alert("设置成功");
+                location.replace(location.href)
+            }
+            else
+                alert("无权限");
+        }
+    })
+}
+
+// 设置置顶
 function setTop() {
     var id = $("#id").val()
     $.ajax({

@@ -28,6 +28,68 @@ public class ArticleController extends BaseController {
     private UserService userService;
 
     /**
+     * 检查密码
+     *
+     * @param id
+     * @param password
+     * @param map
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/checkPassword", method = RequestMethod.POST)
+    public String checkPassword(Integer id, String password, Map<String, Object> map, HttpServletRequest request) {
+        User user = userService.getCookieUser(request);
+        if (user == null) {
+            return "error";
+        }
+        if (BaseService.checkNullStr(password)) {
+            return "error";
+        }
+        Article article = articleService.findById(id, 1);
+        password = BaseService.getHash(password.trim(), "MD5");
+        if (password.equals(article.getPassword())) {
+            if (article == null) return "error";
+            map.put("article", article);
+            return "article";
+        }
+        return "error";
+    }
+
+    /**
+     * 设置密码
+     *
+     * @param id
+     * @param password
+     * @param request
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/addPassword", method = RequestMethod.POST)
+    public ObjectNode addPassword(Integer id, String password, HttpServletRequest request) {
+        objectNode = mapper.createObjectNode();
+        User user = userService.getCookieUser(request);
+        if (user == null) {
+            objectNode.put("status", 1);
+            return objectNode;
+        }
+        if (BaseService.checkNullStr(password)) {
+            objectNode.put("status", 1);
+            return objectNode;
+        }
+        Article article = articleService.findById(id, 1);
+        if (userService.checkAuthority(user, article.getAuthor().getId(), 0)) {
+            article.setPassword(UserService.getHash(password.trim(), "MD5"));
+            try {
+                articleService.save(article);
+                objectNode.put("status", 0);
+            } catch (Exception e) {
+                objectNode.put("status", 1);
+            }
+        }
+        return objectNode;
+    }
+
+    /**
      * 恢复文章
      *
      * @param id
@@ -39,7 +101,10 @@ public class ArticleController extends BaseController {
     public ObjectNode recover(Integer id, HttpServletRequest request) {
         objectNode = mapper.createObjectNode();
         User user = userService.getCookieUser(request);
-        if (user == null) objectNode.put("status", 1);
+        if (user == null) {
+            objectNode.put("status", 1);
+            return objectNode;
+        }
         Article article = articleService.findById(id, 1);
         if (userService.checkAuthority(user, article.getAuthor().getId(), 0)) {
             try {
@@ -284,7 +349,14 @@ public class ArticleController extends BaseController {
         else
             article = articleService.findById(id, 0);
         if (article == null) return "error";
-        map.put("article", article);
+        if (article.getPassword() == null || article.getPassword().equals(""))
+            map.put("article", article);
+        else {
+            article.setTitle("私密博文");
+            article.setContent("请输入密码后查看");
+            map.put("article", article);
+            map.put("password", 1);
+        }
         return "article";
     }
 

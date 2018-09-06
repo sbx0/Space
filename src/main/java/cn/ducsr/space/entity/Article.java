@@ -19,7 +19,7 @@ public class Article {
     @Column(nullable = false, length = 9999)
     private String content; // 内容
     private Date lastChangeTime; // 上次修改时间
-    @Column(length = 30)
+    @Column(length = 40)
     private String password; // 密码
     @Column(nullable = false)
     private Integer views; // 查看数

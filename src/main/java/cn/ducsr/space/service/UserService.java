@@ -52,11 +52,14 @@ public class UserService extends BaseService {
      * @return
      */
     @Transactional
-    public User login(User user) {
+    public User login(User user, String code) {
         // 密码加密
         user.setPassword(getHash(user.getPassword(), "MD5"));
         // 用户不存在 直接注册并登陆
         if (!existByName(user.getName())) {
+            // 邀请码为空注册失败
+            if (!code.equals("IsPantuPaQiuNa"))
+                return null;
             // 密码加密
             user.setRegisterTime(new Date());
             user.setAuthority(1);

@@ -48,6 +48,7 @@
                     该文章已被隐藏
                 </strong>
             </h4>
+
             <h2 class="blog-post-title" th:text="${article.title}"></h2>
             <p class="blog-post-meta">
                 <a th:href="'../user/'+${article.author.id}+'?page=1&size=10'" th:text="${article.author.name}"></a>
@@ -56,6 +57,14 @@
             <div>
                 <div th:utext="${article.content}"></div>
             </div>
+
+            <form th:if="${password == 1}" class="mt-3" action="/article/checkPassword" method="post">
+                <input id="id" name="id" type="hidden" th:value="${article.id}">
+                <div class="form-group">
+                    <input type="text" class="form-control" id="password" name="password" placeholder="密码">
+                </div>
+                <button type="submit" class="btn btn-primary">提交</button>
+            </form>
 
             <nav class="blog-pagination">
                 <a class="btn btn-outline-secondary disabled" href="#">{{prev}}</a>
@@ -91,7 +100,6 @@
                 </p>
             </div>
             <div class="p-3 mb-3 bg-light rounded">
-                <input id="id" type="hidden" th:value="${article.id}">
                 <h4 class="font-italic">管理</h4>
                 <a th:href="'../article/updateOne?id='+${article.id}">修改</a>
                 <a onclick="del()" href="javascript:void(0)">删除</a>
