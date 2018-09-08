@@ -82,7 +82,6 @@ public class UserController extends BaseController {
     @RequestMapping(value = "/info", method = RequestMethod.GET)
     public ObjectNode info(HttpServletRequest request) {
         User user = userService.getCookieUser(request);
-        objectNode = mapper.createObjectNode();
         if (user != null) {
             try {
                 // 用户信息
@@ -112,7 +111,6 @@ public class UserController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
     public ObjectNode logout(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
-        objectNode = mapper.createObjectNode();
         try {
             // 清除session
             session.removeAttribute("user");
@@ -140,7 +138,6 @@ public class UserController extends BaseController {
     @RequestMapping(value = "/cookie", method = RequestMethod.GET)
     public ObjectNode cookie(HttpServletRequest request) {
         User user = userService.getCookieUser(request);
-        objectNode = mapper.createObjectNode();
         if (user != null) {
             // 操作状态保存
             objectNode.put("status", "0");
@@ -162,8 +159,7 @@ public class UserController extends BaseController {
      */
     @ResponseBody
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public ObjectNode login(HttpServletRequest request, HttpServletResponse response, HttpSession session, User user, String code) {
-        objectNode = mapper.createObjectNode();
+    public ObjectNode login(User user, String code, HttpServletRequest request, HttpServletResponse response, HttpSession session) {
         // 判断是否为空
         if (BaseService.checkNullStr(user.getName()) || BaseService.checkNullStr(user.getPassword())) {
             // 操作状态保存
@@ -171,7 +167,7 @@ public class UserController extends BaseController {
             return objectNode;
         }
         // 调用登陆，若返回为null，则为密码错误
-        user = userService.login(user,code);
+        user = userService.login(user, code);
         // 登陆成功
         if (user != null) {
             // 创建Cookie

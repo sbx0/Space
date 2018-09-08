@@ -28,54 +28,69 @@ public class ArticleController extends BaseController {
     private UserService userService;
 
     /**
-     * 检查密码
+     * 密码文章验证密码
      *
-     * @param id
-     * @param password
+     * @param id       文章ID
+     * @param password 输入的密码
      * @param map
-     * @param request
-     * @return
+     * @return 对应页面
      */
     @RequestMapping(value = "/checkPassword", method = RequestMethod.POST)
-    public String checkPassword(Integer id, String password, Map<String, Object> map, HttpServletRequest request) {
-        if (BaseService.checkNullStr(password)) {
+    public String checkPassword(Integer id, String password, Map<String, Object> map) {
+        // 判断密码是否为空字符串
+        if (BaseService.checkNullStr(password))
             return "error";
-        }
+        // 获取文章信息
         Article article = articleService.findById(id, 1);
+        // 文章不存在
+        if (article == null) return "error";
+        // 加密密码
         password = BaseService.getHash(password.trim(), "MD5");
+        // 验证密码是否正确
         if (password.equals(article.getPassword())) {
-            if (article == null) return "error";
             map.put("article", article);
             return "article";
+        } else {
+            article.setTitle("私密文章");
+            article.setContent("密码错误，请确认密码是否正确");
+            map.put("article", article);
+            // 页面根据此字段判断是否该文章是否需要输入密码
+            map.put("password", 1);
+            return "article";
         }
-        return "error";
     }
 
     /**
-     * 设置密码
+     * 为文章设置密码
      *
-     * @param id
-     * @param password
+     * @param id       ID
+     * @param password 密码
      * @param request
-     * @return
+     * @return JSON
      */
     @ResponseBody
     @RequestMapping(value = "/addPassword", method = RequestMethod.POST)
     public ObjectNode addPassword(Integer id, String password, HttpServletRequest request) {
-        objectNode = mapper.createObjectNode();
+        // 从cookie中获取登陆用户信息
         User user = userService.getCookieUser(request);
+        // 未登录
         if (user == null) {
             objectNode.put("status", 1);
             return objectNode;
         }
+        // 密码为空
         if (BaseService.checkNullStr(password)) {
             objectNode.put("status", 1);
             return objectNode;
         }
+        // 获取文章信息
         Article article = articleService.findById(id, 1);
+        // 判断用户是否有权限操作
         if (userService.checkAuthority(user, article.getAuthor().getId(), 0)) {
+            // 加密密码
             article.setPassword(UserService.getHash(password.trim(), "MD5"));
             try {
+                // 将操作保存到数据库中
                 articleService.save(article);
                 objectNode.put("status", 0);
             } catch (Exception e) {
@@ -86,25 +101,30 @@ public class ArticleController extends BaseController {
     }
 
     /**
-     * 恢复文章
+     * 从回收站恢复文章
      *
-     * @param id
+     * @param id      ID
      * @param request
-     * @return
+     * @return JSON
      */
     @ResponseBody
     @RequestMapping(value = "/recover", method = RequestMethod.GET)
     public ObjectNode recover(Integer id, HttpServletRequest request) {
-        objectNode = mapper.createObjectNode();
+        // 从cookie中获取登陆用户信息
         User user = userService.getCookieUser(request);
+        // 未登录
         if (user == null) {
             objectNode.put("status", 1);
             return objectNode;
         }
+        // 获取文章信息
         Article article = articleService.findById(id, 1);
+        // 判断用户是否有权限操作
         if (userService.checkAuthority(user, article.getAuthor().getId(), 0)) {
+            // 恢复文章
+            article.setTop(0);
             try {
-                article.setTop(0);
+                // 操作保存到数据库中
                 articleService.save(article);
                 objectNode.put("status", 0);
             } catch (Exception e) {
@@ -119,14 +139,15 @@ public class ArticleController extends BaseController {
      *
      * @param page    页码
      * @param size    条数
-     * @param map
      * @param request
-     * @return
+     * @return 页面
      */
     @RequestMapping(value = "/trash", method = RequestMethod.GET)
-    public String trash(Integer page, Integer size, Map<String, Object> map, HttpServletRequest request) {
+    public String trash(Integer page, Integer size, HttpServletRequest request, Map<String, Object> map) {
+        // 从cookie中获取登陆用户信息
         User user = userService.getCookieUser(request);
-        if (user == null) return "error";
+        // 未登录
+        if (user == null) return "login";
         int id = user.getId();
         // 分页查询
         if (page == null) page = 1;
@@ -157,7 +178,7 @@ public class ArticleController extends BaseController {
     }
 
     /**
-     * 删除/隐藏文章
+     * 删除 / 隐藏文章
      *
      * @param request
      * @param id      文章ID
@@ -166,10 +187,10 @@ public class ArticleController extends BaseController {
      */
     @ResponseBody
     @RequestMapping(value = "/delete", method = RequestMethod.GET)
-    public ObjectNode delete(HttpServletRequest request, Integer id, Integer type) {
-        objectNode = mapper.createObjectNode();
-        objectNode.put("status", "1");
+    public ObjectNode delete(Integer id, Integer type, HttpServletRequest request) {
+        // 从cookie中获取登陆用户
         User user = userService.getCookieUser(request);
+        // 查询文章信息
         Article article = articleService.findById(id, 1);
         switch (type) {
             // 不是真的删除，只是隐藏文章
@@ -211,13 +232,15 @@ public class ArticleController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/removeTop", method = RequestMethod.GET)
     public ObjectNode removeTop(HttpServletRequest request, Integer id) {
-        objectNode = mapper.createObjectNode();
+        // 从cookie中获取登陆用户
         User user = userService.getCookieUser(request);
+        // 查询文章信息
         Article article = articleService.findById(id, 1);
         // 判断权限
         if (user.getAuthority() > 0)
             objectNode.put("status", "1");
         else {
+            // 移除置顶
             article.setTop(0);
             articleService.save(article);
             objectNode.put("status", "0");
@@ -235,13 +258,15 @@ public class ArticleController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/setTop", method = RequestMethod.GET)
     public ObjectNode setTop(HttpServletRequest request, Integer id) {
-        objectNode = mapper.createObjectNode();
+        // 从cookie中获取登陆用户
         User user = userService.getCookieUser(request);
+        // 查询文章信息
         Article article = articleService.findById(id, 1);
         // 判断权限
         if (user.getAuthority() > 0)
             objectNode.put("status", "1");
         else {
+            // 设置置顶
             if (articleService.setTop(article))
                 objectNode.put("status", "0");
             else
@@ -259,19 +284,21 @@ public class ArticleController extends BaseController {
      */
     @RequestMapping(value = "/updateOne", method = RequestMethod.GET)
     public String updateOne(HttpServletRequest request, Map<String, Object> map, Integer id) {
+        // 从cookie中获取登陆用户
         User user = userService.getCookieUser(request);
         Article article;
         if (user != null) {
+            // 普通用户无法修改隐藏文章
             if (user.getAuthority() == 0)
                 article = articleService.findById(id, 1);
             else
                 article = articleService.findById(id, 0);
             // 判断权限
             if (!userService.checkAuthority(user, article.getAuthor().getId(), 0))
-                return "error";
+                return "login";
             map.put("article", article);
         } else {
-            return "error";
+            return "login";
         }
         return "update";
     }
@@ -286,7 +313,7 @@ public class ArticleController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/post", method = RequestMethod.POST)
     public ObjectNode post(HttpServletRequest request, Article article) {
-        objectNode = mapper.createObjectNode();
+        // 从cookie中获取登陆用户
         User user = userService.getCookieUser(request);
         // 检测是否为空
         if (BaseService.checkNullStr(article.getTitle()) || BaseService.checkNullStr(article.getContent())) {
@@ -338,8 +365,10 @@ public class ArticleController extends BaseController {
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public String one(HttpServletRequest request, Map<String, Object> map, @PathVariable("id") Integer id) {
+        // 从cookie中获取登陆用户
         User user = userService.getCookieUser(request);
         Article article;
+        // 用户无法查看被隐藏的文章
         if (user != null && user.getAuthority() == 0)
             article = articleService.findById(id, 1);
         else
@@ -348,7 +377,7 @@ public class ArticleController extends BaseController {
         if (article.getPassword() == null || article.getPassword().equals(""))
             map.put("article", article);
         else {
-            article.setTitle("私密博文");
+            article.setTitle("私密文章");
             article.setContent("请输入密码后查看");
             map.put("article", article);
             map.put("password", 1);
