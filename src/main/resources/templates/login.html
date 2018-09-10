@@ -3,8 +3,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="description" content="blog">
+    <meta name="author" content="sbx0">
     <link rel="icon" th:href="@{~/img/favicon.png}">
 
     <title>登陆</title>
@@ -21,12 +21,13 @@
 
 <body>
 <div id="login_div" class="form-signin">
-    <div v-if="info_seen">
+
+    <div v-if="info_seen" v-cloak>
         <div class="my-3 p-3 bg-white rounded shadow-sm">
             <h5 class="border-bottom border-gray pb-2 mb-0">已登录</h5>
             <div class="media text-muted pt-3">
                 <p class="media-body pb-3 mb-0 lh-125 border-bottom border-gray">
-                    <strong class="d-block text-gray-dark">@{{info_username}}</strong>
+                    <strong class="d-block text-gray-dark">{{info_username}}</strong>
                     等级：{{info_level}}<br>
                     经验：{{info_exp}}<br>
                     积分：{{info_integral}}
@@ -52,7 +53,7 @@
             </div>
         </div>
     </div>
-    <form v-if="form_seen" id="loginForm" action="/user/login" method="post">
+    <form v-if="form_seen" id="loginForm" action="/user/login" method="post" v-cloak>
         <h2 class="h2 mb-3 font-weight-normal">{{website}}</h2>
         <label for="username" class="sr-only">{{username}}</label>
         <input type="text" id="username" name="name" class="form-control" :placeholder="username" required autofocus>

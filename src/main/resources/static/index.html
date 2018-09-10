@@ -3,8 +3,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="description" content="blog">
+    <meta name="author" content="sbx0">
     <link rel="icon" href="img/favicon.png">
 
     <title>空间站</title>
@@ -24,7 +24,7 @@
 
 <div class="container">
     <header id="blog-header" class="blog-header py-3">
-        <div class="row flex-nowrap justify-content-between align-items-center">
+        <div class="row flex-nowrap justify-content-between align-items-center" v-cloak>
             <div class="col-4 pt-1">
                 <a class="blog-header-logo text-dark" href="index.html">{{space}}</a>
             </div>
@@ -43,14 +43,17 @@
 
     <div id="top-article">
         <div class="row mb-2">
-            <article-top v-for="article in articles" v-bind:article="article" v-bind:key="article.id"></article-top>
+            <transition name="fade">
+                <article-top v-for="article in articles" v-bind:article="article" v-bind:key="article.id"></article-top>
+            </transition>
         </div>
     </div>
 </div>
 
 <main id="list-article" role="main" class="container">
     <div class="row">
-        <div class="col-md-8 blog-main">
+
+        <div class="col-md-8 blog-main" v-cloak>
             <h4 class="pb-2 mb-3 font-italic border-bottom">
                 航行日志
             </h4>
@@ -63,7 +66,7 @@
 
         </div>
 
-        <aside id="blog-about" class="col-md-4 blog-sidebar">
+        <aside id="blog-about" class="col-md-4 blog-sidebar" v-cloak>
             <div class="p-3 mb-3 bg-light rounded">
                 <h4 class="font-italic">{{about}}</h4>
                 <p class="mb-0"><span v-html="about_content"></span></p>
@@ -101,7 +104,7 @@
 
 </main>
 
-<footer id="blog-footer" class="blog-footer">
+<footer id="blog-footer" class="blog-footer" v-cloak>
     <p>
         <span v-html="copyright"></span>
     </p>

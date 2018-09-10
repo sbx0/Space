@@ -14,12 +14,12 @@ if (login()) {
 // 文章列表组件
 Vue.component('article-list', {
     props: ['article'],
-    template: '<div class="blog-post">' +
+    template: '<transition name="fade"><div class="blog-post">' +
         '<h2 class="blog-post-title"><a :href="article.id" class="text-dark">{{article.title}}</a></h2>' +
         '<p class="blog-post-meta"><a :href ="article.author.id">{{article.author.name}}</a>&nbsp;{{article.time}}</p>' +
         '<div v-html="article.content"></div>' +
         '<a class="continue-read btn btn-light" :href ="article.id">' +
-        i18N.continue + i18N.read + '</a>',
+        i18N.continue + i18N.read + '</a></transition>',
 })
 
 // 文章列表
@@ -47,14 +47,14 @@ var list_article = new Vue({
 // 置顶文章组件
 Vue.component('article-top', {
     props: ['article'],
-    template: '<div class="col-md-6"><a :href="article.id">' +
+    template: '<transition name="fade"><div class="col-md-6"><a :href="article.id">' +
         '<div class="card flex-md-row mb-2 box-shadow-lg h-md-250">' +
         '<div class="card-body d-flex flex-column align-items-start">' +
         '<strong class="d-inline-block mb-2 text-info">' + i18N.top + '</strong>' +
         '<h5 class="mb-0">' +
         '<a class="text-dark" :href="article.id">{{article.title}}</a>' +
         '</h5>' +
-        '</div></a></div>',
+        '</div></a></div></transition>',
 })
 
 // 置顶文章

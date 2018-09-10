@@ -3,8 +3,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="description" content="blog">
+    <meta name="author" content="sbx0">
     <link rel="icon" th:href="@{~/img/favicon.png}">
 
     <title>发布博文</title>
@@ -27,7 +27,7 @@
 
 <div class="container">
     <header id="blog-header" class="blog-header py-3">
-        <div class="row flex-nowrap justify-content-between align-items-center">
+        <div class="row flex-nowrap justify-content-between align-items-center" v-cloak>
             <div class="col-4 pt-1">
                 <a class="blog-header-logo text-dark" th:href="@{~/index.html}">{{space}}</a>
             </div>
@@ -47,13 +47,9 @@
                     <label for="title">标题</label>
                     <input type="text" class="form-control" id="title" name="title" th:value="${article.title}">
                 </div>
-
                 <input type="hidden" class="form-control" id="id" name="id" th:value="${article.id}">
-
                 <input type="hidden" class="form-control" id="content" name="content" th:value="${article.content}">
-
                 <div id="editor" class="form-group"></div>
-
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#passwordModal">
                     密码
                 </button>
@@ -63,12 +59,11 @@
                 <button th:if="${article.top > 0}" onclick="moveTop()" type="button" class="btn btn-secondary">
                     取消置顶
                 </button>
-
                 <button type="button" class="btn btn-primary float-right" onclick="post()">发布博文</button>
             </form>
         </div>
 
-        <aside id="blog-about" class="col-md-4 blog-sidebar">
+        <aside id="blog-about" class="col-md-4 blog-sidebar" v-cloak>
             <div class="p-3 mb-3 bg-light rounded">
                 <h4 class="font-italic">{{about}}</h4>
                 <p class="mb-0"><span v-html="about_content"></span></p>
@@ -106,7 +101,7 @@
 
 </main>
 
-<footer id="blog-footer" class="blog-footer">
+<footer id="blog-footer" class="blog-footer" v-cloak>
     <p>
         <span v-html="copyright"></span>
     </p>

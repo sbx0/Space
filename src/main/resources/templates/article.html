@@ -3,8 +3,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="description" content="blog">
+    <meta name="author" content="sbx0">
     <link rel="icon" th:href="@{~/img/favicon.png}">
 
     <title>文章详情</title>
@@ -25,7 +25,7 @@
 
 <div class="container">
     <header id="blog-header" class="blog-header py-3">
-        <div class="row flex-nowrap justify-content-between align-items-center">
+        <div class="row flex-nowrap justify-content-between align-items-center" v-cloak>
             <div class="col-4 pt-1">
                 <a class="blog-header-logo text-dark" th:href="@{~/index.html}">{{space}}</a>
             </div>
@@ -66,12 +66,12 @@
                 <button type="submit" class="btn btn-primary">提交</button>
             </form>
 
-            <nav class="blog-pagination">
+            <nav class="blog-pagination" v-cloak>
                 <a class="btn btn-outline-secondary disabled" href="#">{{prev}}</a>
                 <a class="btn btn-outline-primary float-right" href="#">{{next}}</a>
             </nav>
 
-            <div class="row">
+            <div class="row" v-cloak>
                 <div class="col-sm-12">
                     <div>
                         <h4>{{comment}}</h4>
@@ -89,7 +89,7 @@
             </div>
         </div>
 
-        <aside id="blog-about" class="col-md-4 blog-sidebar">
+        <aside id="blog-about" class="col-md-4 blog-sidebar" v-cloak>
             <div th:if="${article.lastChangeTime != null}" class="p-3 mb-3 bg-light rounded">
                 <h4 class="font-italic">改动</h4>
                 <p class="text-danger">
@@ -116,7 +116,7 @@
 
 </main>
 
-<footer id="blog-footer" class="blog-footer">
+<footer id="blog-footer" class="blog-footer" v-cloak>
     <p>
         <span v-html="copyright"></span>
     </p>
