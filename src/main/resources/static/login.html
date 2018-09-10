@@ -26,7 +26,7 @@
             <h5 class="border-bottom border-gray pb-2 mb-0">已登录</h5>
             <div class="media text-muted pt-3">
                 <p class="media-body pb-3 mb-0 lh-125 border-bottom border-gray">
-                    <strong class="d-block text-gray-dark">@{{info_username}}</strong>
+                    <strong class="d-block text-gray-dark">{{info_username}}</strong>
                     等级：{{info_level}}<br>
                     经验：{{info_exp}}<br>
                     积分：{{info_integral}}
@@ -34,19 +34,19 @@
             </div>
             <div class="media text-muted pt-3">
                 <p class="media-body pb-3 mb-0 lh-125 border-bottom border-gray">
-                    <a href="post.html">
+                    <a href="post.html" class="btn btn-outline-primary" role="button">
                         {{post}}
                     </a>
-                    <a :href="user_home">
+                    <a :href="user_home" class="btn btn-outline-primary" role="button">
                         {{home}}
                     </a>
-                    <a href="/article/trash">
+                    <a href="/article/trash" class="btn btn-outline-dark" role="button">
                         回收站
                     </a>
                 </p>
             </div>
             <div class="d-block text-right mt-3">
-                <a id="logout" href="javascript:void(0)" class="text-danger" onclick="logout()">
+                <a id="logout" href="javascript:void(0)" class="btn btn-danger" onclick="logout()">
                     {{logout}}
                 </a>
             </div>
@@ -68,6 +68,7 @@
             </label>
         </div>
         <button id="login" class="btn btn-md btn-primary btn-block" type="submit">登陆</button>
+        <a href="javascript:history.go(-1);" class="btn btn-secondary btn-block btn-md" role="button">返回</a>
         <small id="passwordHelpBlock" class="form-text text-muted">
             若您是第一次使用本站，登陆即注册。登陆有效期默认为30天。
         </small>

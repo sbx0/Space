@@ -104,7 +104,8 @@ function formate(data) {
         data[i].author.id = "../user/" + data[i].author.id + "?page=1&size=10";
         var d = new Date(data[i].time);
         var times = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + ' ' + d.getHours() + ':' + d.getMinutes();
-        data[i].time = times;
+        var time = Format(getDate(times.toString()), "yyyy-MM-dd HH:mm")
+        data[i].time = time;
     }
     return data
 }
