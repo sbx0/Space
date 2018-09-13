@@ -36,6 +36,10 @@ ol {
     }
 }
 
+.media-heading {
+    line-height: normal;
+}
+
 [v-cloak] {
     display: none;
 }

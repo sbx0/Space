@@ -50,16 +50,16 @@
                 <input type="hidden" class="form-control" id="id" name="id" th:value="${article.id}">
                 <input type="hidden" class="form-control" id="content" name="content" th:value="${article.content}">
                 <div id="editor" class="form-group"></div>
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#passwordModal">
+                <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#passwordModal">
                     密码
                 </button>
-                <button th:if="${article.top == 0}" onclick="setTop()" type="button" class="btn btn-secondary">
+                <button th:if="${article.top == 0}" onclick="setTop()" type="button" class="btn btn-sm btn-secondary">
                     置顶
                 </button>
-                <button th:if="${article.top > 0}" onclick="moveTop()" type="button" class="btn btn-secondary">
+                <button th:if="${article.top > 0}" onclick="moveTop()" type="button" class="btn btn-sm btn-secondary">
                     取消置顶
                 </button>
-                <button type="button" class="btn btn-primary float-right" onclick="post()">发布博文</button>
+                <button type="button" class="btn btn-sm btn-primary float-right" onclick="post()">发布博文</button>
             </form>
         </div>
 
@@ -132,8 +132,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">关闭</button>
-                <button onclick="addPassword()" type="button" class="btn btn-primary">提交</button>
+                <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">关闭</button>
+                <button onclick="addPassword()" type="button" class="btn btn-sm btn-primary">提交</button>
             </div>
 
 

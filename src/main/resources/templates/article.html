@@ -67,8 +67,8 @@
             </form>
 
             <nav class="blog-pagination" v-cloak>
-                <a class="btn btn-outline-secondary disabled" href="#">{{prev}}</a>
-                <a class="btn btn-outline-primary float-right" href="#">{{next}}</a>
+                <a class="btn btn-sm btn-outline-secondary" href="#">{{prev}}</a>
+                <a class="btn btn-sm btn-outline-primary float-right" href="#">{{next}}</a>
             </nav>
 
             <div class="row" v-cloak>
@@ -77,16 +77,41 @@
                         <h4>{{comment}}</h4>
                         <form>
                             <div class="form-group">
-                            <textarea class="form-control">
-                            </textarea>
+                                <label for="user_name">用户名</label>
+                                <input type="text" class="form-control" id="user_name" placeholder="无需登陆">
                             </div>
-                            <button class="btn btn-primary">
+                            <div class="form-group">
+                                <textarea class="form-control"></textarea>
+                            </div>
+                            <button class="btn btn-sm btn-primary">
                                 {{comment}}
                             </button>
                         </form>
                     </div>
                 </div>
             </div>
+
+            <div class="row" v-cloak>
+                <div class="col-sm-12">
+                    <div id="comment-div">
+                        <comment-list v-for="comment in comments"
+                                      v-bind:key="comment.id"
+                                      v-bind:comment="comment">
+                        </comment-list>
+                    </div>
+                    <div class="text-center" hidden>
+                        <div class="spinner">
+                            <div class="bounce1"></div>
+                            <div class="bounce2"></div>
+                            <div class="bounce3"></div>
+                        </div>
+                        <p>
+                            加载中
+                        </p>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
         <aside id="blog-about" class="col-md-4 blog-sidebar" v-cloak>
@@ -102,13 +127,14 @@
             <div class="p-3 mb-3 bg-light rounded">
                 <h4 class="font-italic">管理</h4>
                 <input id="id" type="hidden" th:value="${article.id}">
-                <a th:href="'../article/updateOne?id='+${article.id}" class="btn btn-outline-success" role="button">
+                <a th:href="'../article/updateOne?id='+${article.id}" class="btn btn-sm btn-outline-success"
+                   role="button">
                     修改
                 </a>
-                <a onclick="del()" href="javascript:void(0)" class="btn btn-outline-danger" role="button">
+                <a onclick="del()" href="javascript:void(0)" class="btn btn-sm btn-outline-danger" role="button">
                     删除
                 </a>
-                <a onclick="real_delete()" href="javascript:void(0)" class="btn btn-danger" role="button">
+                <a onclick="real_delete()" href="javascript:void(0)" class="btn btn-sm btn-danger" role="button">
                     真删除
                 </a>
             </div>
@@ -135,6 +161,7 @@
 <script src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js"></script>
 <script src="https://cdn.bootcss.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<!--<script src="https://vuejs.org/js/vue.js"></script>-->
 <script th:src="@{~/js/messenger.min.js}"></script>
 <script th:src="@{~/js/messenger-theme-flat.js}"></script>
 <script th:src="@{~/js/i18N_zh_CN.js}"></script>

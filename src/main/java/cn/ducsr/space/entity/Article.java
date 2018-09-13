@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.util.Date;
 
 /**
+ * 代码 1
  * 文章实体类
  */
 @Entity
@@ -146,4 +147,22 @@ public class Article {
     }
 
     // Set Get End
+
+    @Override
+    public String toString() {
+        return "Article{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", time=" + time +
+                ", content='" + content + '\'' +
+                ", lastChangeTime=" + lastChangeTime +
+                ", password='" + password + '\'' +
+                ", views=" + views +
+                ", comments=" + comments +
+                ", likes=" + likes +
+                ", dislikes=" + dislikes +
+                ", top=" + top +
+                ", author=" + author +
+                '}';
+    }
 }

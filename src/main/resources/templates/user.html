@@ -62,20 +62,20 @@
                     <span th:text="${#dates.format(article?.time,'yyyy-MM-dd HH:mm')}"></span>
                 </p>
                 <div th:utext="${article?.content}"></div>
-                <a th:href="${article?.id}" class="continue-read btn btn-light">
+                <a th:href="'../article/' + ${article?.id}" class="continue-read btn btn-light">
                     继续阅读
                 </a>
             </div>
 
             <nav class="blog-pagination text-center" v-cloak>
                 <a th:if="${prev_page != null}"
-                   th:href="'trash?page=' + ${prev_page} + '&size=' + ${size}"
+                   th:href="'?page=' + ${prev_page} + '&size=' + ${size}"
                    class="btn btn-outline-primary float-left">
                     {{prev}}
                 </a>
                 <a th:if="${page != null}" href="javascript:void(0)" th:text="${page} + '/' + ${totalPages}"></a>
                 <a th:if="${next_page != null}"
-                   th:href="'trash?page=' + ${next_page} + '&size=' + ${size}"
+                   th:href="'?page=' + ${next_page} + '&size=' + ${size}"
                    class="btn btn-outline-primary float-right">
                     {{next}}
                 </a>

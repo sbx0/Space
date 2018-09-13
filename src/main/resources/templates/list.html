@@ -64,14 +64,14 @@
 
             <nav class="blog-pagination text-center">
                 <a th:if="${prev_page != null}"
-                   th:href="'trash?page=' + ${prev_page} + '&size=' + ${size}"
-                   class="btn btn-outline-primary float-left">
+                   th:href="'?page=' + ${prev_page} + '&size=' + ${size}"
+                   class="btn btn-sm btn-outline-primary float-left">
                     {{prev}}
                 </a>
                 <a th:if="${page != null}" href="javascript:void(0)" th:text="${page} + '/' + ${totalPages}"></a>
                 <a th:if="${next_page != null}"
-                   th:href="'trash?page=' + ${next_page} + '&size=' + ${size}"
-                   class="btn btn-outline-primary float-right">
+                   th:href="'?page=' + ${next_page} + '&size=' + ${size}"
+                   class="btn btn-sm btn-outline-primary float-right">
                     {{next}}
                 </a>
             </nav>
@@ -98,7 +98,7 @@
                            th:max="100"
                            th:min="1">
                 </div>
-                <button class="btn btn-primary" onclick="javascript:jump_page();">跳页</button>
+                <button class="btn btn-sm btn-primary" onclick="javascript:jump_page();">跳页</button>
                 </form>
             </div>
 

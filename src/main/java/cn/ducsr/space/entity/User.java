@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.util.Date;
 
 /**
+ * 代码 2
  * 用户
  */
 @Entity
@@ -132,4 +133,21 @@ public class User {
     }
 
     // Set Get End
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", password='" + password + '\'' +
+                ", signature='" + signature + '\'' +
+                ", registerTime=" + registerTime +
+                ", birthday=" + birthday +
+                ", integral=" + integral +
+                ", authority=" + authority +
+                ", level=" + level +
+                ", exp=" + exp +
+                ", exp_max=" + exp_max +
+                '}';
+    }
 }

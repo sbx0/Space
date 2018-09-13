@@ -43,9 +43,7 @@
 
     <div id="top-article">
         <div class="row mb-2">
-            <transition name="fade">
-                <article-top v-for="article in articles" v-bind:article="article" v-bind:key="article.id"></article-top>
-            </transition>
+            <article-top v-for="article in articles" v-bind:article="article" v-bind:key="article.id"></article-top>
         </div>
     </div>
 </div>
@@ -61,7 +59,7 @@
             <article-list v-for="article in articles" v-bind:article="article" v-bind:key="article.id"></article-list>
 
             <nav class="blog-pagination">
-                <a class="btn btn-outline-primary float-right" href="/article/list">{{more}}</a>
+                <a class="btn btn-sm btn-outline-primary float-right" href="/article/list">{{more}}</a>
             </nav>
 
         </div>

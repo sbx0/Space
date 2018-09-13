@@ -1,3 +1,55 @@
+var page = 1;
+var scrollTop = $(this).scrollTop();
+var scrollHeight = $(document).height();
+var windowHeight = $(this).height();
+
+// 文章列表
+var article = new Vue({
+    el: '#article',
+    data: {
+        prev: i18N.prev_article,
+        next: i18N.next_article,
+        comment: i18N.comment,
+        comments: [],
+    },
+    components: {
+        'comment-list': {
+            props: ['comment'],
+            template: '<div><hr id="endLine"><transition name="fade"><div :id="comment.id">' +
+                '<div class="media-left"></div><div class="media-body">' +
+                '<p class="media-heading">#{{comment.floor}}&nbsp;<a :href="comment.user_id">{{comment.user_name}}</a></p>' +
+                '<p>{{comment.content}}</p></div></div></transition></div>',
+        },
+    },
+    created: function () {
+        $.ajax({
+            url: '../comment/list?type=article&id=' + $("#id").val() + '&page=1&size=10',
+            type: 'GET',
+            success: function (data) {
+                if (data.length > 0) {
+                    article.comments = formate(data)
+                }
+            }
+        })
+    },
+})
+
+// 格式化评论列表的阅读链接与日期格式
+function formate(data) {
+    for (var i = 0; i < data.length; i++) {
+        data[i].id = data[i].id;
+        if (data.user_id != null)
+            data[i].user_id = "../user/" + data[i].user_id;
+        else
+            data[i].user_id = "../user/-1";
+        var d = new Date(data[i].time);
+        var times = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + ' ' + d.getHours() + ':' + d.getMinutes();
+        var time = Format(getDate(times.toString()), "yyyy-MM-dd HH:mm")
+        data[i].time = time;
+    }
+    return data
+}
+
 // 自动登陆
 if (login()) {
     $.ajax({
@@ -14,25 +66,15 @@ if (login()) {
     })
 }
 
-// 文章列表
-var article = new Vue({
-    el: '#article',
-    data: {
-        prev: i18N.prev_article,
-        next: i18N.next_article,
-        comment: i18N.comment,
-    },
-})
-
 // 删除
 function del() {
     $.ajax({
-        url: '/article/delete?id=' + $("#id").val() + "&type=0",
+        url: '/article/delete?id=' + $("#id").val() + '&type=0',
         type: 'GET',
         success: function (data) {
             if (data.status == 0) {
                 alert("删除成功");
-                location.replace("../index.html")
+                location.replace("../index.html");
             } else {
                 alert("无权限");
             }
