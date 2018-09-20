@@ -7,6 +7,17 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 public interface CommentDao extends PagingAndSortingRepository<Comment, Integer> {
+
+    /**
+     * 查询上一条评论的楼层
+     *
+     * @param entity_type
+     * @param entity_id
+     * @return
+     */
+    @Query(value = "select floor from Comments c where c.top >= 0 and c.entity_type = ?1 and c.entity_id = ?2 order by c.id desc limit 1", nativeQuery = true)
+    Integer findPrevCommentFloor(String entity_type, Integer entity_id);
+
     /**
      * 按种类加载评论
      *

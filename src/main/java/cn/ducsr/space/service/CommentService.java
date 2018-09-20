@@ -19,6 +19,17 @@ public class CommentService extends BaseService {
         commentDao.save(comment);
     }
 
+    /**
+     * 查询上一条评论的楼层
+     *
+     * @param entity_type
+     * @param entity_id
+     * @return
+     */
+    public Integer findPrevCommentFloor(String entity_type, Integer entity_id) {
+        return commentDao.findPrevCommentFloor(entity_type, entity_id);
+    }
+
 
     /**
      * 加载评论 根据实体

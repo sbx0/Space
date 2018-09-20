@@ -3,6 +3,41 @@ var scrollTop = $(this).scrollTop();
 var scrollHeight = $(document).height();
 var windowHeight = $(this).height();
 
+// 评论
+function comment() {
+    $.ajax({
+        url: '../comment/post',
+        type: 'POST',
+        data: $("#commentForm").serialize(),
+        success: function (data) {
+            var status = data.status;
+            if (status == 0) {
+                alert("发布成功！");
+                $("#content").val("");
+                loadComment();
+            } else {
+                alert("发布失败！");
+            }
+            return false;
+        }
+    })
+    return false;
+}
+
+// 加载评论
+function loadComment() {
+    $.ajax({
+        url: '../comment/list?type=article&id=' + $("#id").val() + '&page=1&size=10',
+        type: 'GET',
+        success: function (data) {
+            if (data.length > 0) {
+                article.comments = formate(data)
+            }
+        }
+    })
+}
+
+
 // 文章列表
 var article = new Vue({
     el: '#article',
@@ -22,15 +57,7 @@ var article = new Vue({
         },
     },
     created: function () {
-        $.ajax({
-            url: '../comment/list?type=article&id=' + $("#id").val() + '&page=1&size=10',
-            type: 'GET',
-            success: function (data) {
-                if (data.length > 0) {
-                    article.comments = formate(data)
-                }
-            }
-        })
+        loadComment();
     },
 })
 
@@ -53,7 +80,7 @@ function formate(data) {
 // 自动登陆
 if (login()) {
     $.ajax({
-        url: '/user/info',
+        url: '../user/info',
         type: 'GET',
         success: function (data) {
             if (data.status == 0) {

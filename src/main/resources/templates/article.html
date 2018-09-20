@@ -75,15 +75,17 @@
                 <div class="col-sm-12">
                     <div>
                         <h4>{{comment}}</h4>
-                        <form>
+                        <form id="commentForm" action="#">
+                            <input name="entity_id" type="hidden" th:value="${article.id}">
+                            <input name="entity_type" type="hidden" value="article">
                             <div class="form-group">
                                 <label for="user_name">用户名</label>
-                                <input type="text" class="form-control" id="user_name" placeholder="无需登陆">
+                                <input type="text" class="form-control" id="user_name" name="user_name">
                             </div>
                             <div class="form-group">
-                                <textarea class="form-control"></textarea>
+                                <textarea class="form-control" id="content" name="content"></textarea>
                             </div>
-                            <button class="btn btn-sm btn-primary">
+                            <button th:onclick="'javascript:comment();'" class="btn btn-sm btn-primary">
                                 {{comment}}
                             </button>
                         </form>
