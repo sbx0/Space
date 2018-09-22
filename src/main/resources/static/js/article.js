@@ -1,7 +1,4 @@
 var page = 1;
-var scrollTop = $(this).scrollTop();
-var scrollHeight = $(document).height();
-var windowHeight = $(this).height();
 
 // 评论
 function comment() {
@@ -14,27 +11,54 @@ function comment() {
             if (status == 0) {
                 alert("发布成功！");
                 $("#content").val("");
-                loadComment();
+                loadComment('0');
             } else {
                 alert("发布失败！");
             }
-            return false;
         }
     })
     return false;
 }
 
+// 上一页评论
+function prevComment() {
+    page--;
+    if (page < 1) {
+        page = 1;
+        article.prevC = false;
+    }
+    loadComment();
+}
+
+// 下一页评论
+function nextComment() {
+    page++;
+    if (page > 1000) page = 1000;
+    loadComment();
+}
+
 // 加载评论
 function loadComment() {
     $.ajax({
-        url: '../comment/list?type=article&id=' + $("#id").val() + '&page=1&size=10',
+        url: '../comment/list?type=article&id=' + $("#id").val() + '&page=' + page + '&size=10',
         type: 'GET',
         success: function (data) {
             if (data.length > 0) {
-                article.comments = formate(data)
+                article.comments = formate(data);
+                article.nextC = true;
+                article.prevC = true;
+            } else {
+                page--;
+                article.nextC = false;
+                article.prevC = true;
+            }
+            if (page == 1) {
+                article.prevC = false;
             }
         }
     })
+    location.href = "#comment";
+    return false;
 }
 
 
@@ -46,6 +70,8 @@ var article = new Vue({
         next: i18N.next_article,
         comment: i18N.comment,
         comments: [],
+        prevC: false,
+        nextC: true,
     },
     components: {
         'comment-list': {

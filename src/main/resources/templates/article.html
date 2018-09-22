@@ -75,7 +75,7 @@
                 <div class="col-sm-12">
                     <div>
                         <h4>{{comment}}</h4>
-                        <form id="commentForm" action="#">
+                        <form id="commentForm">
                             <input name="entity_id" type="hidden" th:value="${article.id}">
                             <input name="entity_type" type="hidden" value="article">
                             <div class="form-group">
@@ -85,7 +85,7 @@
                             <div class="form-group">
                                 <textarea class="form-control" id="content" name="content"></textarea>
                             </div>
-                            <button th:onclick="'javascript:comment();'" class="btn btn-sm btn-primary">
+                            <button onclick="javascript:comment();" type="button" class="btn btn-sm btn-primary">
                                 {{comment}}
                             </button>
                         </form>
@@ -95,6 +95,7 @@
 
             <div class="row" v-cloak>
                 <div class="col-sm-12">
+                    <a name="comment"></a>
                     <div id="comment-div">
                         <comment-list v-for="comment in comments"
                                       v-bind:key="comment.id"
@@ -111,6 +112,15 @@
                             加载中
                         </p>
                     </div>
+                    <nav class="blog-pagination" v-cloak>
+                        <a v-if="prevC" class="btn btn-sm btn-outline-primary" onclick="javascript:prevComment();">
+                            上一页
+                        </a>
+                        <a v-if="nextC" class="btn btn-sm btn-outline-primary float-right"
+                           onclick="javascript:nextComment();">
+                            下一页
+                        </a>
+                    </nav>
                 </div>
             </div>
 
