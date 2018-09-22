@@ -28,6 +28,7 @@ function prevComment() {
         article.prevC = false;
     }
     loadComment();
+    location.href = "#comment";
 }
 
 // 下一页评论
@@ -35,6 +36,7 @@ function nextComment() {
     page++;
     if (page > 1000) page = 1000;
     loadComment();
+    location.href = "#comment";
 }
 
 // 加载评论
@@ -57,7 +59,6 @@ function loadComment() {
             }
         }
     })
-    location.href = "#comment";
     return false;
 }
 

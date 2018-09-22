@@ -50,20 +50,24 @@ public class CommentController extends BaseController {
             } else if (BaseService.checkNullStr(comment.getUser_name())) {
                 comment.setUser_name("匿名");
             }
-            try {
+//            try {
                 comment.setTime(new Date());
                 comment.setDislikes(0);
                 comment.setLikes(0);
                 comment.setTop(0);
                 comment.setUser_ip("127.0.0.1");
-                Integer floor = commentService.findPrevCommentFloor(comment.getEntity_type(), comment.getEntity_id());
-                if (floor == null) floor = 0;
+                Integer count = commentService.countCommentByEntity(comment.getEntity_type(), comment.getEntity_id());
+                Integer floor;
+                if (count > 0)
+                    floor = commentService.findPrevCommentFloor(comment.getEntity_type(), comment.getEntity_id());
+                else
+                    floor = 0;
                 comment.setFloor(floor + 1);
                 commentService.save(comment);
                 objectNode.put("status", 0);
-            } catch (Exception e) {
-                objectNode.put("status", 1);
-            }
+//            } catch (Exception e) {
+//                objectNode.put("status", 1);
+//            }
         }
         return objectNode;
     }

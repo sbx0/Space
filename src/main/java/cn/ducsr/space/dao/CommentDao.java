@@ -8,6 +8,18 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 
 public interface CommentDao extends PagingAndSortingRepository<Comment, Integer> {
 
+
+    /**
+     * 查询某实体类评论总条数
+     *
+     * @param entity_type
+     * @param entity_id
+     * @return
+     */
+    @Query(value = "select count(*) from comments c where c.top >= 0 and c.entity_type = ?1 and c.entity_id = ?2", nativeQuery = true)
+    Integer countCommentByEntity(String entity_type, Integer entity_id);
+
+
     /**
      * 查询上一条评论的楼层
      *
@@ -15,7 +27,7 @@ public interface CommentDao extends PagingAndSortingRepository<Comment, Integer>
      * @param entity_id
      * @return
      */
-    @Query(value = "select floor from Comments c where c.top >= 0 and c.entity_type = ?1 and c.entity_id = ?2 order by c.id desc limit 1", nativeQuery = true)
+    @Query(value = "select floor from comments c where c.top >= 0 and c.entity_type = ?1 and c.entity_id = ?2 order by c.id desc limit 1", nativeQuery = true)
     Integer findPrevCommentFloor(String entity_type, Integer entity_id);
 
     /**
@@ -25,7 +37,7 @@ public interface CommentDao extends PagingAndSortingRepository<Comment, Integer>
      * @param entity_id   实体类ID
      * @return
      */
-    @Query(value = "select  * from Comments c where c.top >= 0 and c.entity_type = ?1 and c.entity_id = ?2", nativeQuery = true)
+    @Query(value = "select  * from comments c where c.top >= 0 and c.entity_type = ?1 and c.entity_id = ?2", nativeQuery = true)
     Page<Comment> findByEntity(String entity_type, Integer entity_id, Pageable pageable);
 
     // 删除评论 deleteById

@@ -19,6 +19,18 @@ public class CommentService extends BaseService {
         commentDao.save(comment);
     }
 
+
+    /**
+     * 查询评论总条数
+     *
+     * @param entity_type
+     * @param entity_id
+     * @return
+     */
+    public Integer countCommentByEntity(String entity_type, Integer entity_id) {
+        return commentDao.countCommentByEntity(entity_type, entity_id);
+    }
+
     /**
      * 查询上一条评论的楼层
      *
@@ -27,7 +39,9 @@ public class CommentService extends BaseService {
      * @return
      */
     public Integer findPrevCommentFloor(String entity_type, Integer entity_id) {
-        return commentDao.findPrevCommentFloor(entity_type, entity_id);
+        Integer floor = commentDao.findPrevCommentFloor(entity_type, entity_id);
+        if (floor == null) floor = 1;
+        return floor;
     }
 
 
