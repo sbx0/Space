@@ -50,12 +50,13 @@ public class CommentController extends BaseController {
             } else if (BaseService.checkNullStr(comment.getUser_name())) {
                 comment.setUser_name("匿名");
             }
-//            try {
+            try {
                 comment.setTime(new Date());
                 comment.setDislikes(0);
                 comment.setLikes(0);
                 comment.setTop(0);
-                comment.setUser_ip("127.0.0.1");
+                // 获取用户IP
+                comment.setUser_ip(BaseService.getIpAddress(request));
                 Integer count = commentService.countCommentByEntity(comment.getEntity_type(), comment.getEntity_id());
                 Integer floor;
                 if (count > 0)
@@ -65,9 +66,9 @@ public class CommentController extends BaseController {
                 comment.setFloor(floor + 1);
                 commentService.save(comment);
                 objectNode.put("status", 0);
-//            } catch (Exception e) {
-//                objectNode.put("status", 1);
-//            }
+            } catch (Exception e) {
+                objectNode.put("status", 1);
+            }
         }
         return objectNode;
     }

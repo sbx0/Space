@@ -35,9 +35,9 @@ var list_article = new Vue({
             type: 'GET',
             success: function (data) {
                 if (data.length > 0) {
-                    list_article.articles = formate(data)
+                    list_article.articles = formate(data);
                 } else {
-                    alert(i18N.query + i18N.result + i18N.null)
+                    alert(i18N.query + i18N.result + i18N.null);
                 }
             }
         })

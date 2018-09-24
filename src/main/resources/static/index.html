@@ -16,6 +16,8 @@
     <!-- 消息提示 -->
     <link href="css/messenger.css" rel="stylesheet">
     <link href="css/messenger-theme-flat.css" rel="stylesheet">
+    <!-- 图片浏览 -->
+    <link href="css/viewer.min.css" rel="stylesheet">
     <link href="css/base.css" rel="stylesheet">
 
 </head>
@@ -56,7 +58,10 @@
                 航行日志
             </h4>
 
-            <article-list v-for="article in articles" v-bind:article="article" v-bind:key="article.id"></article-list>
+            <div id="photo-viewer">
+                <article-list v-for="article in articles" v-bind:article="article" v-bind:key="article.id">
+                </article-list>
+            </div>
 
             <nav class="blog-pagination">
                 <a class="btn btn-sm btn-outline-primary float-right" href="/article/list">{{more}}</a>
@@ -117,6 +122,7 @@
 <script src="https://cdn.jsdelivr.net/npm/vue"></script>
 <script src="js/messenger.min.js"></script>
 <script src="js/messenger-theme-flat.js"></script>
+<script src="js/viewer.min.js"></script>
 <script src="js/i18N_zh_CN.js"></script>
 <script src="js/base.js"></script>
 <script src="js/index.js"></script>

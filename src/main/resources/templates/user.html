@@ -16,6 +16,10 @@
     <!-- 消息提示 -->
     <link th:href="@{~/css/messenger.css}" rel="stylesheet">
     <link th:href="@{~/css/messenger-theme-flat.css}" rel="stylesheet">
+    <!-- 图片浏览 -->
+    <link th:href="@{~/css/viewer.min.css}" rel="stylesheet">
+    <!-- 代码高亮 -->
+    <link th:href="@{~/css/prism.css}" rel="stylesheet">
     <link th:href="@{~/css/base.css}" rel="stylesheet">
 
 </head>
@@ -158,10 +162,16 @@
 <script src="https://cdn.jsdelivr.net/npm/vue"></script>
 <script th:src="@{~/js/messenger.min.js}"></script>
 <script th:src="@{~/js/messenger-theme-flat.js}"></script>
+<script th:src="@{~/js/prism.js}"></script>
 <script th:src="@{~/js/i18N_zh_CN.js}"></script>
 <script th:src="@{~/js/base.js}"></script>
+<script th:src="@{~/js/viewer.min.js}"></script>
 <section>
     <script>
+
+        // 配置图片浏览器
+        var viewer = new Viewer(document.getElementById('list-article'));
+
         // 跳页
         function jump_page() {
             var id = $("#user_id").val()

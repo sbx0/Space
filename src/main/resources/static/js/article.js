@@ -1,5 +1,8 @@
 var page = 1;
 
+// 配置图片浏览器
+var viewer = new Viewer(document.getElementById('article'));
+
 // 评论
 function comment() {
     $.ajax({
