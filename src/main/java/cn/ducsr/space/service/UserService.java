@@ -53,6 +53,7 @@ public class UserService extends BaseService {
      */
     @Transactional
     public User login(User user, String code) {
+        user.setName(BaseService.killHTML(user.getName()));
         // 密码加密
         user.setPassword(getHash(user.getPassword(), "MD5"));
         // 用户不存在 直接注册并登陆

@@ -65,7 +65,7 @@
                        th:href="'../user/' + ${article?.author?.id} + '?page=1&size=10'"></a>
                     <span th:text="${#dates.format(article?.time,'yyyy-MM-dd HH:mm')}"></span>
                 </p>
-                <div th:utext="${article?.content}"></div>
+                <p th:utext="${article?.content}"></p>
                 <a th:href="'../article/' + ${article?.id}" class="continue-read btn btn-light">
                     继续阅读
                 </a>

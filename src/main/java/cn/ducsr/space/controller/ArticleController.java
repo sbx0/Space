@@ -334,7 +334,7 @@ public class ArticleController extends BaseController {
                 a.setLastChangeTime(new Date());
                 articleService.save(a);
             } else {
-                article.setTitle(article.getTitle().trim());
+                article.setTitle(BaseService.killHTML(article.getTitle().trim()));
                 article.setContent(article.getContent().trim());
                 article.setTime(new Date());
                 article.setComments(0);

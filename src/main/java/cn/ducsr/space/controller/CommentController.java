@@ -46,11 +46,12 @@ public class CommentController extends BaseController {
             // 若登录
             if (user != null) {
                 comment.setUser_id(user.getId());
-                comment.setUser_name(user.getName());
+                comment.setUser_name(BaseService.killHTML(user.getName()));
             } else if (BaseService.checkNullStr(comment.getUser_name())) {
                 comment.setUser_name("匿名");
             }
             try {
+                comment.setContent(BaseService.killHTML(comment.getContent()));
                 comment.setTime(new Date());
                 comment.setDislikes(0);
                 comment.setLikes(0);
