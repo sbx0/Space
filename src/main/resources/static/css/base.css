@@ -36,6 +36,21 @@ ol {
     }
 }
 
+.editormd-html-preview, .editormd-preview-container {
+    text-align: left;
+    font-size: 15px;
+    line-height: 1.6;
+    padding: 5px;
+    overflow: auto;
+    width: 100%;
+    background-color: #fff;
+}
+
+markdown-body blockquote, .markdown-body dl, .markdown-body ol, .markdown-body p, .markdown-body pre, .markdown-body table, .markdown-body ul {
+    margin-top: 0;
+    margin-bottom: 5px;
+}
+
 .media-heading {
     line-height: normal;
 }

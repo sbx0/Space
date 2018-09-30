@@ -1,22 +1,10 @@
-// 实例化编辑器
-var E = window.wangEditor;
-var editor = new E('#editor');
-editor.customConfig.menus = [
-    'head',  // 标题
-    'bold',  // 粗体
-    'italic',  // 斜体
-    'link',  // 插入链接
-    'list',  // 列表
-    'justify',  // 对齐方式
-    'image',  // 插入图片
-    'code',  // 插入代码
-    'video', // 视频
-    'undo',  // 撤销
-    'redo'  // 重复
-];
-editor.customConfig.zIndex = 1;
-editor.create();
-editor.txt.html($("#content").val());
+// 配置Markdown编辑器
+var editor = editormd("editor", {
+    width: "100%",
+    height: 640,
+    path: "../lib/",
+    emoji: true,
+});
 
 // 添加密码
 function addPassword() {
@@ -53,7 +41,8 @@ function setTop() {
     })
 }
 
-function moveTop() {
+// 移除置顶
+function removeTop() {
     var id = $("#id").val()
     $.ajax({
         url: '../article/removeTop?id=' + id,
@@ -84,8 +73,7 @@ if (login()) {
 // 发布文章
 function post() {
     var id = $("#id").val()
-    var html = editor.txt.html();
-    $("#content").val(html);
+    $("#content").val(editor.getMarkdown());
     // 判断标题是否存在
     if (checkNullStr($("#title").val())) {
         alert("请输入文章标题");

@@ -16,10 +16,9 @@
     <!-- 消息提示 -->
     <link href="css/messenger.css" rel="stylesheet">
     <link href="css/messenger-theme-flat.css" rel="stylesheet">
+    <!-- Editor.md - 开源在线 Markdown 编辑器 -->
+    <link href="css/editormd.min.css" rel="stylesheet">
     <link href="css/base.css" rel="stylesheet">
-
-    <!-- wangEditor -->
-    <script type="text/javascript" src="js/wangEditor.min.js"></script>
 
 </head>
 
@@ -41,7 +40,6 @@
 
 <main role="main" class="container">
     <div class="row">
-
         <div class="col-md-12 blog-main">
             <form id="article-form">
                 <div class="form-group">
@@ -51,7 +49,9 @@
 
                 <input type="hidden" class="form-control" id="content" name="content">
 
-                <div id="editor" class="form-group"></div>
+                <div id="editor" class="form-group">
+                    <textarea id="markdown" style="display:none;"></textarea>
+                </div>
 
                 <button type="button" class="btn btn-sm btn-secondary">保存</button>
                 <button type="button" class="btn btn-sm btn-secondary">定时</button>
@@ -78,10 +78,11 @@
 <script src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js"></script>
 <script src="https://cdn.bootcss.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script src="js/editormd.min.js"></script>
 <script src="js/messenger.min.js"></script>
 <script src="js/messenger-theme-flat.js"></script>
 <script src="js/i18N_zh_CN.js"></script>
 <script src="js/base.js"></script>
-<script src="js/post.js"></script>
+<script src="js/markdown.js"></script>
 </body>
 </html>

@@ -230,6 +230,9 @@ public class ArticleService extends BaseService {
             Article article = filter(articleList.get(i));
             if (article.getPassword() == null)
                 articles.add(article);
+            String text = BaseService.killHTML(article.getContent());
+            if (text.length() > 150)
+                article.setContent(text.substring(0, 150) + "...");
         }
         return articles;
     }

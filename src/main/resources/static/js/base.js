@@ -137,10 +137,6 @@ function Format(now, mask) {
     })
 }
 
-// 高亮代码
-$("code").addClass("language-java");
-$("code").addClass('line-numbers');
-
 // img 添加 class = "img-responsive"
 $("img").addClass("img-responsive");
 
@@ -195,7 +191,7 @@ function alert(msg, type) {
     Messenger().post({
         message: msg,
         type: type,
-        hideAfter: 1,
+        hideAfter: 5,
         showCloseButton: false
     })
 }

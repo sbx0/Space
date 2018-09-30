@@ -1,5 +1,16 @@
 var page = 1;
 
+// Markdown
+var markdown = editormd.markdownToHTML("markdown", {
+    htmlDecode: "style,script,iframe",  // you can filter tags decode
+    emoji: true,
+    taskList: true,
+    tex: true,  // 默认不解析
+    flowChart: true,  // 默认不解析
+    sequenceDiagram: true,  // 默认不解析
+    path: "../lib/",
+});
+
 // 配置图片浏览器
 var viewer = new Viewer(document.getElementById('article'));
 
