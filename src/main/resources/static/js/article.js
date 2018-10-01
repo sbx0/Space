@@ -1,5 +1,4 @@
-var page = 1;
-
+var page = 1, size = 10;
 // Markdown
 var markdown = editormd.markdownToHTML("markdown", {
     htmlDecode: "style,script,iframe",  // you can filter tags decode
@@ -39,7 +38,6 @@ function prevComment() {
     page--;
     if (page < 1) {
         page = 1;
-        article.prevC = false;
     }
     loadComment();
     location.href = "#comment";
@@ -56,11 +54,25 @@ function nextComment() {
 // 加载评论
 function loadComment() {
     $.ajax({
-        url: '../comment/list?type=article&id=' + $("#id").val() + '&page=' + page + '&size=10',
+        url: '../comment/list?type=article&id=' + $("#id").val() + '&page=' + page + '&size=' + size,
         type: 'GET',
         success: function (data) {
-            if (data.length > 0) {
-                article.comments = formate(data);
+            if (data.length == 0) {
+                article.prevC = false;
+                article.nextC = false;
+                if (page > 1)
+                    loadComment(page--);
+            } else if (data.length == 10) {
+                article.nextC = true;
+                article.prevC = false;
+                if (page > 1)
+                    article.prevC = true;
+            } else if (page == 1 && data.length > 0 && data.length < size) {
+                article.prevC = false;
+                article.nextC = true;
+                if (data.length < size)
+                    article.nextC = false;
+            } else if (page > 1 && data.length > 0 && data.length == size) {
                 article.nextC = true;
                 article.prevC = true;
             } else {
@@ -68,9 +80,7 @@ function loadComment() {
                 article.nextC = false;
                 article.prevC = true;
             }
-            if (page == 1) {
-                article.prevC = false;
-            }
+            article.comments = formate(data);
         }
     })
     return false;
@@ -93,7 +103,7 @@ var article = new Vue({
             props: ['comment'],
             template: '<div><hr id="endLine"><transition name="fade"><div :id="comment.id">' +
                 '<div class="media-left"></div><div class="media-body">' +
-                '<p class="media-heading">#{{comment.floor}}&nbsp;<a :href="comment.user_id">{{comment.user_name}}</a></p>' +
+                '<p class="media-heading">#{{comment.floor}}&nbsp;<a :href="comment.user_id">{{comment.user_name}}</a>&nbsp;{{comment.time}}</p>' +
                 '<p>{{comment.content}}</p></div></div></transition></div>',
         },
     },
@@ -106,10 +116,9 @@ var article = new Vue({
 function formate(data) {
     for (var i = 0; i < data.length; i++) {
         data[i].id = data[i].id;
-        if (data.user_id != null)
             data[i].user_id = "../user/" + data[i].user_id;
-        else
-            data[i].user_id = "../user/-1";
+        if(data[i].user_id == "../user/null")
+            data[i].user_id = "#";
         var d = new Date(data[i].time);
         var times = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + ' ' + d.getHours() + ':' + d.getMinutes();
         var time = Format(getDate(times.toString()), "yyyy-MM-dd HH:mm")

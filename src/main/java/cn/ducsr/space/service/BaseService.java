@@ -160,8 +160,8 @@ public class BaseService {
         if (str.length() == 0) return true;
         if (str.trim() == "") return true;
         if (str.trim().length() == 0) return true;
-        // wangEditor默认
-        if (str == "<p><br></p>") return true;
+        // 纯html标签
+        if (killHTML(str).trim().length() == 0) return false;
         return false;
     }
 

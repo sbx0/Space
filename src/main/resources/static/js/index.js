@@ -81,18 +81,18 @@ new Vue({
     el: '#nav',
     data: {
         groceryList: [
-            {id: 1, text: i18N.tools, url: ''},
-            {id: 2, text: i18N.market, url: ''},
-            {id: 3, text: i18N.message, url: ''},
-            {id: 4, text: i18N.search, url: ''},
-            {id: 5, text: i18N.feedback, url: ''},
-            {id: 6, text: i18N.more, url: ''},
+            {id: 1, text: i18N.tools, url: 'http://blog.ducsr.cn/tools.jsp'},
+            {id: 2, text: i18N.market, url: 'http://blog.ducsr.cn/market.jsp'},
+            {id: 3, text: i18N.message, url: 'http://blog.ducsr.cn/msg.jsp'},
+            {id: 4, text: i18N.search, url: 'http://blog.ducsr.cn/search.jsp'},
+            {id: 5, text: i18N.feedback, url: 'http://blog.ducsr.cn/bugs.jsp'},
+            {id: 6, text: i18N.more, url: 'http://blog.ducsr.cn/index'},
         ]
     },
     components: {
         'nav-bar': {
             props: ['nav'],
-            template: '<a class="p-2 text-muted" href="{{nav.url}}">{{nav.text}}</a>',
+            template: '<a class="p-2 text-muted" :href="nav.url">{{nav.text}}</a>',
         },
     },
 })

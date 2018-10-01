@@ -26,6 +26,8 @@ public class ArticleController extends BaseController {
     private ArticleService articleService;
     @Resource
     private UserService userService;
+    @Resource
+    private LogService logService;
 
     /**
      * 密码文章验证密码
@@ -374,14 +376,26 @@ public class ArticleController extends BaseController {
         else
             article = articleService.findById(id, 0);
         if (article == null) return "error";
+
         if (article.getPassword() == null || article.getPassword().equals(""))
             map.put("article", article);
         else {
-            article.setTitle("私密文章");
             article.setContent("请输入密码后查看");
             map.put("article", article);
             map.put("password", 1);
         }
+
+        // Log
+        Log log = new Log();
+        // 记录ip
+        log.setIp(BaseService.getIpAddress(request));
+        log.setUser(user);
+        log.setTime(new Date());
+        log.setEvent(request.getRequestURL().toString() + "?" + request.getQueryString());
+        log.setMethod(request.getServletPath());
+        log.setStatus(true);
+        logService.save(log);
+
         return "article";
     }
 

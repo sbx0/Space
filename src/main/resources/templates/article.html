@@ -9,7 +9,7 @@
 
     <title>文章详情</title>
 
-    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{~/css/bootstrap.min.css}">
 
     <!-- 博客模板 -->
     <link th:href="@{~/css/blog.css}" rel="stylesheet">
@@ -47,20 +47,30 @@
 <main id="article" role="main" class="container">
     <div class="row">
         <div class="col-md-8 blog-main">
+
+            <div class="go-top">
+                <div class="arrow"></div>
+                <div class="stick"></div>
+            </div>
+
+            <a class="btn btn-sm btn-outline-dark btn-block d-none d-sm-block d-md-none mb-3" href="#comment">
+                查看评论
+            </a>
+
             <h4 th:if="${article.top < 0}" class="text-danger mb-2">
                 <strong>
                     该文章已被隐藏
                 </strong>
             </h4>
 
-            <h2 class="blog-post-title" th:text="${article.title}"></h2>
+            <p class="blog-post-title" th:text="${article.title}"></p>
             <p class="blog-post-meta">
                 <a th:href="'../user/'+${article.author.id}+'?page=1&size=10'" th:text="${article.author.name}"></a>
                 <span th:text="${#dates.format(article.time,'yyyy-MM-dd HH:mm:ss')}"></span>
             <p>
-            <!--<div>-->
+                <!--<div>-->
                 <!--<div th:utext="${article.content}"></div>-->
-            <!--</div>-->
+                <!--</div>-->
 
             <div id="markdown">
                 <textarea style="display:none;" th:text="${article.content}"></textarea>
@@ -75,8 +85,8 @@
             </form>
 
             <nav class="blog-pagination" v-cloak>
-                <a class="btn btn-sm btn-outline-secondary" href="#">{{prev}}</a>
-                <a class="btn btn-sm btn-outline-primary float-right" href="#">{{next}}</a>
+                <a class="btn btn-sm btn-outline-secondary">{{prev}}</a>
+                <a class="btn btn-sm btn-outline-primary float-right">{{next}}</a>
             </nav>
 
             <div class="row" v-cloak>
@@ -172,15 +182,12 @@
     <p>
         <span v-html="copyright"></span>
     </p>
-    <p>
-        <a href="#">{{back_to_top}}</a>
-    </p>
 </footer>
 
-<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
-<script src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js"></script>
-<script src="https://cdn.bootcss.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script th:src="@{~/js/jquery.min.js}"></script>
+<script th:src="@{~/js/popper.min.js}"></script>
+<script th:src="@{~/js/bootstrap.min.js}"></script>
+<script th:src="@{~/js/vue.min.js}"></script>
 <script th:src="@{~/js/messenger.min.js}"></script>
 <script th:src="@{~/js/messenger-theme-flat.js}"></script>
 <script th:src="@{~/js/viewer.min.js}"></script>

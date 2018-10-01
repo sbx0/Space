@@ -6,6 +6,19 @@
 // var time = Format(getDate(TIME.toString()), "yyyy-MM-dd HH:mm:ss")
 // ------------------------------------------------------------------------------------------------------ //
 
+// 返回顶部
+$(function() {
+    $(window).scroll(function() {
+        if ($(window).scrollTop() > 250)
+            $('div.go-top').show();
+        else
+            $('div.go-top').hide();
+    });
+    $('div.go-top').click(function() {
+        $('html, body').animate({scrollTop: 0}, 250);
+    });
+});
+
 // 检测字符串是否为空
 function checkNullStr(str) {
     if (str == null) return true;
