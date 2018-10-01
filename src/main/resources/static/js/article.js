@@ -1,4 +1,5 @@
 var page = 1, size = 10;
+
 // Markdown
 var markdown = editormd.markdownToHTML("markdown", {
     htmlDecode: "style,script,iframe",  // you can filter tags decode
@@ -159,24 +160,4 @@ function del() {
         }
     })
     return false;
-}
-
-// 真删除
-function real_delete() {
-    if (confirm("该操作无法撤回！")) {
-        $.ajax({
-            url: '/article/delete?id=' + $("#id").val() + "&type=1",
-            type: 'GET',
-            success: function (data) {
-                if (data.status == 0) {
-                    alert("删除成功");
-                    location.replace("../index.html")
-                } else {
-                    alert("无权限");
-                }
-                return false;
-            }
-        })
-        return false;
-    }
 }

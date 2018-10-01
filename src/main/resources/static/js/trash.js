@@ -1,7 +1,27 @@
+// 真删除
+function real_delete(id) {
+    if (confirm("该操作无法撤回！")) {
+        $.ajax({
+            url: '../article/delete?id=' + id + "&type=1",
+            type: 'GET',
+            success: function (data) {
+                if (data.status == 0) {
+                    alert("删除成功");
+                    location.replace(location.href)
+                } else {
+                    alert("无权限");
+                }
+                return false;
+            }
+        })
+        return false;
+    }
+}
+
 // 自动登陆
 if (login()) {
     $.ajax({
-        url: '/user/info',
+        url: '../user/info',
         type: 'GET',
         success: function (data) {
             if (data.status == 0) {
@@ -14,12 +34,12 @@ if (login()) {
 // 恢复文章
 function recover(id) {
     $.ajax({
-        url: '/article/recover?id=' + id,
+        url: '../article/recover?id=' + id,
         type: 'GET',
         success: function (data) {
             if (data.status == 0) {
                 alert("恢复成功");
-                location.replace(location.href);
+                location.replace("../article/" + id);
             } else {
                 alert("操作失败")
             }

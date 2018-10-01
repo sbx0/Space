@@ -23,6 +23,22 @@ function addPassword() {
     })
 }
 
+// 移除密码
+function removePassword() {
+    var id = $("#id").val()
+    $.ajax({
+        url: '../article/removePassword?id=' + id,
+        type: 'GET',
+        success: function (data) {
+            if (data.status == 0) {
+                alert("操作成功");
+                location.replace(location.href)
+            } else
+                alert("无权限");
+        }
+    })
+}
+
 // 设置置顶
 function setTop() {
     var id = $("#id").val()

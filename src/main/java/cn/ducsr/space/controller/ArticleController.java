@@ -30,6 +30,40 @@ public class ArticleController extends BaseController {
     private LogService logService;
 
     /**
+     * 为文章移除密码
+     *
+     * @param id       ID
+     * @param request
+     * @return JSON
+     */
+    @ResponseBody
+    @RequestMapping(value = "/removePassword", method = RequestMethod.GET)
+    public ObjectNode removePassword(Integer id, HttpServletRequest request) {
+        // 从cookie中获取登陆用户信息
+        User user = userService.getCookieUser(request);
+        // 未登录
+        if (user == null) {
+            objectNode.put("status", 1);
+            return objectNode;
+        }
+        // 获取文章信息
+        Article article = articleService.findById(id, 1);
+        // 判断用户是否有权限操作
+        if (userService.checkAuthority(user, article.getAuthor().getId(), 0)) {
+            // 去除密码
+            article.setPassword(null);
+            try {
+                // 将操作保存到数据库中
+                articleService.save(article);
+                objectNode.put("status", 0);
+            } catch (Exception e) {
+                objectNode.put("status", 1);
+            }
+        }
+        return objectNode;
+    }
+
+    /**
      * 密码文章验证密码
      *
      * @param id       文章ID
@@ -53,7 +87,6 @@ public class ArticleController extends BaseController {
             map.put("article", article);
             return "article";
         } else {
-            article.setTitle("私密文章");
             article.setContent("密码错误，请确认密码是否正确");
             map.put("article", article);
             // 页面根据此字段判断是否该文章是否需要输入密码
@@ -377,14 +410,6 @@ public class ArticleController extends BaseController {
             article = articleService.findById(id, 0);
         if (article == null) return "error";
 
-        if (article.getPassword() == null || article.getPassword().equals(""))
-            map.put("article", article);
-        else {
-            article.setContent("请输入密码后查看");
-            map.put("article", article);
-            map.put("password", 1);
-        }
-
         // Log
         Log log = new Log();
         // 记录ip
@@ -395,6 +420,14 @@ public class ArticleController extends BaseController {
         log.setMethod(request.getServletPath());
         log.setStatus(true);
         logService.save(log);
+
+        if (article.getPassword() == null || article.getPassword().equals(""))
+            map.put("article", article);
+        else {
+            article.setContent("");
+            map.put("article", article);
+            map.put("password", 1);
+        }
 
         return "article";
     }

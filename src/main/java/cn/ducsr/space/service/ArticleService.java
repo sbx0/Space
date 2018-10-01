@@ -254,13 +254,12 @@ public class ArticleService extends BaseService {
         simpleArticle.setLikes(article.getLikes());
         simpleArticle.setComments(article.getComments());
         simpleArticle.setViews(article.getViews());
+        simpleArticle.setTitle(article.getTitle());
 
         if (article.getPassword() == null) {
             simpleArticle.setContent(article.getContent());
-            simpleArticle.setTitle(article.getTitle());
         } else {
             simpleArticle.setContent("请输入密码后查看");
-            simpleArticle.setTitle("私密文章");
         }
 
         simpleArticle.setTime(article.getTime());

@@ -27,7 +27,7 @@
     <header id="blog-header" class="blog-header py-3">
         <div class="row flex-nowrap justify-content-between align-items-center" v-cloak>
             <div class="col-4 pt-1">
-                <a class="blog-header-logo text-dark" th:href="@{~/index.html}">{{space}}</a>
+                <a class="blog-header-logo text-dark" href="javascript:history.go(-1);">{{space}}</a>
             </div>
             <div class="col-4 text-center"></div>
             <div class="col-4 d-flex justify-content-end align-items-center">
@@ -56,9 +56,14 @@
                     <span th:text="${#dates.format(article?.time,'yyyy-MM-dd HH:mm')}"></span>
                 </p>
                 <div th:utext="${article?.content}"></div>
-                <a th:id="${article?.id}" onclick="recover(this.id)" class="continue-read btn btn-light">
-                    申请恢复
-                </a>
+                <div class="btn-group" role="group">
+                    <a th:id="${article?.id}" onclick="recover(this.id)" class="btn btn-outline-secondary btn-sm" role="button">
+                        申请恢复
+                    </a>
+                    <a th:id="${article?.id}" onclick="real_delete(this.id)" class="btn btn-outline-danger btn-sm" role="button">
+                        真删除
+                    </a>
+                </div>
             </div>
 
             <nav class="blog-pagination text-center" v-cloak>
