@@ -81,10 +81,10 @@ new Vue({
     el: '#nav',
     data: {
         groceryList: [
-            {id: 1, text: i18N.tools, url: 'http://blog.ducsr.cn/tools.jsp'},
+            {id: 1, text: i18N.search, url: 'article/search'},
             {id: 2, text: i18N.market, url: 'http://blog.ducsr.cn/market.jsp'},
             {id: 3, text: i18N.message, url: 'http://blog.ducsr.cn/msg.jsp'},
-            {id: 4, text: i18N.search, url: 'http://blog.ducsr.cn/search.jsp'},
+            {id: 4, text: i18N.tools, url: 'http://blog.ducsr.cn/tools.jsp'},
             {id: 5, text: i18N.feedback, url: 'http://blog.ducsr.cn/bugs.jsp'},
             {id: 6, text: i18N.more, url: 'http://blog.ducsr.cn/index'},
         ]

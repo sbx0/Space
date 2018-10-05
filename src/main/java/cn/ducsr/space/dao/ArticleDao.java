@@ -14,79 +14,95 @@ import java.util.Optional;
  */
 public interface ArticleDao extends PagingAndSortingRepository<Article, Integer> {
 
-    /**
-     * 查询被隐藏的文章列表
-     */
-    @Query(value = "select  * from articles a where a.top < 0", nativeQuery = true)
-    Page<Article> findTrash(Pageable pageable);
 
-    /**
-     * 查询被隐藏的文章列表 根据用户
-     */
-    @Query(value = "select  * from articles a where a.top < 0 and a.author_id = ?1", nativeQuery = true)
-    Page<Article> findTrashByUser(Integer id, Pageable pageable);
+	/**
+	 * 查询文章列表
+	 */
+	@Query(value = "select  * from articles", nativeQuery = true)
+	Page<Article> adminFindAll(Pageable pageable);
 
-    /**
-     * 获取当前置顶文章数
-     *
-     * @return
-     */
-    @Query(value = "select  count(*) from articles a where a.top > 0", nativeQuery = true)
-    Integer getTopNumber();
 
-    /**
-     * 查询文章
-     */
-    @Query(value = "select  * from articles a where a.id = ?1", nativeQuery = true)
-    Optional<Article> adminFindById(Integer id);
+	/**
+	 * 查询文章
+	 */
+	@Query(value = "select  * from articles a where a.id = ?1", nativeQuery = true)
+	Optional<Article> adminFindById(Integer id);
 
-    /**
-     * 查询文章列表
-     */
-    @Query(value = "select  * from articles", nativeQuery = true)
-    Page<Article> adminFindAll(Pageable pageable);
+	/**
+	 * 查询所有文章
+	 */
+	@Query(value = "select  * from articles a where a.top >= 0 order by a.time desc,a.last_change_time desc", nativeQuery = true)
+	List<Article> findAll();
 
-    /**
-     * 查询未被隐藏的文章
-     */
-    @Query(value = "select  * from articles a where a.top >= 0 and a.id = ?1", nativeQuery = true)
-    Optional<Article> findById(Integer id);
 
-    /**
-     * 查询未被隐藏的文章列表
-     */
-    @Query(value = "select  * from articles a where a.top >= 0", nativeQuery = true)
-    Page<Article> findAll(Pageable pageable);
+	/**
+	 * 查询未被隐藏的文章列表
+	 */
+	@Query(value = "select  * from articles a where a.top >= 0", nativeQuery = true)
+	Page<Article> findAll(Pageable pageable);
 
-    /**
-     * 查询所有文章
-     */
-    @Query(value = "select  * from articles a where a.top >= 0 order by a.time desc,a.last_change_time desc", nativeQuery = true)
-    List<Article> findAll();
+	/**
+	 * 查询未被隐藏的文章
+	 */
+	@Query(value = "select  * from articles a where a.top >= 0 and (a.title like ?1 or a.content like ?1)", nativeQuery = true)
+	Page<Article> findByKeyword(String keyword,Pageable pageable);
 
-    /**
-     * 获取最大置顶
-     *
-     * @return
-     */
-    @Query(value = "select top from articles a where a.top >= 0 order by a.top desc limit 1", nativeQuery = true)
-    Integer getMaxTop();
 
-    /**
-     * 查询用户文章
-     *
-     * @param id
-     * @return
-     */
-    @Query(value = "select  * from articles a where a.author_id = ?1 and a.top >= 0", nativeQuery = true)
-    Page<Article> findByUser(Integer id, Pageable pageable);
+	/**
+	 * 查询未被隐藏的文章
+	 */
+	@Query(value = "select  * from articles a where a.top >= 0 and a.id = ?1", nativeQuery = true)
+	Optional<Article> findById(Integer id);
 
-    /**
-     * 查询置顶文章
-     *
-     * @param size
-     * @return
-     */
-    @Query(value = "select * from articles a where a.top > 0 order by a.top desc, a.id desc limit ?1", nativeQuery = true)
-    List<Article> top(Integer size);
+
+	/**
+	 * 查询用户文章
+	 *
+	 * @param id
+	 * @return
+	 */
+	@Query(value = "select  * from articles a where a.author_id = ?1 and a.top >= 0", nativeQuery = true)
+	Page<Article> findByUser(Integer id, Pageable pageable);
+
+
+	/**
+	 * 查询被隐藏的文章列表
+	 */
+	@Query(value = "select  * from articles a where a.top < 0", nativeQuery = true)
+	Page<Article> findTrash(Pageable pageable);
+
+
+	/**
+	 * 查询被隐藏的文章列表 根据用户
+	 */
+	@Query(value = "select  * from articles a where a.top < 0 and a.author_id = ?1", nativeQuery = true)
+	Page<Article> findTrashByUser(Integer id, Pageable pageable);
+
+
+	/**
+	 * 获取最大置顶
+	 *
+	 * @return
+	 */
+	@Query(value = "select top from articles a where a.top >= 0 order by a.top desc limit 1", nativeQuery = true)
+	Integer getMaxTop();
+
+
+	/**
+	 * 获取当前置顶文章数
+	 *
+	 * @return
+	 */
+	@Query(value = "select  count(*) from articles a where a.top > 0", nativeQuery = true)
+	Integer getTopNumber();
+
+
+	/**
+	 * 查询置顶文章
+	 *
+	 * @param size
+	 * @return
+	 */
+	@Query(value = "select * from articles a where a.top > 0 order by a.top desc, a.id desc limit ?1", nativeQuery = true)
+	List<Article> top(Integer size);
 }

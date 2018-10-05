@@ -31,6 +31,43 @@ public class ArticleController extends BaseController {
 	private LogService logService;
 
 	/**
+	 * 搜索
+	 *
+	 * @param keyword
+	 * @return
+	 */
+	@RequestMapping(value = "/search")
+	public String search(String keyword, Integer page, Integer size, Map<String, Object> map) {
+		if (page == null) page = 1;
+		if (size == null) size = 10;
+		// 分页查询
+		Page<Article> articlePage = articleService.findByKeyword(keyword, page - 1, size);
+		if (articlePage != null) {
+			// 取出文章列表
+			List<Article> articles = articleService.filter(articlePage.getContent());
+			// 当页数大于总页数时，查询最后一页的数据
+			if (page > articlePage.getTotalPages()) {
+				articlePage = articleService.findByKeyword(keyword, articlePage.getTotalPages() - 1, size);
+				articles = articleService.filter(articlePage.getContent());
+			}
+			// 将数据返回到页面
+			map.put("keyword", keyword.trim());
+			map.put("articles", articles);
+			map.put("size", articlePage.getPageable().getPageSize());
+			map.put("page", articlePage.getPageable().getPageNumber() + 1);
+			map.put("totalPages", articlePage.getTotalPages());
+			map.put("totalElements", articlePage.getTotalElements());
+			// 判断上下页
+			if (page + 1 <= articlePage.getTotalPages()) map.put("next_page", page + 1);
+			if (page - 1 > 0) map.put("prev_page", page - 1);
+			if (page - 1 > articlePage.getTotalPages()) map.put("prev_page", null);
+		} else {
+			map.put("articles", null);
+		}
+		return "search";
+	}
+
+	/**
 	 * 为文章移除密码
 	 *
 	 * @param id      ID

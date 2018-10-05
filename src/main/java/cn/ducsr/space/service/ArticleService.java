@@ -31,6 +31,37 @@ public class ArticleService extends BaseService {
 	private UserDao userDao;
 
 	/**
+	 * 根据关键词查询
+	 *
+	 * @param keyword
+	 * @param page
+	 * @param size
+	 * @return
+	 */
+	public Page<Article> findByKeyword(String keyword, Integer page, Integer size) {
+		if (BaseService.checkNullStr(keyword))
+			return null;
+		keyword = "%" + keyword + "%";
+		// 页数控制
+		if (page > 9999) page = 9999;
+		if (page < 0) page = 0;
+		// 条数控制
+		if (size > 1000) size = 1000;
+		if (size < 1) size = 1;
+		if (size == 0) size = 10;
+		// 分页配置
+		Sort sort = new Sort(Sort.Direction.DESC, "id");
+		Pageable pageable = PageRequest.of(page, size, sort);
+		try {
+			// 分页查询
+			Page<Article> articlePage = articleDao.findByKeyword(keyword, pageable);
+			return articlePage;
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	/**
 	 * 查询被隐藏的文章列表 根据用户
 	 *
 	 * @return 文章列表

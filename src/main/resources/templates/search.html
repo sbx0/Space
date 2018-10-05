@@ -7,7 +7,7 @@
     <meta name="author" content="sbx0">
     <link rel="icon" th:href="@{~/img/favicon.png}">
 
-    <title>回收站</title>
+    <title>搜索</title>
 
     <link rel="stylesheet" th:href="@{~/css/bootstrap.min.css}">
 
@@ -16,7 +16,12 @@
     <!-- 消息提示 -->
     <link th:href="@{~/css/messenger.css}" rel="stylesheet">
     <link th:href="@{~/css/messenger-theme-flat.css}" rel="stylesheet">
+    <!-- 图片浏览 -->
+    <link th:href="@{~/css/viewer.min.css}" rel="stylesheet">
+    <!-- 代码高亮 -->
+    <link th:href="@{~/css/prism.css}" rel="stylesheet">
     <link th:href="@{~/css/base.css}" rel="stylesheet">
+
 
 </head>
 
@@ -31,9 +36,6 @@
             </div>
             <div class="col-4 text-center"></div>
             <div class="col-4 d-flex justify-content-end align-items-center">
-                <a class="text-muted" href="/article/search">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-3"><circle cx="10.5" cy="10.5" r="7.5"></circle><line x1="21" y1="21" x2="15.8" y2="15.8"></line></svg>
-                </a>
                 <a class="btn btn-sm btn-outline-secondary" th:href="@{~/login.html}">{{login}}</a>
             </div>
         </div>
@@ -43,15 +45,29 @@
 
 <main id="list-article" role="main" class="container">
     <div class="row">
+        <div class="col-md-12 blog-main">
+            <div class="blog-post text-center">
+                <form class="card p-2">
+                    <div class="input-group">
+                        <input id="keyword" name="keyword" type="text" class="form-control" th:value="${keyword}"
+                               placeholder="文章名或内容">
+                        <div class="input-group-append">
+                            <button type="button" class="btn btn-secondary" onclick="search()">搜索</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
 
         <div class="col-md-12 blog-main" th:if="${totalElements == null}">
             <div class="blog-post text-center">
-                <h2 class="blog-post-title">暂时没有可以回收的文章</h2>
+                <h2 class="blog-post-title">暂时没有文章</h2>
             </div>
         </div>
 
         <div class="col-md-8 blog-main">
-            <div class="blog-post" th:each="article,stat:${articles}">
+
+            <div id="photo-viewer" class="blog-post" th:each="article,stat:${articles}">
                 <h2 th:text="${article?.title}" class="blog-post-title"></h2>
                 <p class="blog-post-meta">
                     <a th:text="${article?.author?.name}"
@@ -59,25 +75,20 @@
                     <span th:text="${#dates.format(article?.time,'yyyy-MM-dd HH:mm')}"></span>
                 </p>
                 <div th:utext="${article?.content}"></div>
-                <div class="btn-group" role="group">
-                    <a th:id="${article?.id}" onclick="recover(this.id)" class="btn btn-outline-secondary btn-sm" role="button">
-                        申请恢复
-                    </a>
-                    <a th:id="${article?.id}" onclick="real_delete(this.id)" class="btn btn-outline-danger btn-sm" role="button">
-                        真删除
-                    </a>
-                </div>
+                <a th:href="${article?.id}" class="continue-read btn btn-light">
+                    继续阅读
+                </a>
             </div>
 
-            <nav class="blog-pagination text-center" v-cloak>
+            <nav class="blog-pagination text-center">
                 <a th:if="${prev_page != null}"
-                   th:href="'trash?page=' + ${prev_page} + '&size=' + ${size}"
+                   th:href="'?keyword=' + ${keyword} + '&page=' + ${prev_page} + '&size=' + ${size}"
                    class="btn btn-sm btn-outline-primary float-left">
                     {{prev}}
                 </a>
                 <a th:if="${page != null}" href="javascript:void(0)" th:text="${page} + '/' + ${totalPages}"></a>
                 <a th:if="${next_page != null}"
-                   th:href="'trash?page=' + ${next_page} + '&size=' + ${size}"
+                   th:href="'?keyword=' + ${keyword} + '&page=' + ${next_page} + '&size=' + ${size}"
                    class="btn btn-sm btn-outline-primary float-right">
                     {{next}}
                 </a>
@@ -109,7 +120,7 @@
                 </form>
             </div>
 
-            <div class="p-3 mb-3 bg-light rounded">
+            <div class="p-3 mb-3 bg-light rounded" hidden>
                 <h4 class="font-italic">{{about}}</h4>
                 <p class="mb-0"><span v-html="about_content"></span></p>
             </div>
@@ -158,8 +169,55 @@
 <script th:src="@{~/js/vue.min.js}"></script>
 <script th:src="@{~/js/messenger.min.js}"></script>
 <script th:src="@{~/js/messenger-theme-flat.js}"></script>
+<script th:src="@{~/js/viewer.min.js}"></script>
+<script th:src="@{~/js/prism.js}"></script>
 <script th:src="@{~/js/i18N_zh_CN.js}"></script>
 <script th:src="@{~/js/base.js}"></script>
-<script th:src="@{~/js/trash.js}"></script>
+<section>
+    <script type="text/javascript">
+
+        // 搜索
+        function search() {
+            var keyword = $("#keyword").val();
+            location.replace("../article/search?keyword=" + keyword)
+        }
+
+
+        // // 配置图片浏览器
+        // var viewer = new Viewer(document.getElementById('photo-viewer'));
+
+        // 跳页
+        function jump_page() {
+            var keyword = $("#keyword").val();
+            location.replace("../article/search?keyword=" + keyword)
+            var page = $("#page").val()
+            var size = $("#size").val()
+            var url = "../article/search?keyword=" + keyword + "&page=" + page + " &size=" + size;
+            location.replace(url)
+        }
+
+        // 上一页 下一页
+        new Vue({
+            el: '#list-article',
+            data: {
+                prev: i18N.prev,
+                next: i18N.next,
+            },
+        })
+
+        // 自动登陆
+        if (login()) {
+            $.ajax({
+                url: '/user/info',
+                type: 'GET',
+                success: function (data) {
+                    if (data.status == 0) {
+                        blog_header.login = data.username;
+                    }
+                }
+            })
+        }
+    </script>
+</section>
 </body>
 </html>
