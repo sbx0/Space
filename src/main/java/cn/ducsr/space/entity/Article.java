@@ -17,7 +17,7 @@ public class Article {
     private String title; // 标题
     @Column(nullable = false)
     private Date time; // 时间
-    @Column(nullable = false, length = 9999)
+    @Column(nullable = false)
     private String content; // 内容
     private Date lastChangeTime; // 上次修改时间
     @Column(length = 40)
