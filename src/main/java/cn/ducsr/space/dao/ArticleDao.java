@@ -59,6 +59,12 @@ public interface ArticleDao extends PagingAndSortingRepository<Article, Integer>
     Page<Article> findAll(Pageable pageable);
 
     /**
+     * 查询所有文章
+     */
+    @Query(value = "select  * from articles a where a.top >= 0 order by a.last_change_time desc", nativeQuery = true)
+    List<Article> findAll();
+
+    /**
      * 获取最大置顶
      *
      * @return

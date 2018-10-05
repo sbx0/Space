@@ -4,6 +4,8 @@ import cn.ducsr.space.entity.User;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
+import java.util.List;
+
 /**
  * 用户Dao
  */
@@ -13,4 +15,7 @@ public interface UserDao extends PagingAndSortingRepository<User, Integer> {
 
     @Query(value = "select * from users where name = ?1", nativeQuery = true)
     User findByName(String name);
+
+    @Query(value = "select * from users", nativeQuery = true)
+    List<User> findAll();
 }
