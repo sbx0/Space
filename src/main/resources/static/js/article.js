@@ -1,5 +1,34 @@
 var page = 1, size = 10;
 
+function prevAndNext() {
+    $.ajax({
+        url: '../article/prevAndNext?id=' + $("#id").val() + '&u_id=' + $("#u_id").val(),
+        type: 'GET',
+        success: function (data) {
+            article.prevA = false;
+            article.nextA = false;
+            article.prev = '';
+            article.prev_url = '';
+            article.next = '';
+            article.next_url = '';
+            var prev_id = data.prev_id;
+            var prev_title = data.prev_title;
+            if (prev_id != null) {
+                article.prevA = true;
+                article.prev = prev_title;
+                article.prev_url = "../article/" + prev_id;
+            }
+            var next_id = data.next_id;
+            var next_title = data.next_title;
+            if (next_id != null) {
+                article.nextA = true;
+                article.next = next_title;
+                article.next_url = "../article/" + next_id;
+            }
+        }
+    })
+}
+
 // Markdown
 var markdown = editormd.markdownToHTML("markdown", {
     htmlDecode: "style,script,iframe",  // you can filter tags decode
@@ -94,10 +123,14 @@ var article = new Vue({
     data: {
         prev: i18N.prev_article,
         next: i18N.next_article,
+        prev_url: '#',
+        next_url: '#',
         comment: i18N.comment,
         comments: [],
         prevC: false,
         nextC: true,
+        prevA: false,
+        nextA: false,
     },
     components: {
         'comment-list': {
@@ -110,6 +143,7 @@ var article = new Vue({
     },
     created: function () {
         loadComment();
+        prevAndNext();
     },
 })
 
@@ -117,15 +151,15 @@ var article = new Vue({
 function formate(data) {
     for (var i = 0; i < data.length; i++) {
         data[i].id = data[i].id;
-            data[i].user_id = "../user/" + data[i].user_id;
-        if(data[i].user_id == "../user/null")
+        data[i].user_id = "../user/" + data[i].user_id;
+        if (data[i].user_id == "../user/null")
             data[i].user_id = "#";
         var d = new Date(data[i].time);
         var times = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + ' ' + d.getHours() + ':' + d.getMinutes();
         var time = Format(getDate(times.toString()), "yyyy-MM-dd HH:mm")
         data[i].time = time;
     }
-    return data
+    return data;
 }
 
 // 自动登陆

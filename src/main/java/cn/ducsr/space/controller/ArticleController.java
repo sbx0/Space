@@ -31,6 +31,32 @@ public class ArticleController extends BaseController {
 	private LogService logService;
 
 	/**
+	 * 查询上一条下一条
+	 *
+	 * @param id
+	 * @param u_id
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/prevAndNext", method = RequestMethod.GET)
+	public ObjectNode prevAndNext(Integer id, Integer u_id) {
+		objectNode = mapper.createObjectNode();
+		if (u_id == null)
+			u_id = -1;
+		Article prevA = articleService.prev(id, u_id);
+		Article nextA = articleService.next(id, u_id);
+		if (prevA != null && prevA.getId() != id) {
+			objectNode.put("prev_id", prevA.getId());
+			objectNode.put("prev_title", prevA.getTitle());
+		}
+		if (nextA != null && nextA.getId() != id) {
+			objectNode.put("next_id", nextA.getId());
+			objectNode.put("next_title", nextA.getTitle());
+		}
+		return objectNode;
+	}
+
+	/**
 	 * 搜索
 	 *
 	 * @param keyword
@@ -77,6 +103,7 @@ public class ArticleController extends BaseController {
 	@ResponseBody
 	@RequestMapping(value = "/removePassword", method = RequestMethod.GET)
 	public ObjectNode removePassword(Integer id, HttpServletRequest request) {
+		objectNode = mapper.createObjectNode();
 		// 从cookie中获取登陆用户信息
 		User user = userService.getCookieUser(request);
 		// 未登录
@@ -144,6 +171,7 @@ public class ArticleController extends BaseController {
 	@ResponseBody
 	@RequestMapping(value = "/addPassword", method = RequestMethod.POST)
 	public ObjectNode addPassword(Integer id, String password, HttpServletRequest request) {
+		objectNode = mapper.createObjectNode();
 		// 从cookie中获取登陆用户信息
 		User user = userService.getCookieUser(request);
 		// 未登录
@@ -183,6 +211,7 @@ public class ArticleController extends BaseController {
 	@ResponseBody
 	@RequestMapping(value = "/recover", method = RequestMethod.GET)
 	public ObjectNode recover(Integer id, HttpServletRequest request) {
+		objectNode = mapper.createObjectNode();
 		// 从cookie中获取登陆用户信息
 		User user = userService.getCookieUser(request);
 		// 未登录
@@ -261,6 +290,7 @@ public class ArticleController extends BaseController {
 	@ResponseBody
 	@RequestMapping(value = "/delete", method = RequestMethod.GET)
 	public ObjectNode delete(Integer id, Integer type, HttpServletRequest request) {
+		objectNode = mapper.createObjectNode();
 		// 从cookie中获取登陆用户
 		User user = userService.getCookieUser(request);
 		// 查询文章信息
@@ -305,6 +335,7 @@ public class ArticleController extends BaseController {
 	@ResponseBody
 	@RequestMapping(value = "/removeTop", method = RequestMethod.GET)
 	public ObjectNode removeTop(HttpServletRequest request, Integer id) {
+		objectNode = mapper.createObjectNode();
 		// 从cookie中获取登陆用户
 		User user = userService.getCookieUser(request);
 		// 查询文章信息
@@ -331,6 +362,7 @@ public class ArticleController extends BaseController {
 	@ResponseBody
 	@RequestMapping(value = "/setTop", method = RequestMethod.GET)
 	public ObjectNode setTop(HttpServletRequest request, Integer id) {
+		objectNode = mapper.createObjectNode();
 		// 从cookie中获取登陆用户
 		User user = userService.getCookieUser(request);
 		// 查询文章信息
@@ -386,6 +418,7 @@ public class ArticleController extends BaseController {
 	@ResponseBody
 	@RequestMapping(value = "/post", method = RequestMethod.POST)
 	public ObjectNode post(HttpServletRequest request, Article article) {
+		objectNode = mapper.createObjectNode();
 		// 从cookie中获取登陆用户
 		User user = userService.getCookieUser(request);
 		// 检测是否为空

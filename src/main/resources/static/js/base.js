@@ -7,14 +7,14 @@
 // ------------------------------------------------------------------------------------------------------ //
 
 // 返回顶部
-$(function() {
-    $(window).scroll(function() {
+$(function () {
+    $(window).scroll(function () {
         if ($(window).scrollTop() > 250)
             $('div.go-top').show();
         else
             $('div.go-top').hide();
     });
-    $('div.go-top').click(function() {
+    $('div.go-top').click(function () {
         $('html, body').animate({scrollTop: 0}, 250);
     });
 });

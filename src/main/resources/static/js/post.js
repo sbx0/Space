@@ -29,6 +29,8 @@ if (login()) {
             }
         }
     })
+} else {
+    location.replace("../login.html")
 }
 
 // 发布文章

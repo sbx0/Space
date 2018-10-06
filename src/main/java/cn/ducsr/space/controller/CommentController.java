@@ -38,6 +38,7 @@ public class CommentController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/post", method = RequestMethod.POST)
     public ObjectNode post(Comment comment, HttpServletRequest request) {
+        objectNode = mapper.createObjectNode();
         if (BaseService.checkNullStr(comment.getContent())) {
             objectNode.put("status", 1);
         } else {

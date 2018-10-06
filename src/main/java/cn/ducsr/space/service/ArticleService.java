@@ -31,6 +31,34 @@ public class ArticleService extends BaseService {
 	private UserDao userDao;
 
 	/**
+	 * 查询上一条博文
+	 *
+	 * @param id
+	 * @param u_id
+	 * @return
+	 */
+	public Article prev(int id, int u_id) {
+		if (u_id > 0)
+			return articleDao.prev(id, u_id);
+		else
+			return articleDao.prev(id);
+	}
+
+	/**
+	 * 查询下一条博文
+	 *
+	 * @param id
+	 * @param u_id
+	 * @return
+	 */
+	public Article next(int id, int u_id) {
+		if (u_id > 0)
+			return articleDao.next(id, u_id);
+		else
+			return articleDao.next(id);
+	}
+
+	/**
 	 * 根据关键词查询
 	 *
 	 * @param keyword
