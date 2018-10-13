@@ -47,6 +47,7 @@
     <div class="row">
         <div class="col-md-12 blog-main">
             <div class="blog-post text-center">
+                <h4 class="mb-3">文章搜索</h4>
                 <form class="card p-2">
                     <div class="input-group">
                         <input id="keyword" name="keyword" type="text" class="form-control" th:value="${keyword}"
@@ -114,37 +115,6 @@
                 </form>
             </div>
 
-            <div class="p-3 mb-3 bg-light rounded" hidden>
-                <h4 class="font-italic">{{about}}</h4>
-                <p class="mb-0"><span v-html="about_content"></span></p>
-            </div>
-
-            <div class="p-3" hidden>
-                <h4 class="font-italic">Archives</h4>
-                <ol class="list-unstyled mb-0">
-                    <li><a href="#">March 2014</a></li>
-                    <li><a href="#">February 2014</a></li>
-                    <li><a href="#">January 2014</a></li>
-                    <li><a href="#">December 2013</a></li>
-                    <li><a href="#">November 2013</a></li>
-                    <li><a href="#">October 2013</a></li>
-                    <li><a href="#">September 2013</a></li>
-                    <li><a href="#">August 2013</a></li>
-                    <li><a href="#">July 2013</a></li>
-                    <li><a href="#">June 2013</a></li>
-                    <li><a href="#">May 2013</a></li>
-                    <li><a href="#">April 2013</a></li>
-                </ol>
-            </div>
-
-            <div class="p-3" hidden>
-                <h4 class="font-italic">Elsewhere</h4>
-                <ol class="list-unstyled">
-                    <li><a href="#">GitHub</a></li>
-                    <li><a href="#">Twitter</a></li>
-                    <li><a href="#">Facebook</a></li>
-                </ol>
-            </div>
         </aside>
 
     </div>
@@ -172,20 +142,19 @@
 
         // 搜索
         function search() {
-            var keyword = $("#keyword").val();
+            var keyword = $("#keyword").val().trim();
             location.replace("../article/search?keyword=" + keyword)
         }
-
 
         // // 配置图片浏览器
         // var viewer = new Viewer(document.getElementById('photo-viewer'));
 
         // 跳页
         function jump_page() {
-            var keyword = $("#keyword").val();
-            location.replace("../article/search?keyword=" + keyword)
-            var page = $("#page").val()
-            var size = $("#size").val()
+            var keyword = $("#keyword").val().trim();
+            location.replace("../article/search?keyword=" + keyword);
+            var page = $("#page").val().trim();
+            var size = $("#size").val().trim();
             var url = "../article/search?keyword=" + keyword + "&page=" + page + " &size=" + size;
             location.replace(url)
         }

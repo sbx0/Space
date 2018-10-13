@@ -13,15 +13,21 @@ function prevAndNext() {
             article.next_url = '';
             var prev_id = data.prev_id;
             var prev_title = data.prev_title;
+            article.prev_full = prev_title;
             if (prev_id != null) {
                 article.prevA = true;
+                if (prev_title.length > 7)
+                    prev_title = prev_title.substring(0, 7) + "..."
                 article.prev = prev_title;
                 article.prev_url = "../article/" + prev_id;
             }
             var next_id = data.next_id;
             var next_title = data.next_title;
+            article.next_full = next_title;
             if (next_id != null) {
                 article.nextA = true;
+                if (next_title.length > 7)
+                    next_title = next_title.substring(0, 7) + "..."
                 article.next = next_title;
                 article.next_url = "../article/" + next_id;
             }
@@ -125,6 +131,8 @@ var article = new Vue({
         next: i18N.next_article,
         prev_url: '#',
         next_url: '#',
+        prev_full: '',
+        next_full: '',
         comment: i18N.comment,
         comments: [],
         prevC: false,
