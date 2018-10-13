@@ -67,12 +67,10 @@
                     <p>
                         用户:
                         <span>
-                            <a th:text="${log?.user.name}" th:href="'../user/' + ${log?.user.id}"></a>
+                            <a th:text="${log?.user?.name}" th:href="'../user/' + ${log?.user?.id}"></a>
                         </span>
                         <span th:text="${log?.ip}"></span>
                     </p>
-                    </p>
-
                     <p>
                         时间:
                         <span th:text="${#dates.format(log?.time,'yyyy-MM-dd HH:mm:ss')}"></span>
@@ -150,9 +148,6 @@
 <script th:src="@{~/js/base.js}"></script>
 <section>
     <script>
-
-        // 配置图片浏览器
-        var viewer = new Viewer(document.getElementById('photo-viewer'));
 
         // 跳页
         function jump_page() {
