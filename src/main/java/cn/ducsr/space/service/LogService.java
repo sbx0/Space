@@ -3,7 +3,10 @@ package cn.ducsr.space.service;
 import cn.ducsr.space.dao.LogDao;
 import cn.ducsr.space.entity.Log;
 import cn.ducsr.space.entity.User;
-import org.omg.PortableInterceptor.USER_EXCEPTION;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +21,24 @@ import java.util.Date;
 public class LogService extends BaseService {
     @Resource
     private LogDao logDao;
+
+    public Page<Log> findAll(Integer page, Integer size) {
+        // 页数控制
+        if (page > 9999) page = 9999;
+        if (page < 0) page = 0;
+        // 条数控制
+        if (size > 1000) size = 1000;
+        if (size < 1) size = 1;
+        if (size == 0) size = 10;
+        // 分页配置
+        Sort sort = new Sort(Sort.Direction.DESC, "id");
+        Pageable pageable = PageRequest.of(page, size, sort);
+        try {
+            return logDao.findAll(pageable);
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
     /**
      * 保存日志
