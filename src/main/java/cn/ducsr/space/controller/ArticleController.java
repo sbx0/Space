@@ -47,26 +47,22 @@ public class ArticleController extends BaseController {
         if (!logService.check(request, 3))
             objectNode.put("status", 2);
         else {
-            // 登陆
-            if (user != null) {
-                Article article = articleService.findById(id, 0);
-                if (article != null) {
-                    int dislikes = article.getDislikes();
-                    if (dislikes < 0) dislikes = 0;
-                    dislikes++;
-                    if (dislikes + 1 > Integer.MAX_VALUE - 5) {
-                        dislikes--;
-                    }
-                    article.setDislikes(dislikes);
-                    try {
-                        articleService.save(article);
-                        objectNode.put("status", 0);
-                    } catch (Exception e) {
-                        objectNode.put("msg", e.getMessage());
-                        objectNode.put("status", 1);
-                    }
-                } else
+            Article article = articleService.findById(id, 0);
+            if (article != null) {
+                int dislikes = article.getDislikes();
+                if (dislikes < 0) dislikes = 0;
+                dislikes++;
+                if (dislikes + 1 > Integer.MAX_VALUE - 5) {
+                    dislikes--;
+                }
+                article.setDislikes(dislikes);
+                try {
+                    articleService.save(article);
+                    objectNode.put("status", 0);
+                } catch (Exception e) {
+                    objectNode.put("msg", e.getMessage());
                     objectNode.put("status", 1);
+                }
             } else
                 objectNode.put("status", 1);
             // 日志记录
@@ -92,8 +88,6 @@ public class ArticleController extends BaseController {
         if (!logService.check(request, 3))
             objectNode.put("status", 2);
         else {
-            // 登陆
-            if (user != null) {
                 Article article = articleService.findById(id, 0);
                 if (article != null) {
                     int likes = article.getLikes();
@@ -112,8 +106,6 @@ public class ArticleController extends BaseController {
                     }
                 } else
                     objectNode.put("status", 1);
-            } else
-                objectNode.put("status", 1);
             // 日志记录
             logService.log(user, request, true);
         }

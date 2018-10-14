@@ -80,13 +80,15 @@ public class LogService extends BaseService {
     @Transactional
     public boolean save(Log log) {
         // 不记录管理员的操作
-        if (log.getUser().getAuthority() == 0)
+        if (log.getUser() != null && log.getUser().getAuthority() == 0)
             return false;
-        try {
-            logDao.save(log);
-            return true;
-        } catch (Exception e) {
-            return false;
+        else {
+            try {
+                logDao.save(log);
+                return true;
+            } catch (Exception e) {
+                return false;
+            }
         }
     }
 
