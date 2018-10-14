@@ -22,6 +22,37 @@ public class LogService extends BaseService {
     @Resource
     private LogDao logDao;
 
+    /**
+     * 检测重复操作
+     *
+     * @param request
+     * @param minutes 事件
+     * @return
+     */
+    public boolean check(HttpServletRequest request, int minutes) {
+        String method = request.getServletPath();
+        String ip = BaseService.getIpAddress(request);
+        Log log = logDao.findByIpAndEvent(ip, method);
+        if (log == null)
+            return true;
+        Date time = log.getTime();
+        Date now = new Date();
+        long past = time.getTime();
+        long to = now.getTime();
+        int m = (int) ((to - past) / (1000 * 60));
+        if (m > minutes)
+            return true;
+        else
+            return false;
+    }
+
+    /**
+     * 查询全部
+     *
+     * @param page
+     * @param size
+     * @return
+     */
     public Page<Log> findAll(Integer page, Integer size) {
         // 页数控制
         if (page > 9999) page = 9999;
@@ -48,6 +79,9 @@ public class LogService extends BaseService {
      */
     @Transactional
     public boolean save(Log log) {
+        // 不记录管理员的操作
+        if (log.getUser().getAuthority() == 0)
+            return false;
         try {
             logDao.save(log);
             return true;
@@ -63,16 +97,21 @@ public class LogService extends BaseService {
      *
      * @return
      */
-    public boolean log(User user, HttpServletRequest httpServletRequest, boolean status) {
+    public boolean log(User user, HttpServletRequest request, boolean status) {
+        // Log
         Log log = new Log();
-        log.setTime(new Date());
+        // 记录ip
+        log.setIp(BaseService.getIpAddress(request));
         log.setUser(user);
-        log.setIp(BaseService.getIpAddress(httpServletRequest));
-        log.setEvent(httpServletRequest.getQueryString());
-        log.setMethod(httpServletRequest.getRequestURI());
+        log.setTime(new Date());
+        if (request.getQueryString() != null)
+            log.setEvent(request.getRequestURL().toString() + "?" + request.getQueryString());
+        else
+            log.setEvent(request.getRequestURL().toString());
+        log.setMethod(request.getServletPath());
         log.setStatus(status);
         try {
-            logDao.save(log);
+            save(log);
             return true;
         } catch (Exception e) {
             return false;

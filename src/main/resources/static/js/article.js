@@ -1,5 +1,32 @@
 var page = 1, size = 10;
 
+// 赞 踩
+function attitude(type) {
+    var att = '';
+    switch (type) {
+        case 1:
+            att = 'like';
+            break;
+        case 2:
+            att = 'dislike';
+            break;
+        default:
+            att = '';
+    }
+    $.ajax({
+        url: '../article/' + att + '?id=' + $("#id").val(),
+        type: 'GET',
+        success: function (data) {
+            if (data.status == 0) {
+                location.replace(location.href);
+            } else if (data.status == 2) {
+                alert("3分钟内只能赞/踩一次");
+            }
+        }
+    })
+}
+
+// 上一页 下一页
 function prevAndNext() {
     $.ajax({
         url: '../article/prevAndNext?id=' + $("#id").val() + '&u_id=' + $("#u_id").val(),

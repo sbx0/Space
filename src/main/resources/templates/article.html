@@ -77,7 +77,7 @@
                 <span th:text="${#dates.format(article.time,'yyyy-MM-dd HH:mm:ss')}"></span>
             <p>
 
-            <div id="markdown">
+            <div id="markdown" class="border-top">
                 <textarea style="display:none;" th:text="${article.content}"></textarea>
             </div>
 
@@ -88,6 +88,33 @@
                 </div>
                 <button type="submit" class="btn btn-primary btn-sm">提交</button>
             </form>
+
+            <ul class="nav justify-content-center mt-3 border-top">
+                <li class="nav-item">
+                    <a class="nav-link text-danger" onclick="attitude(1)" href="javascript:void(0)">
+                        赞
+                        <span th:text="${article.likes}">0</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark" onclick="attitude(2)" href="javascript:void(0)">
+                        踩
+                        <span th:text="${article.dislikes}">0</span>
+                    </a>
+                </li>
+                <li class="nav-item" hidden>
+                    <a class="nav-link disabled" href="javascript:void(0)">
+                        喜欢
+                        <span>0</span>
+                    </a>
+                </li>
+                <li class="nav-item" hidden>
+                    <a class="nav-link disabled" href="javascript:void(0)">
+                        收藏
+                        <span>0</span>
+                    </a>
+                </li>
+            </ul>
 
             <nav class="blog-pagination" v-cloak>
                 <a v-if="prevA" class="btn btn-sm btn-outline-primary" :href="prev_url" :title="prev_full">{{prev}}</a>

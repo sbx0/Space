@@ -1,4 +1,4 @@
-### [Space](http://space.ducsr.cn "Space")   
+### [Space](http://space.sbx0.cn "Space")   
    
 ###### 基于Spring Boot和Vue.js的博客项目   
    
@@ -11,9 +11,9 @@ JavaScript框架:[Vue.js](https://cn.vuejs.org/index.html "Vue.js")
    
 ------------
    
-这是一个正在开发的博客项目，你可以访问 [http://space.ducsr.cn](http://space.ducsr.cn "http://space.ducsr.cn") 查看实际效果   
+这是一个正在开发的博客项目，你可以访问 [http://space.sbx0.cn](http://space.sbx0.cn "http://space.sbx0.cn") 查看实际效果   
    
-如果有好的意见与建议，可以在 [反馈](http://blog.ducsr.cn/bugs.jsp "反馈") 处提交   
+如果有好的意见与建议，可以在 [反馈](http://blog.sbx0.cn/bugs.jsp "反馈") 处提交   
    
 ------------
    

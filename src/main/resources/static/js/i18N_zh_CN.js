@@ -46,7 +46,6 @@ var i18N = {
         '前端框架:Bootstrap<br>' +
         '后端框架:Spring Boot<br>' +
         'JavaScript框架:Vue.js<br>',
-    copyright: '样式模板来自 <a href="https://getbootstrap.com/">Bootstrap</a> 作者 <a href="https://twitter.com/mdo">@mdo</a>' +
-        '<br><a href="http://weibo.com/ihomemwh" target="_blank">Ducsr.cn</a> 个人网站 2017 - 2018',
+    copyright: '<a href="https://github.com/sbx0/" target="_blank">sbx0</a> 个人网站 2017 - 2018',
     back_to_top: '返回顶部',
 }

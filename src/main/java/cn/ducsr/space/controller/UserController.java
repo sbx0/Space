@@ -28,6 +28,8 @@ public class UserController extends BaseController {
     private UserService userService;
     @Resource
     private ArticleService articleService;
+    @Resource
+    private LogService logService;
 
     /**
      * 获取用户详情
@@ -37,12 +39,13 @@ public class UserController extends BaseController {
      * @return JSON串
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public String one(Map<String, Object> map, @PathVariable("id") Integer id, Integer page, Integer size) {
+    public String one(Map<String, Object> map, @PathVariable("id") Integer id, Integer page, Integer size, HttpServletRequest request) {
+        User user = userService.getCookieUser(request);
         if (page == null) page = 1;
         if (size == null) size = 10;
         // 分页查询
         Page<Article> articlePage = articleService.findByUser(id, page - 1, size);
-        User user = userService.findById(id);
+        User u = userService.findById(id);
         if (articlePage != null) {
             // 取出文章列表
             List<Article> articles = articleService.filter(articlePage.getContent());
@@ -61,14 +64,18 @@ public class UserController extends BaseController {
             if (page + 1 <= articlePage.getTotalPages()) map.put("next_page", page + 1);
             if (page - 1 > 0) map.put("prev_page", page - 1);
             if (page - 1 > articlePage.getTotalPages()) map.put("prev_page", null);
-            if (user == null) {
-                user = new User();
-                user.setName("该用户不存在");
+            if (u == null) {
+                u = new User();
+                u.setName("该用户不存在");
             }
         } else {
             map.put("articles", null);
         }
-        map.put("user", user);
+        map.put("user", u);
+
+        // 日志记录
+        logService.log(user, request, true);
+
         return "user";
     }
 
@@ -190,6 +197,10 @@ public class UserController extends BaseController {
             objectNode.put("status", "1");
         }
         // 返回json串
+
+        // 日志记录
+        logService.log(user, request, true);
+
         return objectNode;
     }
 
