@@ -74,7 +74,7 @@
                 <span th:text="${#dates.format(article.time,'yyyy-MM-dd HH:mm:ss')}"></span>
             <p>
 
-            <div id="markdown">
+            <div th:if="${password != 1}" id="markdown">
                 <textarea style="display:none;" th:text="${article.content}"></textarea>
             </div>
 
@@ -178,10 +178,12 @@
                 <h4>版权声明</h4>
                 <p>
                     作者:
-                    <a th:href="'http://space.sbx0.cn/user/' + ${article.author.id}" th:text="${article.author.name}"></a>
+                    <a th:href="'http://space.sbx0.cn/user/' + ${article.author.id}"
+                       th:text="${article.author.name}"></a>
                     <br>
                     链接:
-                    <a th:href="'http://space.sbx0.cn' + ${#httpServletRequest.requestURI}" th:text="'http://space.sbx0.cn' + ${#httpServletRequest.requestURI}"></a>
+                    <a th:href="'http://space.sbx0.cn' + ${#httpServletRequest.requestURI}"
+                       th:text="'http://space.sbx0.cn' + ${#httpServletRequest.requestURI}"></a>
                     <br>
                     本博客所有文章除特别声明外，均采用
                     <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a>

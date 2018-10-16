@@ -223,31 +223,35 @@ public class ArticleController extends BaseController {
     /**
      * 密码文章验证密码
      *
-     * @param id       文章ID
-     * @param password 输入的密码
      * @param map
      * @return 对应页面
      */
     @RequestMapping(value = "/checkPassword", method = RequestMethod.POST)
-    public String checkPassword(Integer id, String password, Map<String, Object> map) {
+    public String checkPassword(Article article, Map<String, Object> map, HttpServletRequest request) {
+        // 从cookie中获取登陆用户信息
+        User user = userService.getCookieUser(request);
         // 判断密码是否为空字符串
-        if (BaseService.checkNullStr(password))
+        if (BaseService.checkNullStr(article.getPassword()))
             return "error";
         // 获取文章信息
-        Article article = articleService.findById(id, 1);
+        Article a = articleService.findById(article.getId(), 1);
         // 文章不存在
-        if (article == null) return "error";
+        if (a == null) return "error";
         // 加密密码
-        password = BaseService.getHash(password.trim(), "MD5");
+        String password = BaseService.getHash(article.getPassword().trim(), "MD5");
         // 验证密码是否正确
-        if (password.equals(article.getPassword())) {
-            map.put("article", article);
+        if (password.equals(a.getPassword())) {
+            map.put("article", a);
+            if (user != null)
+                if (a.getAuthor().getId() == user.getId() || user.getAuthority() == 0)
+                    map.put("manage", 1);
             return "article";
         } else {
-            article.setContent("密码错误，请确认密码是否正确");
-            map.put("article", article);
+            a.setContent("密码错误，请确认密码是否正确");
+            map.put("article", a);
             // 页面根据此字段判断是否该文章是否需要输入密码
             map.put("password", 1);
+            map.put("manage", 0);
             return "article";
         }
     }
@@ -582,16 +586,14 @@ public class ArticleController extends BaseController {
         else
             article = articleService.findById(id, 0);
 
-        if (user != null)
-            if (article.getAuthor().getId() == user.getId() || user.getAuthority() == 0)
-                map.put("manage", 1);
-
         if (article == null) return "error";
 
-        if (article.getPassword() == null || article.getPassword().equals(""))
+        if (article.getPassword() == null || article.getPassword().equals("")) {
             map.put("article", article);
-        else {
-            article.setContent("");
+            if (user != null)
+                if (article.getAuthor().getId() == user.getId() || user.getAuthority() == 0)
+                    map.put("manage", 1);
+        } else {
             map.put("article", article);
             map.put("password", 1);
             map.put("manage", 0);

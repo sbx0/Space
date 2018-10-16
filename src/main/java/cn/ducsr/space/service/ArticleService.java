@@ -326,9 +326,13 @@ public class ArticleService extends BaseService {
             simpleArticle.setContent(article.getContent());
             if (checkNullStr(article.getIntroduction())) {
                 String content = article.getContent().trim();
-                if (content.length() > 250)
-                    simpleArticle.setContent(BaseService.killHTML(content).substring(0, 250) + " ...");
-                else
+                if (content.length() > 250) {
+                    String killHTMLString = BaseService.killHTML(content);
+                    if (killHTMLString.length() > 250)
+                        simpleArticle.setContent(killHTMLString.substring(0, 250) + " ...");
+                    else
+                        simpleArticle.setContent(killHTMLString + " ...");
+                } else
                     simpleArticle.setContent(BaseService.killHTML(content) + " ...");
             } else {
                 simpleArticle.setContent(BaseService.killHTML(article.getIntroduction()));
