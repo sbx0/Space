@@ -51,6 +51,10 @@
                 </div>
                 <input type="hidden" class="form-control" id="id" name="id" th:value="${article.id}">
                 <input type="hidden" class="form-control" id="content" name="content" th:value="${article.content}">
+                <div class="form-group">
+                    <label for="title">简介</label>
+                    <textarea name="introduction" th:text="${article.introduction}" class="form-control"></textarea>
+                </div>
                 <div id="editor" class="form-group">
                     <textarea id="markdown" style="display:none;" th:text="${article.content}"></textarea>
                 </div>

@@ -17,6 +17,8 @@ public class Article {
     private String title; // 标题
     @Column(nullable = false)
     private Date time; // 时间
+    @Column(length = 250)
+    private String introduction; // 简介
     @Lob
     @Column(nullable = false)
     private String content; // 内容
@@ -50,14 +52,6 @@ public class Article {
 
     // Set Get Begin
 
-    public Integer getTop() {
-        return top;
-    }
-
-    public void setTop(Integer top) {
-        this.top = top;
-    }
-
     public Integer getId() {
         return id;
     }
@@ -71,8 +65,7 @@ public class Article {
     }
 
     public void setTitle(String title) {
-        if (title.length() > 30) title = title.substring(0, 30);
-        this.title = title.trim();
+        this.title = title;
     }
 
     public Date getTime() {
@@ -83,12 +76,20 @@ public class Article {
         this.time = time;
     }
 
+    public String getIntroduction() {
+        return introduction;
+    }
+
+    public void setIntroduction(String introduction) {
+        this.introduction = introduction;
+    }
+
     public String getContent() {
         return content;
     }
 
     public void setContent(String content) {
-        this.content = content.trim();
+        this.content = content;
     }
 
     public Date getLastChangeTime() {
@@ -139,6 +140,14 @@ public class Article {
         this.dislikes = dislikes;
     }
 
+    public Integer getTop() {
+        return top;
+    }
+
+    public void setTop(Integer top) {
+        this.top = top;
+    }
+
     public User getAuthor() {
         return author;
     }
@@ -147,14 +156,13 @@ public class Article {
         this.author = author;
     }
 
-    // Set Get End
-
     @Override
     public String toString() {
         return "Article{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", time=" + time +
+                ", introduction='" + introduction + '\'' +
                 ", content='" + content + '\'' +
                 ", lastChangeTime=" + lastChangeTime +
                 ", password='" + password + '\'' +

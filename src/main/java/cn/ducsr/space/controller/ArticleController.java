@@ -1,7 +1,11 @@
 package cn.ducsr.space.controller;
 
-import cn.ducsr.space.entity.*;
-import cn.ducsr.space.service.*;
+import cn.ducsr.space.entity.Article;
+import cn.ducsr.space.entity.User;
+import cn.ducsr.space.service.ArticleService;
+import cn.ducsr.space.service.BaseService;
+import cn.ducsr.space.service.LogService;
+import cn.ducsr.space.service.UserService;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
@@ -88,24 +92,24 @@ public class ArticleController extends BaseController {
         if (!logService.check(request, 3))
             objectNode.put("status", 2);
         else {
-                Article article = articleService.findById(id, 0);
-                if (article != null) {
-                    int likes = article.getLikes();
-                    if (likes < 0) likes = 0;
-                    likes++;
-                    if (likes + 1 > Integer.MAX_VALUE - 5) {
-                        likes--;
-                    }
-                    article.setLikes(likes);
-                    try {
-                        articleService.save(article);
-                        objectNode.put("status", 0);
-                    } catch (Exception e) {
-                        objectNode.put("msg", e.getMessage());
-                        objectNode.put("status", 1);
-                    }
-                } else
+            Article article = articleService.findById(id, 0);
+            if (article != null) {
+                int likes = article.getLikes();
+                if (likes < 0) likes = 0;
+                likes++;
+                if (likes + 1 > Integer.MAX_VALUE - 5) {
+                    likes--;
+                }
+                article.setLikes(likes);
+                try {
+                    articleService.save(article);
+                    objectNode.put("status", 0);
+                } catch (Exception e) {
+                    objectNode.put("msg", e.getMessage());
                     objectNode.put("status", 1);
+                }
+            } else
+                objectNode.put("status", 1);
             // 日志记录
             logService.log(user, request, true);
         }
@@ -533,11 +537,13 @@ public class ArticleController extends BaseController {
                     a = articleService.findById(article.getId(), 0);
                 a.setTitle(article.getTitle().trim());
                 a.setContent(article.getContent().trim());
+                a.setIntroduction(article.getIntroduction().trim());
                 a.setLastChangeTime(new Date());
                 articleService.save(a);
             } else {
                 article.setTitle(BaseService.killHTML(article.getTitle().trim()));
                 article.setContent(article.getContent().trim());
+                article.setIntroduction(article.getIntroduction().trim());
                 article.setTime(new Date());
                 article.setComments(0);
                 article.setLikes(0);
@@ -575,6 +581,11 @@ public class ArticleController extends BaseController {
             article = articleService.findById(id, 1);
         else
             article = articleService.findById(id, 0);
+
+        if (user != null)
+            if (article.getAuthor().getId() == user.getId() || user.getAuthority() == 0)
+                map.put("manage", 1);
+
         if (article == null) return "error";
 
         if (article.getPassword() == null || article.getPassword().equals(""))
@@ -583,6 +594,7 @@ public class ArticleController extends BaseController {
             article.setContent("");
             map.put("article", article);
             map.put("password", 1);
+            map.put("manage", 0);
         }
 
         // 日志记录

@@ -3,11 +3,11 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="blog">
+    <meta name="description" content="sbx0 个人博客 日志列表">
     <meta name="author" content="sbx0">
     <link rel="icon" th:href="@{~/img/favicon.png}">
 
-    <title>日志详情</title>
+    <title>日志详情 - sbx0.cn</title>
 
     <link rel="stylesheet" th:href="@{~/css/bootstrap.min.css}">
 
@@ -69,7 +69,9 @@
                         <span>
                             <a th:text="${log?.user?.name}" th:href="'../user/' + ${log?.user?.id}"></a>
                         </span>
-                        <span th:text="${log?.ip}"></span>
+                        <span>
+                            <a th:text="${log?.ip}" th:href="'https://ip.cn/index.php?ip=' + ${log?.ip}"></a>
+                        </span>
                     </p>
                     <p>
                         时间:

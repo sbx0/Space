@@ -2,7 +2,7 @@
 function logout() {
     $.ajax({
         type: "get",
-        url: "user/logout",
+        url: "../user/logout",
         success: function (data) {
             location.replace(location.href);
         }
@@ -37,7 +37,7 @@ if (login()) {
     login_div.info_seen = true;
     login_div.form_seen = false;
     $.ajax({
-        url: 'user/info',
+        url: '../user/info',
         type: 'GET',
         success: function (data) {
             if (data.status == 0) {
@@ -73,7 +73,7 @@ $("#login").click(function () {
     }
     $.ajax({
         type: "post",
-        url: "user/login",
+        url: "../user/login",
         data: $("#loginForm").serialize(),
         dataType: "json",
         success: function (data) {
