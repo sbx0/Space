@@ -45,12 +45,10 @@ public class CommentController extends BaseController {
         // 从cookie中获取登陆用户信息
         User user = userService.getCookieUser(request);
         // 检测重复操作
-        if (!logService.check(request, 60))
+        if (!logService.check(request, 5))
             objectNode.put("status", 2);
         else if (BaseService.checkNullStr(comment.getContent())) {
             objectNode.put("status", 1);
-            // 日志记录
-            logService.log(user, request, false);
         } else {
             // 若登录
             if (user != null) {
@@ -79,9 +77,9 @@ public class CommentController extends BaseController {
             } catch (Exception e) {
                 objectNode.put("status", 1);
             }
-            // 日志记录
-            logService.log(user, request, true);
         }
+        // 日志记录
+        logService.log(user, request);
         return objectNode;
     }
 

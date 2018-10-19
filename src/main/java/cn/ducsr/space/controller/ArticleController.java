@@ -48,7 +48,7 @@ public class ArticleController extends BaseController {
         // 从cookie中获取登陆用户信息
         User user = userService.getCookieUser(request);
         // 检测重复操作
-        if (!logService.check(request, 3))
+        if (!logService.check(request, 1440))
             objectNode.put("status", 2);
         else {
             Article article = articleService.findById(id, 0);
@@ -70,7 +70,7 @@ public class ArticleController extends BaseController {
             } else
                 objectNode.put("status", 1);
             // 日志记录
-            logService.log(user, request, true);
+            logService.log(user, request);
         }
         return objectNode;
     }
@@ -89,7 +89,7 @@ public class ArticleController extends BaseController {
         // 从cookie中获取登陆用户信息
         User user = userService.getCookieUser(request);
         // 检测重复操作
-        if (!logService.check(request, 3))
+        if (!logService.check(request, 1440))
             objectNode.put("status", 2);
         else {
             Article article = articleService.findById(id, 0);
@@ -111,7 +111,7 @@ public class ArticleController extends BaseController {
             } else
                 objectNode.put("status", 1);
             // 日志记录
-            logService.log(user, request, true);
+            logService.log(user, request);
         }
         return objectNode;
     }
@@ -150,6 +150,7 @@ public class ArticleController extends BaseController {
      */
     @RequestMapping(value = "/search")
     public String search(String keyword, Integer page, Integer size, Map<String, Object> map, HttpServletRequest request) {
+        if (keyword != null && keyword.length() > 20) return "error";
         // 从cookie中获取登陆用户信息
         User user = userService.getCookieUser(request);
         if (page == null) page = 1;
@@ -180,7 +181,7 @@ public class ArticleController extends BaseController {
         }
 
         // 日志记录
-        logService.log(user, request, true);
+        logService.log(user, request);
 
         return "search";
     }
@@ -331,7 +332,7 @@ public class ArticleController extends BaseController {
         }
 
         // 日志记录
-        logService.log(user, request, true);
+        logService.log(user, request);
 
         return objectNode;
     }
@@ -424,7 +425,7 @@ public class ArticleController extends BaseController {
         }
 
         // 日志记录
-        logService.log(user, request, true);
+        logService.log(user, request);
 
         return objectNode;
     }
@@ -600,7 +601,7 @@ public class ArticleController extends BaseController {
         }
 
         // 日志记录
-        logService.log(user, request, true);
+        logService.log(user, request);
 
         return "article";
     }

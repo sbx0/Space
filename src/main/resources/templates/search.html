@@ -142,6 +142,8 @@
         // 搜索
         function search() {
             var keyword = $("#keyword").val().trim();
+            if (keyword > 20)
+                keyword = keyword.substring(0, 20)
             location.replace("../article/search?keyword=" + keyword)
         }
 
@@ -151,6 +153,8 @@
         // 跳页
         function jump_page() {
             var keyword = $("#keyword").val().trim();
+            if (keyword > 20)
+                keyword = keyword.substring(0, 20)
             location.replace("../article/search?keyword=" + keyword);
             var page = $("#page").val().trim();
             var size = $("#size").val().trim();

@@ -19,11 +19,11 @@ public class Log {
     @Column(nullable = false)
     private Date time; // 时间
     @Column(length = 100)
-    private String event; // 事件
+    private String query; // 事件
     @Column(nullable = false, length = 100)
     private String method; // 方法
     @Column(nullable = false)
-    private boolean status; // 状态
+    private String url; // url
 
     public Integer getId() {
         return id;
@@ -57,12 +57,12 @@ public class Log {
         this.time = time;
     }
 
-    public String getEvent() {
-        return event;
+    public String getQuery() {
+        return query;
     }
 
-    public void setEvent(String event) {
-        this.event = event;
+    public void setQuery(String query) {
+        this.query = query;
     }
 
     public String getMethod() {
@@ -73,11 +73,24 @@ public class Log {
         this.method = method;
     }
 
-    public boolean isStatus() {
-        return status;
+    public String getUrl() {
+        return url;
     }
 
-    public void setStatus(boolean status) {
-        this.status = status;
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    @Override
+    public String toString() {
+        return "Log{" +
+                "id=" + id +
+                ", ip='" + ip + '\'' +
+                ", user=" + user +
+                ", time=" + time +
+                ", query='" + query + '\'' +
+                ", method='" + method + '\'' +
+                ", url='" + url + '\'' +
+                '}';
     }
 }

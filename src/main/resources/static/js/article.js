@@ -20,7 +20,7 @@ function attitude(type) {
             if (data.status == 0) {
                 location.replace(location.href);
             } else if (data.status == 2) {
-                alert("3分钟内只能赞/踩一次");
+                alert("不要重复操作");
             }
         }
     })
@@ -89,7 +89,7 @@ function comment() {
                 $("#content").val("");
                 loadComment('0');
             } else if (data.status == 2) {
-                alert("60分钟内只能评论一次");
+                alert("5分钟内只能评论一次");
             } else {
                 alert("发布失败！");
             }

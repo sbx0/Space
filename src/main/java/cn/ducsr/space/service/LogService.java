@@ -30,11 +30,27 @@ public class LogService extends BaseService {
      * @return
      */
     public boolean check(HttpServletRequest request, int minutes) {
-        String method = request.getServletPath();
         String ip = BaseService.getIpAddress(request);
-        Log log = logDao.findByIpAndEvent(ip, method);
+        String method = request.getServletPath();
+        String query = request.getQueryString();
+        Log log;
+        if (!query.equals("")) {
+            if (method.equals("/article/dislike") && !query.equals("")) {
+                log = logDao.findByIpAndMethodAndQuery(ip, "/article/like", query);
+                if (log != null)
+                    return false;
+            }
+            if (method.equals("/article/like") && !query.equals("")) {
+                log = logDao.findByIpAndMethodAndQuery(ip, "/article/dislike", request.getQueryString());
+                if (log != null)
+                    return false;
+            }
+            log = logDao.findByIpAndMethodAndQuery(ip, method, query);
+        } else
+            log = logDao.findByIpAndEvent(ip, method);
         if (log == null)
             return true;
+
         Date time = log.getTime();
         Date now = new Date();
         long past = time.getTime();
@@ -99,19 +115,27 @@ public class LogService extends BaseService {
      *
      * @return
      */
-    public boolean log(User user, HttpServletRequest request, boolean status) {
+    public boolean log(User user, HttpServletRequest request) {
         // Log
         Log log = new Log();
         // 记录ip
         log.setIp(BaseService.getIpAddress(request));
         log.setUser(user);
         log.setTime(new Date());
-        if (request.getQueryString() != null)
-            log.setEvent(request.getRequestURL().toString() + "?" + request.getQueryString());
-        else
-            log.setEvent(request.getRequestURL().toString());
+        if (request.getQueryString() != null) {
+            log.setQuery(request.getQueryString());
+            log.setUrl(request.getRequestURL().toString() + "?" + request.getQueryString());
+        } else
+            log.setUrl(request.getRequestURL().toString());
         log.setMethod(request.getServletPath());
-        log.setStatus(status);
+
+        // 刷新不记录log
+        Log prevLog = logDao.findByIpAndUrl(log.getIp());
+        if (prevLog != null && prevLog.getUrl().equals(log.getUrl()))
+            return false;
+
+        if (log == null)
+            return true;
         try {
             save(log);
             return true;

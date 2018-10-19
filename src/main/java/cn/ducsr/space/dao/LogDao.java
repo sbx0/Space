@@ -12,13 +12,31 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 public interface LogDao extends PagingAndSortingRepository<Log, Integer> {
 
     /**
+     * 查询某ip的最近一次操作
+     *
+     * @param ip
+     * @return
+     */
+    @Query(value = "select  * from logs l where l.ip = ?1 and l.method = ?2 and l.query = ?3 order by l.id desc limit 1", nativeQuery = true)
+    Log findByIpAndMethodAndQuery(String ip, String method, String query);
+
+    /**
+     * 查询某ip的最近一次操作
+     *
+     * @param ip
+     * @return
+     */
+    @Query(value = "select  * from logs l where l.ip = ?1 order by l.id desc limit 1", nativeQuery = true)
+    Log findByIpAndUrl(String ip);
+
+    /**
      * 查询某ip的某个方法的最近一次操作
      *
      * @param ip
      * @param method
      * @return
      */
-    @Query(value = "select  * from logs l where l.ip = ?1 and l.method = ?2 order by l.time desc limit 1", nativeQuery = true)
+    @Query(value = "select  * from logs l where l.ip = ?1 and l.method = ?2 order by l.id desc limit 1", nativeQuery = true)
     Log findByIpAndEvent(String ip, String method);
 
     /**

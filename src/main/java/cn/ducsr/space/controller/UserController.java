@@ -74,7 +74,7 @@ public class UserController extends BaseController {
         map.put("user", u);
 
         // 日志记录
-        logService.log(user, request, true);
+        logService.log(user, request);
 
         return "user";
     }
@@ -196,11 +196,10 @@ public class UserController extends BaseController {
             // 操作状态保存
             objectNode.put("status", "1");
         }
-        // 返回json串
-
         // 日志记录
-        logService.log(user, request, true);
+        logService.log(user, request);
 
+        // 返回json串
         return objectNode;
     }
 
