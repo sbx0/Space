@@ -1,9 +1,9 @@
-package cn.ducsr.space.controller;
+package cn.sbx0.space.controller;
 
-import cn.ducsr.space.entity.Log;
-import cn.ducsr.space.entity.User;
-import cn.ducsr.space.service.LogService;
-import cn.ducsr.space.service.UserService;
+import cn.sbx0.space.entity.Log;
+import cn.sbx0.space.entity.User;
+import cn.sbx0.space.service.LogService;
+import cn.sbx0.space.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

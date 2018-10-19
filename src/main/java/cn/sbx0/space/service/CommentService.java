@@ -1,7 +1,7 @@
-package cn.ducsr.space.service;
+package cn.sbx0.space.service;
 
-import cn.ducsr.space.dao.CommentDao;
-import cn.ducsr.space.entity.Comment;
+import cn.sbx0.space.dao.CommentDao;
+import cn.sbx0.space.entity.Comment;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

@@ -1,6 +1,6 @@
-package cn.ducsr.space.dao;
+package cn.sbx0.space.dao;
 
-import cn.ducsr.space.entity.User;
+import cn.sbx0.space.entity.User;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 

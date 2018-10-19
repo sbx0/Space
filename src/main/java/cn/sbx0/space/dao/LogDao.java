@@ -1,6 +1,6 @@
-package cn.ducsr.space.dao;
+package cn.sbx0.space.dao;
 
-import cn.ducsr.space.entity.Log;
+import cn.sbx0.space.entity.Log;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;

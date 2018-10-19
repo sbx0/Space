@@ -1,24 +1,10 @@
-package cn.ducsr.space.service;
+package cn.sbx0.space.service;
 
-import cn.ducsr.space.dao.ArticleDao;
-import cn.ducsr.space.dao.UserDao;
-import cn.ducsr.space.entity.Article;
-import cn.ducsr.space.entity.User;
-import com.redfin.sitemapgenerator.ChangeFreq;
-import com.redfin.sitemapgenerator.WebSitemapGenerator;
-import com.redfin.sitemapgenerator.WebSitemapUrl;
-import org.springframework.beans.factory.annotation.Value;
-
-import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

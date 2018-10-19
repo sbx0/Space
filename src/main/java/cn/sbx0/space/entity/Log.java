@@ -1,4 +1,4 @@
-package cn.ducsr.space.entity;
+package cn.sbx0.space.entity;
 
 import javax.persistence.*;
 import java.util.Date;

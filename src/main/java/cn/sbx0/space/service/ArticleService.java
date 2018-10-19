@@ -1,9 +1,9 @@
-package cn.ducsr.space.service;
+package cn.sbx0.space.service;
 
-import cn.ducsr.space.dao.ArticleDao;
-import cn.ducsr.space.dao.UserDao;
-import cn.ducsr.space.entity.Article;
-import cn.ducsr.space.entity.User;
+import cn.sbx0.space.dao.ArticleDao;
+import cn.sbx0.space.dao.UserDao;
+import cn.sbx0.space.entity.Article;
+import cn.sbx0.space.entity.User;
 import com.redfin.sitemapgenerator.ChangeFreq;
 import com.redfin.sitemapgenerator.WebSitemapGenerator;
 import com.redfin.sitemapgenerator.WebSitemapUrl;

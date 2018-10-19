@@ -1,8 +1,8 @@
-package cn.ducsr.space.service;
+package cn.sbx0.space.service;
 
-import cn.ducsr.space.dao.LogDao;
-import cn.ducsr.space.entity.Log;
-import cn.ducsr.space.entity.User;
+import cn.sbx0.space.dao.LogDao;
+import cn.sbx0.space.entity.Log;
+import cn.sbx0.space.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -32,11 +32,11 @@ public class LogService extends BaseService {
      * @return
      */
     public boolean check(HttpServletRequest request, int minutes) {
-        String ip = BaseService.getIpAddress(request); // 用户IP
+        String ip = getIpAddress(request); // 用户IP
         String method = request.getServletPath(); // 运行的方法
         String query = request.getQueryString(); // 参数
         List<Log> logs = new ArrayList<>();
-        if (!query.equals("")) { // 参数不为空
+        if (!BaseService.checkNullStr(query)) { // 参数不为空
             if (method.equals("/article/dislike") && !query.equals("")) // 若踩则找赞
                 logs = logDao.findByIpAndMethodAndQuery(ip, "/article/like", query, 1);
             if (method.equals("/article/like") && !query.equals("")) // 若赞则找踩
@@ -112,7 +112,7 @@ public class LogService extends BaseService {
         // Log
         Log log = new Log();
         // 记录ip
-        log.setIp(BaseService.getIpAddress(request));
+        log.setIp(getIpAddress(request));
         log.setUser(user);
         log.setTime(new Date());
         if (request.getQueryString() != null) {

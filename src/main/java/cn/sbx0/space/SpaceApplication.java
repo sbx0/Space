@@ -1,4 +1,4 @@
-package cn.ducsr.space;
+package cn.sbx0.space;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

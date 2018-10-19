@@ -1,4 +1,4 @@
-package cn.ducsr.space.controller;
+package cn.sbx0.space.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
