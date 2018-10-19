@@ -88,6 +88,8 @@ function comment() {
                 alert("发布成功！");
                 $("#content").val("");
                 loadComment('0');
+            } else if (data.status == 2) {
+                alert("60分钟内只能评论一次");
             } else {
                 alert("发布失败！");
             }

@@ -4,6 +4,7 @@ import cn.ducsr.space.entity.Comment;
 import cn.ducsr.space.entity.User;
 import cn.ducsr.space.service.BaseService;
 import cn.ducsr.space.service.CommentService;
+import cn.ducsr.space.service.LogService;
 import cn.ducsr.space.service.UserService;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.data.domain.Page;
@@ -27,6 +28,8 @@ public class CommentController extends BaseController {
     private CommentService commentService;
     @Resource
     private UserService userService;
+    @Resource
+    private LogService logService;
 
     /**
      * 发布评论
@@ -39,11 +42,16 @@ public class CommentController extends BaseController {
     @RequestMapping(value = "/post", method = RequestMethod.POST)
     public ObjectNode post(Comment comment, HttpServletRequest request) {
         objectNode = mapper.createObjectNode();
-        if (BaseService.checkNullStr(comment.getContent())) {
+        // 从cookie中获取登陆用户信息
+        User user = userService.getCookieUser(request);
+        // 检测重复操作
+        if (!logService.check(request, 60))
+            objectNode.put("status", 2);
+        else if (BaseService.checkNullStr(comment.getContent())) {
             objectNode.put("status", 1);
+            // 日志记录
+            logService.log(user, request, false);
         } else {
-            // 从cookie中获取登陆用户信息
-            User user = userService.getCookieUser(request);
             // 若登录
             if (user != null) {
                 comment.setUser_id(user.getId());
@@ -71,6 +79,8 @@ public class CommentController extends BaseController {
             } catch (Exception e) {
                 objectNode.put("status", 1);
             }
+            // 日志记录
+            logService.log(user, request, true);
         }
         return objectNode;
     }
