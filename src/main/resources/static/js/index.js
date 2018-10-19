@@ -25,13 +25,13 @@ var list_article = new Vue({
                 '<h2 class="blog-post-title"><a :href="article.id" class="text-dark">{{article.title}}</a></h2>' +
                 '<p class="blog-post-meta"><a :href ="article.author.id">{{article.author.name}}</a>&nbsp;{{article.time}}</p>' +
                 '<div v-html="article.content"></div>' +
-                '<a class="continue-read btn btn-light" :href ="article.id">' +
-                i18N.continue + i18N.read + '</a></transition>',
+                '<a class="btn btn-sm btn-light continue-read" :href ="article.id">' +
+                i18N.read + i18N.detail+ '</a></transition>',
         },
     },
     created: function () {
         $.ajax({
-            url: i18N.json.article.list + '?page=1&size=10',
+            url: i18N.json.article.list,
             type: 'GET',
             success: function (data) {
                 if (data.length > 0) {
@@ -65,7 +65,7 @@ var top_article = new Vue({
     },
     created: function () {
         $.ajax({
-            url: i18N.json.article.top + "?size=2",
+            url: i18N.json.article.top,
             type: 'GET',
             success: function (data) {
                 if (data.length > 0) {
@@ -82,11 +82,11 @@ new Vue({
     data: {
         groceryList: [
             {id: 1, text: i18N.search, url: 'article/search'},
-            {id: 2, text: i18N.market, url: 'http://blog.ducsr.cn/market.jsp'},
-            {id: 3, text: i18N.message, url: 'http://blog.ducsr.cn/msg.jsp'},
-            {id: 4, text: i18N.tools, url: 'http://blog.ducsr.cn/tools.jsp'},
-            {id: 5, text: i18N.feedback, url: 'http://blog.ducsr.cn/bugs.jsp'},
-            {id: 6, text: i18N.more, url: 'http://blog.ducsr.cn/index'},
+            {id: 2, text: i18N.market, url: 'http://blog.sbx0.cn/market.jsp'},
+            {id: 3, text: i18N.message, url: 'http://blog.sbx0.cn/msg.jsp'},
+            {id: 4, text: i18N.tools, url: 'http://blog.sbx0.cn/tools.jsp'},
+            {id: 5, text: i18N.feedback, url: 'http://blog.sbx0.cn/bugs.jsp'},
+            {id: 6, text: i18N.more, url: 'http://blog.sbx0.cn/index'},
         ]
     },
     components: {
@@ -101,7 +101,7 @@ new Vue({
 function formate(data) {
     for (var i = 0; i < data.length; i++) {
         data[i].id = i18N.json.article.one + data[i].id;
-        data[i].author.id = "../user/" + data[i].author.id + "?page=1&size=10";
+        data[i].author.id = "../user/" + data[i].author.id;
         var d = new Date(data[i].time);
         var times = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + ' ' + d.getHours() + ':' + d.getMinutes();
         var time = Format(getDate(times.toString()), "yyyy-MM-dd HH:mm")

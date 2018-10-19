@@ -78,26 +78,38 @@
                         <span th:text="${#dates.format(log?.time,'yyyy-MM-dd HH:mm:ss')}"></span>
                     </p>
                     <p>
+                        链接:
+                        <a th:href="${log?.url}" th:text="${log?.url}"></a>
+                    </p>
+                    <p>
                         方法:
                         <span th:text="${log?.method}"></span>
                     </p>
                     <p>
-                        事件:
-                        <a th:href="${log?.query}" th:text="${log?.query}"></a>
+                        参数:
+                        <span th:text="${log?.query}"></span>
                     </p>
                 </li>
             </ul>
 
-            <nav class="blog-pagination text-center">
+            <nav th:if="${logs != null}" class="blog-pagination text-center">
                 <a th:if="${prev_page != null}"
                    th:href="'?page=' + ${prev_page} + '&size=' + ${size}"
                    class="btn btn-sm btn-outline-primary float-left">
+                    {{prev}}
+                </a>
+                <a th:unless="${prev_page != null}"
+                   class="btn btn-sm btn-outline-primary float-left disabled">
                     {{prev}}
                 </a>
                 <a th:if="${page != null}" href="javascript:void(0)" th:text="${page} + '/' + ${totalPages}"></a>
                 <a th:if="${next_page != null}"
                    th:href="'?page=' + ${next_page} + '&size=' + ${size}"
                    class="btn btn-sm btn-outline-primary float-right">
+                    {{next}}
+                </a>
+                <a th:unless="${next_page != null}"
+                   class="btn btn-sm btn-outline-primary float-right disabled">
                     {{next}}
                 </a>
             </nav>

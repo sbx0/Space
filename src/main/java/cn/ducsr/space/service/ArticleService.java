@@ -320,23 +320,16 @@ public class ArticleService extends BaseService {
         simpleArticle.setTitle(article.getTitle());
 
         if (article.getPassword() == null) {
-            simpleArticle.setContent(article.getContent());
             if (checkNullStr(article.getIntroduction())) {
                 String content = article.getContent().trim();
                 if (content.length() > 250) {
                     String killHTMLString = BaseService.killHTML(content);
                     if (killHTMLString.length() > 250)
                         simpleArticle.setContent(killHTMLString.substring(0, 250) + " ...");
-                    else
-                        simpleArticle.setContent(killHTMLString + " ...");
-                } else
-                    simpleArticle.setContent(BaseService.killHTML(content) + " ...");
-            } else {
-                simpleArticle.setContent(BaseService.killHTML(article.getIntroduction()));
-            }
-        } else {
-            simpleArticle.setContent("请输入密码后查看");
-        }
+                    else simpleArticle.setContent(killHTMLString + " ...");
+                } else simpleArticle.setContent(BaseService.killHTML(content) + " ...");
+            } else simpleArticle.setContent(BaseService.killHTML(article.getIntroduction()));
+        } else simpleArticle.setContent("请输入密码后查看");
 
         simpleArticle.setTime(article.getTime());
         simpleArticle.setLastChangeTime(article.getLastChangeTime());
@@ -386,6 +379,14 @@ public class ArticleService extends BaseService {
         return String.join("", wsg.writeAsStrings());
     }
 
+    /**
+     * 拼接 WebSitemapUrl
+     *
+     * @param url
+     * @param priority
+     * @param date
+     * @return
+     */
     public WebSitemapUrl createWebSitemapUrl(String url, Double priority, Date date) {
         try {
             WebSitemapUrl webSitemapUrl = new WebSitemapUrl.Options(url)

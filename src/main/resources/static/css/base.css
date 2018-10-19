@@ -193,7 +193,7 @@ markdown-body blockquote {
 }
 
 .blog-post {
-    margin-bottom: 1rem;
+    margin-bottom: 3rem;
 }
 
 .blog-post-meta {
@@ -205,4 +205,9 @@ markdown-body blockquote {
     display: block;
     font-size: 15px;
     font-weight: bolder;
+    border: #dcdcdc 1px solid;
+}
+
+.container {
+    max-width: 970px;
 }

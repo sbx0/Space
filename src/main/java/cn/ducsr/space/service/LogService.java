@@ -12,7 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 用户服务层
@@ -26,40 +28,31 @@ public class LogService extends BaseService {
      * 检测重复操作
      *
      * @param request
-     * @param minutes 事件
+     * @param minutes 限制时间
      * @return
      */
     public boolean check(HttpServletRequest request, int minutes) {
-        String ip = BaseService.getIpAddress(request);
-        String method = request.getServletPath();
-        String query = request.getQueryString();
-        Log log;
-        if (!query.equals("")) {
-            if (method.equals("/article/dislike") && !query.equals("")) {
-                log = logDao.findByIpAndMethodAndQuery(ip, "/article/like", query);
-                if (log != null)
-                    return false;
-            }
-            if (method.equals("/article/like") && !query.equals("")) {
-                log = logDao.findByIpAndMethodAndQuery(ip, "/article/dislike", request.getQueryString());
-                if (log != null)
-                    return false;
-            }
-            log = logDao.findByIpAndMethodAndQuery(ip, method, query);
-        } else
-            log = logDao.findByIpAndEvent(ip, method);
-        if (log == null)
-            return true;
-
-        Date time = log.getTime();
-        Date now = new Date();
-        long past = time.getTime();
-        long to = now.getTime();
-        int m = (int) ((to - past) / (1000 * 60));
-        if (m > minutes)
-            return true;
-        else
-            return false;
+        String ip = BaseService.getIpAddress(request); // 用户IP
+        String method = request.getServletPath(); // 运行的方法
+        String query = request.getQueryString(); // 参数
+        List<Log> logs = new ArrayList<>();
+        if (!query.equals("")) { // 参数不为空
+            if (method.equals("/article/dislike") && !query.equals("")) // 若踩则找赞
+                logs = logDao.findByIpAndMethodAndQuery(ip, "/article/like", query, 1);
+            if (method.equals("/article/like") && !query.equals("")) // 若赞则找踩
+                logs = logDao.findByIpAndMethodAndQuery(ip, "/article/dislike", request.getQueryString(), 1);
+            if (logs.size() > 0) return false; // 同一片文章不能同时点赞点踩
+            logs = logDao.findByIpAndMethodAndQuery(ip, method, query, 1); // 查看上一次相同操作的记录
+        } else logs = logDao.findByIpAndMethod(ip, method, 1); // 查看上一次相同操作的记录
+        if (logs.size() == 0) return true; // 如果没有则直接检测通过
+        // 开始检测前一次与这一次的分钟差是否达到要求
+        Date prevTime = logs.get(0).getTime();
+        Date nowTime = new Date();
+        long prev = prevTime.getTime();
+        long now = nowTime.getTime();
+        int m = (int) ((now - prev) / (1000 * 60));
+        if (m > minutes) return true;
+        else return false;
     }
 
     /**
@@ -130,7 +123,7 @@ public class LogService extends BaseService {
         log.setMethod(request.getServletPath());
 
         // 刷新不记录log
-        Log prevLog = logDao.findByIpAndUrl(log.getIp());
+        Log prevLog = logDao.findByIpAndUrl(log.getIp(), 1).get(0);
         if (prevLog != null && prevLog.getUrl().equals(log.getUrl()))
             return false;
 

@@ -18,7 +18,7 @@ var i18N = {
     more: '更多',
     loading: '加载中',
     continue: '继续',
-    read: '阅读',
+    read: '查看',
     query: '查询',
     no: '没有',
     result: '结果',
@@ -42,6 +42,7 @@ var i18N = {
     password: '密码',
     is_or_not: '是否',
     right: '正确',
+    detail:'详情',
     about_content: '开发工具:IntelliJ IDEA<br>' +
         '前端框架:Bootstrap<br>' +
         '后端框架:Spring Boot<br>' +

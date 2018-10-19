@@ -55,7 +55,7 @@
 
 <main id="article" role="main" class="container">
     <div class="row">
-        <div class="col-md-8 blog-main">
+        <div class="col-md-12 blog-main">
 
             <div class="go-top">
                 <div class="arrow"></div>
@@ -113,6 +113,61 @@
                 </li>
             </ul>
 
+            <div>
+                <div class="p-3 mb-3 bg-light rounded">
+                    <p class="font-italic">
+                        <strong>
+                            版权声明
+                        </strong>
+                    </p>
+                    <p>
+                        作者:
+                        <a th:href="'http://space.sbx0.cn/user/' + ${article.author.id}"
+                           th:text="${article.author.name}"></a>
+                        <br>
+                        链接:
+                        <a th:href="'http://space.sbx0.cn' + ${#httpServletRequest.requestURI}"
+                           th:text="'http://space.sbx0.cn' + ${#httpServletRequest.requestURI}"></a>
+                        <br>
+                        本博客所有文章除特别声明外，均采用
+                        <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a>
+                        许可协议
+                        ，
+                        <strong>
+                            转载请注明出处
+                        </strong>
+                    </p>
+                </div>
+
+                <div th:if="${article.lastChangeTime != null}" class="p-3 mb-3 bg-light rounded">
+                    <p class="font-italic">
+                        <strong>
+                            改动
+                        </strong>
+                    </p>
+                    <p class="text-danger">
+                        修改于
+                        <strong>
+                            <span th:text="${#dates.format(article.lastChangeTime,'yyyy-MM-dd HH:mm:ss')}"></span>
+                        </strong>
+                    </p>
+                </div>
+                <div th:if="${manage == 1}" class="p-3 mb-3 bg-light rounded">
+                    <p class="font-italic">
+                        <strong>
+                            管理
+                        </strong>
+                    </p>
+                    <a th:href="'../article/updateOne?id='+${article.id}" class="btn btn-sm btn-outline-success"
+                       role="button">
+                        修改
+                    </a>
+                    <a onclick="del()" href="javascript:void(0)" class="btn btn-sm btn-outline-danger" role="button">
+                        删除
+                    </a>
+                </div>
+            </div>
+
             <nav class="blog-pagination" v-cloak>
                 <a v-if="prevA" class="btn btn-sm btn-outline-primary" :href="prev_url" :title="prev_full">{{prev}}</a>
                 <a v-if="nextA" class="btn btn-sm btn-outline-primary float-right" :href="next_url" :title="next_full">{{next}}</a>
@@ -126,11 +181,10 @@
                             <input name="entity_id" type="hidden" th:value="${article.id}">
                             <input name="entity_type" type="hidden" value="article">
                             <div class="form-group">
-                                <label for="user_name">用户名</label>
-                                <input type="text" class="form-control" id="user_name" name="user_name">
+                                <input type="text" class="form-control" id="user_name" name="user_name" placeholder="匿名">
                             </div>
                             <div class="form-group">
-                                <textarea class="form-control" id="content" name="content"></textarea>
+                                <textarea class="form-control" id="content" name="content" placeholder="无需登陆"></textarea>
                             </div>
                             <button onclick="javascript:comment();" type="button" class="btn btn-sm btn-primary">
                                 {{comment}}
@@ -173,42 +227,8 @@
 
         </div>
 
-        <aside id="blog-about" class="col-md-4 blog-sidebar" v-cloak>
-            <div class="p-3 mb-3 bg-light rounded">
-                <h4>版权声明</h4>
-                <p>
-                    作者:
-                    <a th:href="'http://space.sbx0.cn/user/' + ${article.author.id}"
-                       th:text="${article.author.name}"></a>
-                    <br>
-                    链接:
-                    <a th:href="'http://space.sbx0.cn' + ${#httpServletRequest.requestURI}"
-                       th:text="'http://space.sbx0.cn' + ${#httpServletRequest.requestURI}"></a>
-                    <br>
-                    本博客所有文章除特别声明外，均采用
-                    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a>
-                    许可协议。转载请注明出处
-                </p>
-            </div>
-            <div th:if="${article.lastChangeTime != null}" class="p-3 mb-3 bg-light rounded">
-                <h4 class="font-italic">改动</h4>
-                <p class="text-danger">
-                    修改于
-                    <strong>
-                        <span th:text="${#dates.format(article.lastChangeTime,'yyyy-MM-dd HH:mm:ss')}"></span>
-                    </strong>
-                </p>
-            </div>
-            <div th:if="${manage == 1}" class="p-3 mb-3 bg-light rounded">
-                <h4 class="font-italic">管理</h4>
-                <a th:href="'../article/updateOne?id='+${article.id}" class="btn btn-sm btn-outline-success"
-                   role="button">
-                    修改
-                </a>
-                <a onclick="del()" href="javascript:void(0)" class="btn btn-sm btn-outline-danger" role="button">
-                    删除
-                </a>
-            </div>
+        <aside id="blog-about" class="col-md-4 blog-sidebar small-font" v-cloak>
+
         </aside>
 
     </div>

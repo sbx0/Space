@@ -246,6 +246,8 @@ public class ArticleController extends BaseController {
             if (user != null)
                 if (a.getAuthor().getId() == user.getId() || user.getAuthority() == 0)
                     map.put("manage", 1);
+            // 日志记录
+            logService.log(user, request);
             return "article";
         } else {
             a.setContent("密码错误，请确认密码是否正确");
@@ -253,6 +255,8 @@ public class ArticleController extends BaseController {
             // 页面根据此字段判断是否该文章是否需要输入密码
             map.put("password", 1);
             map.put("manage", 0);
+            // 日志记录
+            logService.log(user, request);
             return "article";
         }
     }
@@ -377,6 +381,8 @@ public class ArticleController extends BaseController {
         } else {
             map.put("articles", null);
         }
+        // 日志记录
+        logService.log(user, request);
         return "trash";
     }
 
@@ -454,6 +460,8 @@ public class ArticleController extends BaseController {
             articleService.save(article);
             objectNode.put("status", "0");
         }
+        // 日志记录
+        logService.log(user, request);
         return objectNode;
     }
 
@@ -482,6 +490,8 @@ public class ArticleController extends BaseController {
             else
                 objectNode.put("status", "2");
         }
+        // 日志记录
+        logService.log(user, request);
         return objectNode;
     }
 
@@ -510,6 +520,8 @@ public class ArticleController extends BaseController {
         } else {
             return "login";
         }
+        // 日志记录
+        logService.log(user, request);
         return "update";
     }
 
@@ -566,6 +578,8 @@ public class ArticleController extends BaseController {
             // 操作状态保存
             objectNode.put("status", "1");
         }
+        // 日志记录
+        logService.log(user, request);
         return objectNode;
     }
 
@@ -613,21 +627,23 @@ public class ArticleController extends BaseController {
      */
     @ResponseBody
     @RequestMapping(value = "/top", method = RequestMethod.GET)
-    public List top(Integer size) {
-        return articleService.top(size);
+    public List top() {
+        return articleService.top(2);
     }
 
     /**
-     * 获取文章列表 json 版
+     * 首页 json
      *
-     * @param page 当前页数
-     * @param size 每页条数
      * @return json串
      */
     @ResponseBody
     @RequestMapping(value = "/index", method = RequestMethod.GET)
-    public List index(Integer page, Integer size) {
-        Page<Article> articlePage = articleService.findAll(page - 1, size, 0);
+    public List index(HttpServletRequest request) {
+        // 从 Cookie 中获取登陆信息
+        User user = userService.getCookieUser(request);
+        // 日志记录
+        logService.log(user, request);
+        Page<Article> articlePage = articleService.findAll(0, 10, 0);
         if (articlePage != null) {
             List<Article> articles = articleService.filter(articlePage.getContent());
             return articles;
@@ -644,7 +660,11 @@ public class ArticleController extends BaseController {
      * @return list.html
      */
     @RequestMapping(value = "/list")
-    public String list(Map<String, Object> map, Integer page, Integer size) {
+    public String list(Map<String, Object> map, Integer page, Integer size, HttpServletRequest request) {
+        // 从 Cookie 中获取登陆信息
+        User user = userService.getCookieUser(request);
+        // 日志记录
+        logService.log(user, request);
         if (page == null) page = 1;
         if (size == null) size = 10;
         // 分页查询

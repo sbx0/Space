@@ -74,16 +74,24 @@
                 </a>
             </div>
 
-            <nav class="blog-pagination text-center">
+            <nav th:if="${articles != null}" class="blog-pagination text-center">
                 <a th:if="${prev_page != null}"
                    th:href="'?keyword=' + ${keyword} + '&page=' + ${prev_page} + '&size=' + ${size}"
                    class="btn btn-sm btn-outline-primary float-left">
+                    {{prev}}
+                </a>
+                <a th:unless="${prev_page != null}"
+                   class="btn btn-sm btn-outline-primary float-left disabled">
                     {{prev}}
                 </a>
                 <a th:if="${page != null}" href="javascript:void(0)" th:text="${page} + '/' + ${totalPages}"></a>
                 <a th:if="${next_page != null}"
                    th:href="'?keyword=' + ${keyword} + '&page=' + ${next_page} + '&size=' + ${size}"
                    class="btn btn-sm btn-outline-primary float-right">
+                    {{next}}
+                </a>
+                <a th:unless="${next_page != null}"
+                   class="btn btn-sm btn-outline-primary float-right disabled">
                     {{next}}
                 </a>
             </nav>
@@ -144,7 +152,7 @@
             var keyword = $("#keyword").val().trim();
             if (keyword > 20)
                 keyword = keyword.substring(0, 20)
-            location.replace("../article/search?keyword=" + keyword)
+            location.replace("../article/search?keyword=" + keyword);
         }
 
         // // 配置图片浏览器
