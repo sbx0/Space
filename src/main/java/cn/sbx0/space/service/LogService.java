@@ -123,8 +123,8 @@ public class LogService extends BaseService {
         log.setMethod(request.getServletPath());
 
         // 刷新不记录log
-        Log prevLog = logDao.findByIpAndUrl(log.getIp(), 1).get(0);
-        if (prevLog != null && prevLog.getUrl().equals(log.getUrl()))
+        List<Log> logs = logDao.findByIpAndUrl(log.getIp(), 1);
+        if (logs.size() > 0 && logs.get(0).getUrl().equals(log.getUrl()))
             return false;
 
         if (log == null)
