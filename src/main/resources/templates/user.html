@@ -49,6 +49,12 @@
         </div>
     </header>
 
+    <div class="nav-scroller py-1">
+        <nav id="nav" class="nav d-flex justify-content-between">
+            <nav-bar v-for="nav in groceryList" v-bind:nav="nav" v-bind:key="nav.id"></nav-bar>
+        </nav>
+    </div>
+
 </div>
 
 <main id="list-article" role="main" class="container">
@@ -68,7 +74,7 @@
             </div>
 
             <div class="blog-post" th:each="article,stat:${articles}">
-                <h2 th:text="${article?.title}" class="blog-post-title"></h2>
+                <h2 th:id="${article?.id}" th:text="${article?.title}" class="blog-post-title"></h2>
                 <p class="blog-post-meta">
                     <a th:text="${article?.author?.name}"
                        th:href="'../user/' + ${article?.author?.id} + '?page=1&size=10'"></a>

@@ -29,10 +29,12 @@
 <body>
 
 <div class="container">
+
     <header id="blog-header" class="blog-header py-3">
         <div class="row flex-nowrap justify-content-between align-items-center" v-cloak>
             <div class="col-4 pt-1">
-                <a class="blog-header-logo text-dark" th:href="'../user/'+${article.author.id}+'?page=1&size=20'">{{space}}</a>
+                <a class="blog-header-logo text-dark"
+                   th:href="'../user/'+${article.author.id}+'?page='+${page}+'&size=20#'+${article.id}">{{space}}</a>
             </div>
             <div class="col-4 text-center">
 
@@ -50,6 +52,12 @@
             </div>
         </div>
     </header>
+
+    <div class="nav-scroller py-1">
+        <nav id="nav" class="nav d-flex justify-content-between">
+            <nav-bar v-for="nav in groceryList" v-bind:nav="nav" v-bind:key="nav.id"></nav-bar>
+        </nav>
+    </div>
 
 </div>
 
@@ -70,7 +78,7 @@
 
             <p class="blog-post-title" th:text="${article.title}"></p>
             <p class="blog-post-meta">
-                <a th:href="'../user/'+${article.author.id}+'?page=1&size=10'" th:text="${article.author.name}"></a>
+                <a th:href="'../user/'+${article.author.id}+'?page='+${page}+'&size=20#'+${article.id}" th:text="${article.author.name}"></a>
                 <span th:text="${#dates.format(article.time,'yyyy-MM-dd HH:mm:ss')}"></span>
             <p>
 
@@ -181,10 +189,12 @@
                             <input name="entity_id" type="hidden" th:value="${article.id}">
                             <input name="entity_type" type="hidden" value="article">
                             <div class="form-group">
-                                <input type="text" class="form-control" id="user_name" name="user_name" placeholder="匿名">
+                                <input type="text" class="form-control" id="user_name" name="user_name"
+                                       placeholder="匿名">
                             </div>
                             <div class="form-group">
-                                <textarea class="form-control" id="content" name="content" placeholder="无需登陆"></textarea>
+                                <textarea class="form-control" id="content" name="content"
+                                          placeholder="无需登陆"></textarea>
                             </div>
                             <button onclick="javascript:comment();" type="button" class="btn btn-sm btn-primary">
                                 {{comment}}

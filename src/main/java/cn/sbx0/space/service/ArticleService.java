@@ -30,6 +30,19 @@ public class ArticleService extends BaseService {
     private UserDao userDao;
 
     /**
+     * 查询某文章在第几页
+     *
+     * @param id
+     * @param size
+     * @return
+     */
+    public Integer whereIsMyPage(Integer id, Integer u_id, Integer size) {
+        int me = articleDao.countLargeThanId(id, u_id);
+        int page = me % size == 0 ? me / size : me / size + 1;
+        return page;
+    }
+
+    /**
      * 查询上一条博文
      *
      * @param id

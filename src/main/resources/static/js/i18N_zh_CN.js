@@ -14,6 +14,7 @@ var i18N = {
     market: '市场',
     message: '消息',
     search: '搜索',
+    upload: '上传',
     feedback: '反馈',
     more: '更多',
     loading: '加载中',

@@ -614,6 +614,8 @@ public class ArticleController extends BaseController {
             map.put("manage", 0);
         }
 
+        map.put("page", articleService.whereIsMyPage(id, article.getAuthor().getId(), 20));
+
         // 日志记录
         logService.log(user, request);
 

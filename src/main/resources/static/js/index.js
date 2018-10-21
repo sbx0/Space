@@ -76,27 +76,6 @@ var top_article = new Vue({
     },
 })
 
-// 给nav-bar赋值
-new Vue({
-    el: '#nav',
-    data: {
-        groceryList: [
-            {id: 1, text: i18N.search, url: 'article/search'},
-            {id: 2, text: i18N.market, url: 'http://blog.sbx0.cn/market.jsp'},
-            {id: 3, text: i18N.message, url: 'http://blog.sbx0.cn/msg.jsp'},
-            {id: 4, text: i18N.tools, url: 'http://blog.sbx0.cn/tools.jsp'},
-            {id: 5, text: i18N.feedback, url: 'http://blog.sbx0.cn/bugs.jsp'},
-            {id: 6, text: i18N.more, url: 'http://blog.sbx0.cn/index'},
-        ]
-    },
-    components: {
-        'nav-bar': {
-            props: ['nav'],
-            template: '<a class="p-2 text-muted" :href="nav.url">{{nav.text}}</a>',
-        },
-    },
-})
-
 // 格式化文章列表的阅读链接与日期格式
 function formate(data) {
     for (var i = 0; i < data.length; i++) {

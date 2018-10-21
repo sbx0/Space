@@ -6,6 +6,26 @@
 // var time = Format(getDate(TIME.toString()), "yyyy-MM-dd HH:mm:ss")
 // ------------------------------------------------------------------------------------------------------ //
 
+// 给nav-bar赋值
+new Vue({
+    el: '#nav',
+    data: {
+        groceryList: [
+            {id: 1, text: i18N.search, url: '../article/search'},
+            {id: 2, text: i18N.upload, url: 'http://upload.sbx0.cn/'},
+            {id: 3, text: 'GitHub', url: 'https://github.com/sbx0'},
+            {id: 4, text: 'Bilibili', url: 'https://space.bilibili.com/2309570/#/'},
+            {id: 5, text: 'GokouCat', url: 'http://gokoucat.cn/'},
+        ]
+    },
+    components: {
+        'nav-bar': {
+            props: ['nav'],
+            template: '<a class="p-2 text-muted" :href="nav.url">{{nav.text}}</a>',
+        },
+    },
+})
+
 // 返回顶部
 $(function () {
     $(window).scroll(function () {

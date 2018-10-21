@@ -39,6 +39,12 @@
         </div>
     </header>
 
+    <div class="nav-scroller py-1 mb-2">
+        <nav id="nav" class="nav d-flex justify-content-between">
+            <nav-bar v-for="nav in groceryList" v-bind:nav="nav" v-bind:key="nav.id"></nav-bar>
+        </nav>
+    </div>
+
 </div>
 
 <main id="list-article" role="main" class="container">
