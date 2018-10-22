@@ -13,8 +13,6 @@ JavaScript框架:[Vue.js](https://cn.vuejs.org/index.html "Vue.js")
    
 这是一个正在开发的博客项目，你可以访问 [http://space.sbx0.cn](http://space.sbx0.cn "http://space.sbx0.cn") 查看实际效果   
    
-如果有好的意见与建议，可以在 [反馈](http://blog.sbx0.cn/bugs.jsp "反馈") 处提交   
-   
 ------------
    
 **注意：** 建议使用IDEA，其他IDE不能保证运行成功   
