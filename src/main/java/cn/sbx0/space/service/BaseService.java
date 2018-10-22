@@ -1,6 +1,7 @@
 package cn.sbx0.space.service;
 
 import org.springframework.beans.factory.annotation.Value;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -80,6 +81,7 @@ public class BaseService {
         if (cookies == null) return false;
         for (int i = 0; i < cookies.length; i++) {
             if (cookies[i] == null) continue;
+            cookies[i].setDomain(DOMAIN);
             cookies[i].setValue(null);
             cookies[i].setMaxAge(0);
             cookies[i].setPath("/");
@@ -191,7 +193,7 @@ public class BaseService {
         return null;
     }
 
-    @Value("${sbx0.domain}")
+    @Value("${sbx0.DOMAIN}")
     public void setDomain(String domain) {
         DOMAIN = domain;
     }
