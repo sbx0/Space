@@ -172,15 +172,6 @@ public class ArticleService extends BaseService {
     }
 
     /**
-     * 真的删除文章
-     *
-     * @param id
-     */
-    public void delete(Integer id) {
-        articleDao.deleteById(id);
-    }
-
-    /**
      * 获取最大置顶
      *
      * @return

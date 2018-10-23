@@ -150,6 +150,7 @@ public class ArticleController extends BaseController {
      */
     @RequestMapping(value = "/search")
     public String search(String keyword, Integer page, Integer size, Map<String, Object> map, HttpServletRequest request) {
+
         if (keyword != null && keyword.length() > 20) return "error";
         // 从cookie中获取登陆用户信息
         User user = userService.getCookieUser(request);
@@ -417,15 +418,6 @@ public class ArticleController extends BaseController {
                 break;
             // 真删除
             case 1:
-                if (userService.checkAuthority(user, article.getAuthor().getId(), 0)) {
-                    try {
-                        articleService.delete(id);
-                        objectNode.put("status", "0");
-                    } catch (Exception e) {
-                        objectNode.put("status", "1");
-                    }
-                    break;
-                }
             default:
                 objectNode.put("status", 1);
         }
@@ -504,6 +496,11 @@ public class ArticleController extends BaseController {
      */
     @RequestMapping(value = "/updateOne", method = RequestMethod.GET)
     public String updateOne(HttpServletRequest request, Map<String, Object> map, Integer id) {
+        // 检测重复操作
+        if (!logService.check(request, 1)) {
+            objectNode.put("status", 2);
+            return "error";
+        }
         // 从cookie中获取登陆用户
         User user = userService.getCookieUser(request);
         Article article;
@@ -538,12 +535,20 @@ public class ArticleController extends BaseController {
         objectNode = mapper.createObjectNode();
         // 从cookie中获取登陆用户
         User user = userService.getCookieUser(request);
+
+        // 检测重复操作
+        if (!logService.check(request, 5)) {
+            objectNode.put("status", 2);
+            return objectNode;
+        }
+
         // 检测是否为空
         if (BaseService.checkNullStr(article.getTitle()) || BaseService.checkNullStr(article.getContent())) {
             // 操作状态保存
             objectNode.put("status", "1");
             return objectNode;
         }
+
         try {
             // 修改文章
             if (article.getId() != null) {

@@ -1,4 +1,5 @@
 package cn.sbx0.space.controller;
+
 import cn.sbx0.space.entity.Article;
 import cn.sbx0.space.entity.User;
 import cn.sbx0.space.service.ArticleService;
@@ -90,10 +91,10 @@ public class UserController extends BaseController {
      */
     @ResponseBody
     @RequestMapping(value = "/info", method = RequestMethod.GET)
-    public ObjectNode info(HttpServletRequest request) {
+    public ObjectNode info(HttpServletRequest request, HttpServletResponse response) {
         objectNode = mapper.createObjectNode();
         User user = userService.getCookieUser(request);
-        if (user != null) {
+        if (user.getId() != null) {
             try {
                 // 用户信息
                 objectNode.put("id", user.getId());
@@ -107,6 +108,13 @@ public class UserController extends BaseController {
                 // 操作状态保存
                 objectNode.put("status", "1");
             }
+        } else {
+            // 清除Cookie
+            String[] names = {"ID", "NAME", "KEY"};
+            Cookie[] cookies = BaseService.getCookiesByName(names, request.getCookies());
+            BaseService.removeCookies(cookies, response);
+            // 操作状态保存
+            objectNode.put("status", "1");
         }
         return objectNode;
     }
@@ -116,16 +124,13 @@ public class UserController extends BaseController {
      *
      * @param request
      * @param response
-     * @param session
      * @return json
      */
     @ResponseBody
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
-    public ObjectNode logout(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+    public ObjectNode logout(HttpServletRequest request, HttpServletResponse response) {
         objectNode = mapper.createObjectNode();
         try {
-            // 清除session
-            session.removeAttribute("user");
             // 清除Cookie
             String[] names = {"ID", "NAME", "KEY"};
             Cookie[] cookies = BaseService.getCookiesByName(names, request.getCookies());

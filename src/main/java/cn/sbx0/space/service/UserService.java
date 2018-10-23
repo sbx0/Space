@@ -56,20 +56,21 @@ public class UserService extends BaseService {
         user.setName(BaseService.killHTML(user.getName()));
         // 密码加密
         user.setPassword(getHash(user.getPassword(), "MD5"));
-        // 用户不存在 直接注册并登陆
+        // 用户不存在
         if (!existByName(user.getName())) {
-            // 邀请码为空注册失败
-            if (!code.equals("IsPantuPaQiuNa"))
-                return null;
-            // 密码加密
-            user.setRegisterTime(new Date());
-            user.setAuthority(1);
-            user.setLevel(0);
-            user.setIntegral(0.0);
-            user.setExp_max(100.0);
-            user.setExp(0.0);
-            // 注册
-            userDao.save(user);
+            return null;
+//            // 邀请码为空注册失败
+//            if (!code.equals("IsPantuPaQiuNa"))
+//                return null;
+//            // 密码加密
+//            user.setRegisterTime(new Date());
+//            user.setAuthority(1);
+//            user.setLevel(0);
+//            user.setIntegral(0.0);
+//            user.setExp_max(100.0);
+//            user.setExp(0.0);
+//            // 注册
+//            userDao.save(user);
         }
         // 查询数据库内的用户数据
         User databaseUser = userDao.findByName(user.getName());
@@ -86,6 +87,7 @@ public class UserService extends BaseService {
      */
     public boolean checkAuthority(User user, int id, int type) {
         if (user == null) return false;
+        if (user.getId() == null) return false;
         if (id <= 0) return false;
         if (type < 0) return false;
         switch (type) {

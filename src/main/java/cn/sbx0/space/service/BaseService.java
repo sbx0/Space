@@ -12,7 +12,9 @@ import java.util.regex.Pattern;
 
 public class BaseService {
 
-    public static String DOMAIN; // 域名
+    private static String DOMAIN; // 域名
+    private static String KEY; // KEY
+
 
     /**
      * 去html标签
@@ -65,8 +67,7 @@ public class BaseService {
      * @return
      */
     public static String getKey(int id) {
-        String key = "CHINA NO.1";
-        String result = getHash(key + id, "MD5");
+        String result = getHash(id + KEY, "MD5");
         return result;
     }
 
@@ -196,5 +197,10 @@ public class BaseService {
     @Value("${sbx0.DOMAIN}")
     public void setDomain(String domain) {
         DOMAIN = domain;
+    }
+
+    @Value("${sbx0.KEY}")
+    public void setKEY(String key) {
+        KEY = key;
     }
 }
