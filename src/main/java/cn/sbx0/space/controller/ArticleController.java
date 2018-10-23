@@ -33,18 +33,18 @@ public class ArticleController extends BaseController {
     private UserService userService;
     @Resource
     private LogService logService;
+    private ObjectNode objectNode = mapper.createObjectNode();
 
     /**
-     * 不喜欢
+     * 给文章点踩
      *
-     * @param id
+     * @param id      文章ID
      * @param request
-     * @return
+     * @return json
      */
     @ResponseBody
     @RequestMapping(value = "/dislike", method = RequestMethod.GET)
     public ObjectNode dislike(Integer id, HttpServletRequest request) {
-        objectNode = mapper.createObjectNode();
         // 从cookie中获取登陆用户信息
         User user = userService.getCookieUser(request);
         // 检测重复操作

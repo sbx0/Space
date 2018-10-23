@@ -110,9 +110,7 @@ public class UserController extends BaseController {
             }
         } else {
             // 清除Cookie
-            String[] names = {"ID", "NAME", "KEY"};
-            Cookie[] cookies = BaseService.getCookiesByName(names, request.getCookies());
-            BaseService.removeCookies(cookies, response);
+            BaseService.removeCookies(response);
             // 操作状态保存
             objectNode.put("status", "1");
         }
@@ -122,19 +120,16 @@ public class UserController extends BaseController {
     /**
      * 退出登陆
      *
-     * @param request
      * @param response
      * @return json
      */
     @ResponseBody
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
-    public ObjectNode logout(HttpServletRequest request, HttpServletResponse response) {
+    public ObjectNode logout(HttpServletResponse response) {
         objectNode = mapper.createObjectNode();
         try {
             // 清除Cookie
-            String[] names = {"ID", "NAME", "KEY"};
-            Cookie[] cookies = BaseService.getCookiesByName(names, request.getCookies());
-            BaseService.removeCookies(cookies, response);
+            BaseService.removeCookies(response);
             // 操作状态保存
             objectNode.put("status", "0");
         } catch (Exception e) {
@@ -190,23 +185,20 @@ public class UserController extends BaseController {
         // 登陆成功
         if (user != null) {
             // 创建Cookie
-            response.addCookie(BaseService.createCookie("ID", user.getId() + "", 30));
-            response.addCookie(BaseService.createCookie("NAME", user.getName(), 30));
-            response.addCookie(BaseService.createCookie("KEY", BaseService.getKey(user.getId()), 30));
+            response.addCookie(BaseService.createCookie(BaseService.COOKIE_NAMES.get(0), user.getId() + "", 30));
+            response.addCookie(BaseService.createCookie(BaseService.COOKIE_NAMES.get(1), BaseService.getKey(user.getId()), 30));
+            response.addCookie(BaseService.createCookie(BaseService.COOKIE_NAMES.get(2), user.getName(), 30));
             session.setAttribute("user", user);
             // 操作状态保存
             objectNode.put("status", "0");
         } else {
             // 清除Cookie
-            String[] names = {"ID", "NAME", "KEY"};
-            Cookie[] cookies = BaseService.getCookiesByName(names, request.getCookies());
-            BaseService.removeCookies(cookies, response);
+            BaseService.removeCookies(response);
             // 操作状态保存
             objectNode.put("status", "1");
         }
         // 日志记录
         logService.log(user, request);
-
         // 返回json串
         return objectNode;
     }

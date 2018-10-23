@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,6 +15,7 @@ public class BaseService {
 
     private static String DOMAIN; // 域名
     private static String KEY; // KEY
+    public static List<String> COOKIE_NAMES = Arrays.asList("ID", "KEY", "NAME");
 
 
     /**
@@ -72,43 +74,38 @@ public class BaseService {
     }
 
     /**
-     * 清除cookies
+     * 清空cookies
      *
-     * @param cookies
      * @param response
      * @return
      */
-    public static boolean removeCookies(Cookie[] cookies, HttpServletResponse response) {
-        if (cookies == null) return false;
-        for (int i = 0; i < cookies.length; i++) {
-            if (cookies[i] == null) continue;
-            cookies[i].setDomain(DOMAIN);
-            cookies[i].setValue(null);
-            cookies[i].setMaxAge(0);
-            cookies[i].setPath("/");
-            response.addCookie(cookies[i]);
+    public static void removeCookies(HttpServletResponse response) {
+        for (int i = 0; i < COOKIE_NAMES.size(); i++) {
+            Cookie cookie = new Cookie(COOKIE_NAMES.get(i), null);
+            cookie.setDomain(DOMAIN);
+            cookie.setMaxAge(0);
+            cookie.setPath("/");
+            response.addCookie(cookie);
         }
-        return true;
     }
 
     /**
-     * 根据Cookie名来查找Cookie
+     * 在一群Cookie中根据名称查找想要的
      *
-     * @param name
-     * @param cookies
+     * @param name    Cookie名数组
+     * @param cookies 一群Cookie
      * @return
      */
-    public static Cookie[] getCookiesByName(String[] name, Cookie[] cookies) {
-        Cookie[] getCookies = new Cookie[name.length];
-        int i = 0;
+    public static Map<String, Cookie> getCookiesByName(List<String> name, Cookie[] cookies) {
+        // 一群Cookie为空，放弃寻找
         if (cookies == null) return null;
-        for (Cookie cookie : cookies) {
-            if (i < name.length) {
-                for (int j = 0; j < name.length; j++) {
-                    if (cookie.getName().equals(name[j])) {
-                        getCookies[i] = cookie;
-                        i++;
-                    }
+        // 名字有几个就找几个
+        Map<String, Cookie> getCookies = new HashMap<>();
+        for (int i = 0; i < cookies.length; i++) { // 遍历一群Cookie
+            for (int j = 0; j < name.size(); j++) { // 匹配名称
+                if (cookies[i].getName().equals(name.get(j))) { // 找到一个
+                    getCookies.put(name.get(j), cookies[i]); // 存下来
+                    if (getCookies.size() == name.size()) break; // 全找到了
                 }
             }
         }

@@ -5,7 +5,7 @@ import cn.sbx0.space.entity.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
+import java.util.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
@@ -122,20 +122,30 @@ public class UserService extends BaseService {
      */
     public User getCookieUser(HttpServletRequest request) {
         // 查找是否存在cookie
-        User user = new User();
-        String[] names = {"ID", "KEY"};
-        Cookie[] cookies = BaseService.getCookiesByName(names, request.getCookies());
-        try {
-            Cookie cookieId = cookies[0];
-            Cookie cookieKey = cookies[1];
-            if (cookieId.getValue() != null && !cookieId.getValue().equals("")
-                    || cookieKey.getValue() != null || !cookieKey.getValue().equals(""))
-                if (BaseService.getKey(Integer.parseInt(cookieId.getValue())).equals(cookieKey.getValue()))
-                    user = findById(Integer.parseInt(cookieId.getValue()));
-            return user;
-        } catch (Exception e) {
-            return null;
+        Map<String, Cookie> cookies = BaseService.getCookiesByName(COOKIE_NAMES, request.getCookies());
+        if(cookies.size() == 0) return null;
+        // 为空
+        for (int i = 0; i < cookies.size(); i++) {
+            if (BaseService.checkNullStr(cookies.get(COOKIE_NAMES.get(i)).getValue()))
+                return null;
         }
+        // Cookie中的ID
+        int id = Integer.parseInt(cookies.get("ID").getValue());
+        // Cookie中的KEY
+        String key = cookies.get("KEY").getValue();
+        // Cookie中的用户名
+        String name = cookies.get("NAME").getValue();
+        // 正确的KEY
+        String check = BaseService.getKey(id);
+        // 匹配KEY
+        if (!check.equals(key))
+            return null;
+        User user = findById(id);
+        if (user == null)
+            return null;
+        if (!user.getName().equals(name))
+            return null;
+        return user;
     }
 
 

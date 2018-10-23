@@ -6,7 +6,7 @@ import org.springframework.stereotype.Controller;
 
 @Controller
 public class BaseController {
-	// 为了返回json
-	ObjectMapper mapper = new ObjectMapper();
-	ObjectNode objectNode = mapper.createObjectNode();
+    // 为了返回json
+    ObjectMapper mapper = new ObjectMapper();
+    ObjectNode objectNode;
 }
