@@ -123,7 +123,8 @@ public class UserService extends BaseService {
     public User getCookieUser(HttpServletRequest request) {
         // 查找是否存在cookie
         Map<String, Cookie> cookies = BaseService.getCookiesByName(COOKIE_NAMES, request.getCookies());
-        if(cookies.size() == 0) return null;
+        if (cookies == null) return null;
+        if (cookies.size() == 0) return null;
         // 为空
         for (int i = 0; i < cookies.size(); i++) {
             if (BaseService.checkNullStr(cookies.get(COOKIE_NAMES.get(i)).getValue()))

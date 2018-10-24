@@ -239,6 +239,7 @@ public class ArticleController extends BaseController {
         Article a = articleService.findById(article.getId(), 1);
         // 文章不存在
         if (a == null) return "error";
+        map.put("page", articleService.whereIsMyPage(a.getId(), a.getAuthor().getId(), 20));
         // 加密密码
         String password = BaseService.getHash(article.getPassword().trim(), "MD5");
         // 验证密码是否正确
@@ -496,11 +497,6 @@ public class ArticleController extends BaseController {
      */
     @RequestMapping(value = "/updateOne", method = RequestMethod.GET)
     public String updateOne(HttpServletRequest request, Map<String, Object> map, Integer id) {
-        // 检测重复操作
-        if (!logService.check(request, 1)) {
-            objectNode.put("status", 2);
-            return "error";
-        }
         // 从cookie中获取登陆用户
         User user = userService.getCookieUser(request);
         Article article;
@@ -537,9 +533,11 @@ public class ArticleController extends BaseController {
         User user = userService.getCookieUser(request);
 
         // 检测重复操作
-        if (!logService.check(request, 5)) {
-            objectNode.put("status", 2);
-            return objectNode;
+        if (article.getId() == null) {
+            if (!logService.check(request, 5)) {
+                objectNode.put("status", 2);
+                return objectNode;
+            }
         }
 
         // 检测是否为空

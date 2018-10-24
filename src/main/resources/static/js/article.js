@@ -74,7 +74,9 @@ var markdown = editormd.markdownToHTML("markdown", {
 });
 
 // 配置图片浏览器
-var viewer = new Viewer(document.getElementById('article'));
+var viewer = new Viewer(document.getElementById('markdown'), {
+    movable: false,
+});
 
 // 评论
 function comment() {
