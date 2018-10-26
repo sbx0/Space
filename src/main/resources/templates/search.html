@@ -3,11 +3,11 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="blog">
+    <meta name="description" content="sbx0 个人博客 搜索">
     <meta name="author" content="sbx0">
     <link rel="icon" th:href="@{~/img/favicon.png}">
 
-    <title>搜索</title>
+    <title>搜索 | sbx0</title>
 
     <link rel="stylesheet" th:href="@{~/css/bootstrap.min.css}">
 
@@ -53,9 +53,10 @@
     <div class="row">
         <div class="col-md-12 blog-main">
             <div class="blog-post text-center">
-                <form class="card p-2">
+                <form class="mt-4">
                     <div class="input-group">
-                        <input id="keyword" name="keyword" type="text" class="form-control" th:value="${keyword}"
+                        <input id="keyword" name="keyword" type="text" class="form-control"
+                               th:value="${keyword}"
                                placeholder="文章名或内容">
                         <div class="input-group-append">
                             <button type="button" class="btn btn-secondary" onclick="search()">搜索</button>
@@ -65,7 +66,7 @@
             </div>
         </div>
 
-        <div class="col-md-8 blog-main">
+        <div class="col-md-8 blog-main" th:if="${articles != null}">
 
             <div id="photo-viewer" class="blog-post" th:each="article,stat:${articles}">
                 <h2 th:text="${article?.title}" class="blog-post-title"></h2>
@@ -104,7 +105,7 @@
 
         </div>
 
-        <aside id="blog-about" class="col-md-4 blog-sidebar" v-cloak>
+        <aside id="blog-about" class="col-md-4 blog-sidebar" v-cloak th:if="${articles != null}">
 
             <div class="p-3 mb-3 bg-light rounded" th:if="${totalElements != null}">
                 <h4 class="font-italic">数据</h4>

@@ -1,5 +1,8 @@
 package cn.sbx0.space.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -10,9 +13,11 @@ import java.util.Date;
 @Entity
 @Table(name = "USERS")
 public class User {
+    @JsonView(Article.Top.class)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @JsonView(Article.Index.class)
     @Column(unique = true, nullable = false, length = 30)
     private String name; // 名称
     @Column(nullable = false, length = 40)
@@ -30,6 +35,7 @@ public class User {
      * 若等于0 为最高权限，可操作任何东西
      * 若小于0 表示为管理员，数值越大（注意是负数，越靠近0权限越大）用户可操作的东西越多
      */
+    @JsonIgnore
     @Column(nullable = false)
     private Integer authority; // 权限 默认普通用户
     @Column(nullable = false)

@@ -73,11 +73,6 @@ var markdown = editormd.markdownToHTML("markdown", {
     path: "../lib/",
 });
 
-// 配置图片浏览器
-var viewer = new Viewer(document.getElementById('markdown'), {
-    movable: false,
-});
-
 // 评论
 function comment() {
     $.ajax({
@@ -183,6 +178,10 @@ var article = new Vue({
     created: function () {
         loadComment();
         prevAndNext();
+        // 配置图片浏览器
+        new Viewer(document.getElementById('markdown'), {
+            movable: false,
+        });
     },
 })
 

@@ -1,5 +1,8 @@
 package cn.sbx0.space.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -10,27 +13,39 @@ import java.util.Date;
 @Entity
 @Table(name = "ARTICLES")
 public class Article {
+    // 置顶
+    public interface Top {}
+    public interface Index extends Top {}
+    @JsonView(Top.class)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(nullable = false, length = 30)
+    @Column(nullable = false, length = 100)
+    @JsonView(Top.class)
     private String title; // 标题
+    @JsonView(Index.class)
     @Column(nullable = false)
     private Date time; // 时间
     @Column(length = 250)
     private String introduction; // 简介
+    @JsonView(Index.class)
     @Lob
     @Column(nullable = false)
     private String content; // 内容
     private Date lastChangeTime; // 上次修改时间
+    @JsonIgnore
     @Column(length = 40)
     private String password; // 密码
+    @JsonView(Index.class)
     @Column(nullable = false)
     private Integer views; // 查看数
+    @JsonView(Index.class)
     @Column(nullable = false)
     private Integer comments; // 评论数
+    @JsonView(Index.class)
     @Column(nullable = false)
     private Integer likes; // 喜欢数
+    @JsonView(Index.class)
     @Column(nullable = false)
     private Integer dislikes; // 不喜欢数
     /**
@@ -47,6 +62,7 @@ public class Article {
      * @optional 定义是否为必需属性，如果为必需（false），但在持久化时user = null,则会持久化失败
      * @targetEntity 目标关联对象，默认为被注解属性所在类
      */
+    @JsonView(Top.class)
     @ManyToOne(cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER, targetEntity = User.class, optional = false)
     private User author; // 作者
 

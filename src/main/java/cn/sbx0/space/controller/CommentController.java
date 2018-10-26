@@ -1,12 +1,12 @@
 package cn.sbx0.space.controller;
 
+import cn.sbx0.space.entity.Article;
 import cn.sbx0.space.entity.Comment;
 import cn.sbx0.space.entity.User;
-import cn.sbx0.space.service.BaseService;
-import cn.sbx0.space.service.CommentService;
-import cn.sbx0.space.service.LogService;
-import cn.sbx0.space.service.UserService;
+import cn.sbx0.space.service.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +30,10 @@ public class CommentController extends BaseController {
     private UserService userService;
     @Resource
     private LogService logService;
+    @Resource
+    private ArticleService articleService;
+    @Autowired
+    private ObjectMapper mapper;
 
     /**
      * 发布评论
@@ -73,6 +77,8 @@ public class CommentController extends BaseController {
                     floor = 0;
                 comment.setFloor(floor + 1);
                 commentService.save(comment);
+                Article article = articleService.findById(comment.getEntity_id(), 1);
+                article.setComments(article.getComments() + 1);
                 objectNode.put("status", 0);
             } catch (Exception e) {
                 objectNode.put("status", 1);

@@ -7,7 +7,7 @@
     <meta name="author" content="sbx0">
     <link rel="icon" th:href="@{~/img/favicon.png}">
 
-    <title>航行日志 - sbx0.cn</title>
+    <title>航行日志 | sbx0</title>
 
     <link rel="stylesheet" th:href="@{~/css/bootstrap.min.css}">
 
@@ -69,16 +69,20 @@
         <div class="col-md-8 blog-main">
 
             <div id="photo-viewer" class="blog-post" th:each="article,stat:${articles}">
-                <h2 th:id="${article?.id}" th:text="${article?.title}" class="blog-post-title"></h2>
+                <a th:href="'../article/' + ${article?.id}" class="text-dark">
+                    <h2 th:id="${article?.id}" th:text="${article?.title}" class="blog-post-title"></h2>
+                </a>
                 <p class="blog-post-meta">
                     <a th:text="${article?.author?.name}"
                        th:href="'../user/' + ${article?.author?.id} + '?page=1&size=10'"></a>
                     <span th:text="${#dates.format(article?.time,'yyyy-MM-dd HH:mm')}"></span>
                 </p>
+                <a href="../article/59" class="text-dark">
+                    阅[<span th:text="${article?.views}">0</span>]&nbsp;&nbsp;&nbsp;
+                    评[<span th:text="${article?.comments}">0</span>]&nbsp;&nbsp;&nbsp;
+                    赞[<span th:text="${article?.likes}">0</span>]&nbsp;&nbsp;&nbsp;
+                    踩[<span th:text="${article?.dislikes}">0</span>]</a>
                 <div th:utext="${article?.content}"></div>
-                <a th:href="${article?.id}" class="continue-read btn btn-light">
-                    继续阅读
-                </a>
             </div>
 
             <nav th:if="${articles != null}" class="blog-pagination text-center">

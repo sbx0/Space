@@ -7,6 +7,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -17,6 +21,19 @@ public class BaseService {
     private static String KEY; // KEY
     public static List<String> COOKIE_NAMES = Arrays.asList("ID", "KEY", "NAME");
 
+    // 获得某天最大时间 2017-10-15 23:59:59
+    public static Date getEndOfDay(Date date) {
+        LocalDateTime localDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(date.getTime()), ZoneId.systemDefault());;
+        LocalDateTime endOfDay = localDateTime.with(LocalTime.MAX);
+        return Date.from(endOfDay.atZone(ZoneId.systemDefault()).toInstant());
+    }
+
+    // 获得某天最小时间 2017-10-15 00:00:00
+    public static Date getStartOfDay(Date date) {
+        LocalDateTime localDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(date.getTime()), ZoneId.systemDefault());
+        LocalDateTime startOfDay = localDateTime.with(LocalTime.MIN);
+        return Date.from(startOfDay.atZone(ZoneId.systemDefault()).toInstant());
+    }
 
     /**
      * 去html标签

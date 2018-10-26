@@ -25,6 +25,17 @@ public class LogService extends BaseService {
     private LogDao logDao;
 
     /**
+     * 统计某时间段的日志
+     *
+     * @param begin
+     * @param end
+     * @return
+     */
+    public List<Log> countByTime(Date begin, Date end) {
+        return logDao.countByTime(begin, end);
+    }
+
+    /**
      * 检测重复操作
      *
      * @param request
@@ -103,7 +114,7 @@ public class LogService extends BaseService {
      *
      * @return
      */
-    public boolean log(User user, HttpServletRequest request) {
+    public User log(User user, HttpServletRequest request) {
         // Log
         Log log = new Log();
         // 记录ip
@@ -116,19 +127,17 @@ public class LogService extends BaseService {
         } else
             log.setUrl(request.getRequestURL().toString());
         log.setMethod(request.getServletPath());
-
         // 刷新不记录log
         List<Log> logs = logDao.findByIpAndUrl(log.getIp(), 1);
         if (logs.size() > 0 && logs.get(0).getUrl().equals(log.getUrl()))
-            return false;
-
+            return user;
         if (log == null)
-            return true;
+            return user;
         try {
             save(log);
-            return true;
+            return user;
         } catch (Exception e) {
-            return false;
+            return user;
         }
     }
 

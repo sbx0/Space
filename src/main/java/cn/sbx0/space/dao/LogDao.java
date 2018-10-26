@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -13,6 +14,15 @@ import java.util.List;
  */
 public interface LogDao extends PagingAndSortingRepository<Log, Integer> {
 
+    /**
+     * 统计某时间段的日志
+     *
+     * @param begin
+     * @param end
+     * @return
+     */
+    @Query(value = "select * from logs l where l.time > ?1 and l.time < ?2", nativeQuery = true)
+    List<Log> countByTime(Date begin, Date end);
 
     /**
      * 查询某ip的最近limit次操作

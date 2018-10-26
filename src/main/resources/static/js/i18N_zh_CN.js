@@ -43,8 +43,9 @@ var i18N = {
     password: '密码',
     is_or_not: '是否',
     right: '正确',
-    detail:'详情',
-    about_content: '开发工具:IntelliJ IDEA<br>' +
+    detail: '详情',
+    about_content: 'GitHub:<a href="https://github.com/sbx0/Space" target="_blank">Space</a><br>' +
+        '开发工具:IntelliJ IDEA<br>' +
         '前端框架:Bootstrap<br>' +
         '后端框架:Spring Boot<br>' +
         'JavaScript框架:Vue.js<br>',

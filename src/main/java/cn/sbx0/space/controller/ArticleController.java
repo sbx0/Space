@@ -1,14 +1,14 @@
 package cn.sbx0.space.controller;
 
-import cn.sbx0.space.entity.Article;
-import cn.sbx0.space.entity.User;
-import cn.sbx0.space.service.ArticleService;
-import cn.sbx0.space.service.BaseService;
-import cn.sbx0.space.service.LogService;
-import cn.sbx0.space.service.UserService;
+import cn.sbx0.space.entity.*;
+import cn.sbx0.space.service.*;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,7 +33,9 @@ public class ArticleController extends BaseController {
     private UserService userService;
     @Resource
     private LogService logService;
-    private ObjectNode objectNode = mapper.createObjectNode();
+    @Autowired
+    ObjectMapper mapper;
+    private ObjectNode objectNode;
 
     /**
      * 给文章点踩
@@ -45,22 +47,23 @@ public class ArticleController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/dislike", method = RequestMethod.GET)
     public ObjectNode dislike(Integer id, HttpServletRequest request) {
-        // 从cookie中获取登陆用户信息
-        User user = userService.getCookieUser(request);
+        objectNode = mapper.createObjectNode();
         // 检测重复操作
         if (!logService.check(request, 1440))
             objectNode.put("status", 2);
         else {
+            // 日志记录
+            logService.log(userService.getCookieUser(request), request);
             Article article = articleService.findById(id, 0);
             if (article != null) {
-                int dislikes = article.getDislikes();
-                if (dislikes < 0) dislikes = 0;
-                dislikes++;
-                if (dislikes + 1 > Integer.MAX_VALUE - 5) {
-                    dislikes--;
-                }
-                article.setDislikes(dislikes);
                 try {
+                    int dislikes = article.getDislikes();
+                    if (dislikes < 0) dislikes = 0;
+                    dislikes++;
+                    if (dislikes + 1 > Integer.MAX_VALUE - 5) {
+                        dislikes--;
+                    }
+                    article.setDislikes(dislikes);
                     articleService.save(article);
                     objectNode.put("status", 0);
                 } catch (Exception e) {
@@ -69,18 +72,16 @@ public class ArticleController extends BaseController {
                 }
             } else
                 objectNode.put("status", 1);
-            // 日志记录
-            logService.log(user, request);
         }
         return objectNode;
     }
 
     /**
-     * 喜欢
+     * 给文章点赞
      *
-     * @param id
+     * @param id      文章ID
      * @param request
-     * @return
+     * @return json
      */
     @ResponseBody
     @RequestMapping(value = "/like", method = RequestMethod.GET)
@@ -92,16 +93,18 @@ public class ArticleController extends BaseController {
         if (!logService.check(request, 1440))
             objectNode.put("status", 2);
         else {
+            // 日志记录
+            logService.log(user, request);
             Article article = articleService.findById(id, 0);
             if (article != null) {
-                int likes = article.getLikes();
-                if (likes < 0) likes = 0;
-                likes++;
-                if (likes + 1 > Integer.MAX_VALUE - 5) {
-                    likes--;
-                }
-                article.setLikes(likes);
                 try {
+                    int likes = article.getLikes();
+                    if (likes < 0) likes = 0;
+                    likes++;
+                    if (likes + 1 > Integer.MAX_VALUE - 5) {
+                        likes--;
+                    }
+                    article.setLikes(likes);
                     articleService.save(article);
                     objectNode.put("status", 0);
                 } catch (Exception e) {
@@ -110,18 +113,18 @@ public class ArticleController extends BaseController {
                 }
             } else
                 objectNode.put("status", 1);
-            // 日志记录
-            logService.log(user, request);
         }
         return objectNode;
     }
 
     /**
      * 查询上一条下一条
+     * 如果u_id不为空 查询的是该用户的上一篇下一篇博文
+     * 如果u_id为空 查询的是不限用户的上一篇下一篇
      *
-     * @param id
-     * @param u_id
-     * @return
+     * @param id   文章ID
+     * @param u_id 用户ID
+     * @return json
      */
     @ResponseBody
     @RequestMapping(value = "/prevAndNext", method = RequestMethod.GET)
@@ -150,10 +153,11 @@ public class ArticleController extends BaseController {
      */
     @RequestMapping(value = "/search")
     public String search(String keyword, Integer page, Integer size, Map<String, Object> map, HttpServletRequest request) {
-
-        if (keyword != null && keyword.length() > 20) return "error";
         // 从cookie中获取登陆用户信息
         User user = userService.getCookieUser(request);
+        // 日志记录
+        logService.log(user, request);
+        if (keyword != null && keyword.length() > 20) return "error";
         if (page == null) page = 1;
         if (size == null) size = 10;
         // 分页查询
@@ -180,10 +184,6 @@ public class ArticleController extends BaseController {
         } else {
             map.put("articles", null);
         }
-
-        // 日志记录
-        logService.log(user, request);
-
         return "search";
     }
 
@@ -531,7 +531,6 @@ public class ArticleController extends BaseController {
         objectNode = mapper.createObjectNode();
         // 从cookie中获取登陆用户
         User user = userService.getCookieUser(request);
-
         // 检测重复操作
         if (article.getId() == null) {
             if (!logService.check(request, 5)) {
@@ -539,14 +538,14 @@ public class ArticleController extends BaseController {
                 return objectNode;
             }
         }
-
+        // 日志记录
+        logService.log(user, request);
         // 检测是否为空
         if (BaseService.checkNullStr(article.getTitle()) || BaseService.checkNullStr(article.getContent())) {
             // 操作状态保存
             objectNode.put("status", "1");
             return objectNode;
         }
-
         try {
             // 修改文章
             if (article.getId() != null) {
@@ -581,8 +580,6 @@ public class ArticleController extends BaseController {
             // 操作状态保存
             objectNode.put("status", "1");
         }
-        // 日志记录
-        logService.log(user, request);
         return objectNode;
     }
 
@@ -597,15 +594,15 @@ public class ArticleController extends BaseController {
     public String one(HttpServletRequest request, Map<String, Object> map, @PathVariable("id") Integer id) {
         // 从cookie中获取登陆用户
         User user = userService.getCookieUser(request);
+        // 日志记录
+        logService.log(user, request);
         Article article;
         // 用户无法查看被隐藏的文章
         if (user != null && user.getAuthority() == 0)
             article = articleService.findById(id, 1);
         else
             article = articleService.findById(id, 0);
-
         if (article == null) return "error";
-
         if (article.getPassword() == null || article.getPassword().equals("")) {
             map.put("article", article);
             if (user != null)
@@ -616,12 +613,7 @@ public class ArticleController extends BaseController {
             map.put("password", 1);
             map.put("manage", 0);
         }
-
         map.put("page", articleService.whereIsMyPage(id, article.getAuthor().getId(), 20));
-
-        // 日志记录
-        logService.log(user, request);
-
         return "article";
     }
 
@@ -630,6 +622,7 @@ public class ArticleController extends BaseController {
      *
      * @return 返回置顶文章
      */
+    @JsonView({Article.Top.class})
     @ResponseBody
     @RequestMapping(value = "/top", method = RequestMethod.GET)
     public List top() {
@@ -641,9 +634,11 @@ public class ArticleController extends BaseController {
      *
      * @return json串
      */
+    @JsonView({Article.Index.class})
     @ResponseBody
     @RequestMapping(value = "/index", method = RequestMethod.GET)
     public List index(HttpServletRequest request) {
+        objectNode = mapper.createObjectNode();
         // 从 Cookie 中获取登陆信息
         User user = userService.getCookieUser(request);
         // 日志记录

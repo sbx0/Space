@@ -25,8 +25,12 @@ var list_article = new Vue({
                 '<h2 class="blog-post-title"><a :href="article.id" class="text-dark">{{article.title}}</a></h2>' +
                 '<p class="blog-post-meta"><a :href ="article.author.id">{{article.author.name}}</a>&nbsp;{{article.time}}</p>' +
                 '<div v-html="article.content"></div>' +
-                '<a class="btn btn-sm btn-light continue-read" :href ="article.id">' +
-                i18N.read + i18N.detail+ '</a></transition>',
+                '<a class="text-dark" :href="article.id">' +
+                '阅[<span>{{article.views}}</span>]&nbsp;&nbsp;&nbsp;' +
+                '评[<span>{{article.comments}}</span>]&nbsp;&nbsp;&nbsp;' +
+                '赞[<span>{{article.likes}}</span>]&nbsp;&nbsp;&nbsp;' +
+                '踩[<span>{{article.dislikes}}</span>]</a>' +
+                '</transition>',
         },
     },
     created: function () {

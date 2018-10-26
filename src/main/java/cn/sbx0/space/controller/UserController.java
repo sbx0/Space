@@ -6,7 +6,9 @@ import cn.sbx0.space.service.ArticleService;
 import cn.sbx0.space.service.BaseService;
 import cn.sbx0.space.service.LogService;
 import cn.sbx0.space.service.UserService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,6 +36,9 @@ public class UserController extends BaseController {
     private ArticleService articleService;
     @Resource
     private LogService logService;
+    @Autowired
+    private ObjectMapper mapper;
+
 
     /**
      * 获取用户详情
