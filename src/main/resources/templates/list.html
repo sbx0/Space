@@ -77,7 +77,7 @@
                        th:href="'../user/' + ${article?.author?.id} + '?page=1&size=10'"></a>
                     <span th:text="${#dates.format(article?.time,'yyyy-MM-dd HH:mm')}"></span>
                 </p>
-                <a href="../article/59" class="text-dark">
+                <a th:href="'../article/' + ${article?.id}" class="text-dark">
                     阅[<span th:text="${article?.views}">0</span>]&nbsp;&nbsp;&nbsp;
                     评[<span th:text="${article?.comments}">0</span>]&nbsp;&nbsp;&nbsp;
                     赞[<span th:text="${article?.likes}">0</span>]&nbsp;&nbsp;&nbsp;

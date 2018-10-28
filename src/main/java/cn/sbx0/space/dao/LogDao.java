@@ -15,6 +15,16 @@ import java.util.List;
 public interface LogDao extends PagingAndSortingRepository<Log, Integer> {
 
     /**
+     * 某个时间段统计访问ip数
+     *
+     * @param begin
+     * @param end
+     * @return
+     */
+    @Query(value = " SELECT CAST(l.time AS DATE),COUNT(DISTINCT l.ip) AS number FROM logs l where l.time > ?1 and l.time < ?2 GROUP BY CAST(l.time AS DATE)", nativeQuery = true)
+    List<Object[]> countIpByTime(Date begin, Date end);
+
+    /**
      * 统计某时间段的日志
      *
      * @param begin

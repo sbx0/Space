@@ -12,10 +12,11 @@ new Vue({
     data: {
         groceryList: [
             {id: 1, text: i18N.search, url: '../article/search'},
-            {id: 2, text: i18N.upload, url: 'http://upload.sbx0.cn/'},
-            {id: 3, text: 'GitHub', url: 'https://github.com/sbx0'},
-            {id: 4, text: 'Bilibili', url: 'https://space.bilibili.com/2309570/#/'},
-            {id: 5, text: 'GokouCat', url: 'http://gokoucat.cn/'},
+            {id: 2, text: i18N.data_center, url: '../data.html'},
+            {id: 3, text: i18N.upload, url: 'http://upload.sbx0.cn/'},
+            {id: 4, text: 'GitHub', url: 'https://github.com/sbx0'},
+            {id: 5, text: 'Bilibili', url: 'https://space.bilibili.com/2309570/#/'},
+            {id: 6, text: 'GokouCat', url: 'http://gokoucat.cn/'},
         ]
     },
     components: {

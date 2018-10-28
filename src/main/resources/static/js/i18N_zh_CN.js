@@ -44,6 +44,7 @@ var i18N = {
     is_or_not: '是否',
     right: '正确',
     detail: '详情',
+    data_center: '数据',
     about_content: 'GitHub:<a href="https://github.com/sbx0/Space" target="_blank">Space</a><br>' +
         '开发工具:IntelliJ IDEA<br>' +
         '前端框架:Bootstrap<br>' +

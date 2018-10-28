@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="sbx0 数据中心">
+    <meta name="author" content="sbx0">
+    <link rel="icon" href="img/favicon.png">
+
+    <title>数据中心 | sbx0</title>
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+
+    <!-- 博客模板 -->
+    <link href="css/blog.css" rel="stylesheet">
+    <!-- 消息提示 -->
+    <link href="css/messenger.css" rel="stylesheet">
+    <link href="css/messenger-theme-flat.css" rel="stylesheet">
+    <!-- 图片浏览 -->
+    <link href="css/viewer.min.css" rel="stylesheet">
+    <link href="css/base.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="container">
+    <header id="blog-header" class="blog-header py-3">
+        <div class="row flex-nowrap justify-content-between align-items-center" v-cloak>
+            <div class="col-4 pt-1">
+                <a class="blog-header-logo text-dark" href="index.html">{{space}}</a>
+            </div>
+            <div class="col-4 text-center"></div>
+            <div class="col-4 d-flex justify-content-end align-items-center">
+                <a class="text-muted" href="/article/search">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                         class="mx-3">
+                        <circle cx="10.5" cy="10.5" r="7.5"></circle>
+                        <line x1="21" y1="21" x2="15.8" y2="15.8"></line>
+                    </svg>
+                </a>
+                <a class="btn btn-sm btn-outline-secondary" href="login.html">{{login}}</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="nav-scroller py-1">
+        <nav id="nav" class="nav d-flex justify-content-between">
+            <nav-bar v-for="nav in groceryList" v-bind:nav="nav" v-bind:key="nav.id"></nav-bar>
+        </nav>
+    </div>
+
+</div>
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12 blog-main text-center">
+            <h5 class="font-italic">
+                <p>30天内的IP访问数</p>
+            </h5>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-4">
+    <div class="row">
+        <div id="c1" class="g2"></div>
+    </div>
+</div>
+
+<footer id="blog-footer" class="blog-footer" v-cloak>
+    <p>
+        <span v-html="copyright"></span>
+    </p>
+</footer>
+
+<script src="js/jquery.min.js"></script>
+<script src="js/popper.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/vue.min.js"></script>
+<script src="js/messenger.min.js"></script>
+<script src="js/messenger-theme-flat.js"></script>
+<script src="js/viewer.min.js"></script>
+<script src="js/g2.js"></script>
+<script src="js/i18N_zh_CN.js"></script>
+<script src="js/base.js"></script>
+<script src="js/data.js"></script>
+</body>
+</html>

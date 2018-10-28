@@ -25,6 +25,17 @@ public class LogService extends BaseService {
     private LogDao logDao;
 
     /**
+     * 某个时间段统计访问ip数
+     * @param begin
+     * @param end
+     * @return
+     */
+    public List<Object[]> countIpByTime(Date begin, Date end) {
+        return logDao.countIpByTime(begin, end);
+    }
+
+
+    /**
      * 统计某时间段的日志
      *
      * @param begin
