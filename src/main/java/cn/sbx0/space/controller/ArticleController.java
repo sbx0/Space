@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -65,6 +64,7 @@ public class ArticleController extends BaseController {
                     }
                     article.setDislikes(dislikes);
                     articleService.save(article);
+                    objectNode.put("dislikes", article.getDislikes());
                     objectNode.put("status", 0);
                 } catch (Exception e) {
                     objectNode.put("msg", e.getMessage());
@@ -106,6 +106,7 @@ public class ArticleController extends BaseController {
                     }
                     article.setLikes(likes);
                     articleService.save(article);
+                    objectNode.put("likes", article.getLikes());
                     objectNode.put("status", 0);
                 } catch (Exception e) {
                     objectNode.put("msg", e.getMessage());

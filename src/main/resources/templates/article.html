@@ -84,13 +84,15 @@
                 </strong>
             </h4>
 
-            <p class="blog-post-title" th:text="${article.title}"></p>
+            <h3 th:text="${article.title}"></h3>
             <p class="blog-post-meta">
                 <a th:href="'../user/'+${article.author.id}+'?page='+${page}+'&size=20#'+${article.id}"
                    th:text="${article.author.name}"></a>
-                <span th:text="${#dates.format(article.time,'yyyy-MM-dd HH:mm:ss')}"></span>
-            <p>
-
+                <span th:text="${#dates.format(article.time,'yyyy-MM-dd HH:mm:ss')}+'发布'"></span>
+                <span th:text="${#dates.format(article.lastChangeTime,'yyyy-MM-dd HH:mm:ss')}+'修改'"
+                      th:if="${article.lastChangeTime != null}"
+                      class="text-danger"></span>
+            </p>
             <div th:if="${password != 1}" id="markdown">
                 <textarea style="display:none;" th:text="${article.content}"></textarea>
             </div>
@@ -105,15 +107,21 @@
 
             <ul class="nav justify-content-center mt-3 border-top">
                 <li class="nav-item">
+                    <a class="nav-link text-success" href="javascript:void(0)">
+                        阅
+                        <span th:text="${article.views}">0</span>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link text-danger" onclick="attitude(1)" href="javascript:void(0)">
                         赞
-                        <span th:text="${article.likes}">0</span>
+                        <span id="likes" th:text="${article.likes}">0</span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-dark" onclick="attitude(2)" href="javascript:void(0)">
                         踩
-                        <span th:text="${article.dislikes}">0</span>
+                        <span id="dislikes" th:text="${article.dislikes}">0</span>
                     </a>
                 </li>
                 <li class="nav-item" hidden>
@@ -161,20 +169,6 @@
             ，
             <strong>
                 转载请注明出处
-            </strong>
-        </p>
-    </div>
-
-    <div th:if="${article.lastChangeTime != null}" class="container pb-2 mb-3">
-        <p class="font-italic">
-            <strong>
-                改动
-            </strong>
-        </p>
-        <p class="text-danger">
-            修改于
-            <strong>
-                <span th:text="${#dates.format(article.lastChangeTime,'yyyy-MM-dd HH:mm:ss')}"></span>
             </strong>
         </p>
     </div>

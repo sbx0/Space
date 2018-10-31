@@ -1,6 +1,7 @@
 package cn.sbx0.space.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -9,7 +10,8 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "COMMENTS")
-public class Comment {
+public class Comment implements Serializable {
+    private static final long serialVersionUID = 2325996491164098528L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

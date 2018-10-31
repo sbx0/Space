@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -12,7 +13,8 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "ARTICLES")
-public class Article {
+public class Article implements Serializable {
+    private static final long serialVersionUID = 1840679258382434964L;
     // 置顶
     public interface Top {}
     public interface Index extends Top {}

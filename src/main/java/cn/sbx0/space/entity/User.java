@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -12,7 +13,8 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "USERS")
-public class User {
+public class User implements Serializable {
+    private static final long serialVersionUID = 1389714315239886773L;
     @JsonView(Article.Top.class)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -85,12 +85,12 @@
                        th:href="'../user/' + ${article?.author?.id} + '?page=1&size=10'"></a>
                     <span th:text="${#dates.format(article?.time,'yyyy-MM-dd HH:mm')}"></span>
                 </p>
+                <div th:utext="${article?.content}"></div>
                 <a th:href="'../article/' + ${article?.id}" class="text-dark">
                     阅[<span th:text="${article?.views}">0</span>]&nbsp;&nbsp;&nbsp;
                     评[<span th:text="${article?.comments}">0</span>]&nbsp;&nbsp;&nbsp;
                     赞[<span th:text="${article?.likes}">0</span>]&nbsp;&nbsp;&nbsp;
                     踩[<span th:text="${article?.dislikes}">0</span>]</a>
-                <div th:utext="${article?.content}"></div>
             </div>
 
             <nav th:if="${articles != null}" class="blog-pagination text-center" v-cloak>

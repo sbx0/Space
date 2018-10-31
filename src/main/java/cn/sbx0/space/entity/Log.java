@@ -1,6 +1,7 @@
 package cn.sbx0.space.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -8,7 +9,8 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "LOGS")
-public class Log {
+public class Log implements Serializable {
+    private static final long serialVersionUID = 559080799578351798L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

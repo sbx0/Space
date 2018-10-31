@@ -18,7 +18,10 @@ function attitude(type) {
         type: 'GET',
         success: function (data) {
             if (data.status == 0) {
-                location.replace(location.href);
+                if(data.dislikes != null)
+                    $("#dislikes").html(data.dislikes)
+                if(data.likes != null)
+                    $("#likes").html(data.likes)
             } else if (data.status == 2) {
                 alert("不要重复操作");
             }
