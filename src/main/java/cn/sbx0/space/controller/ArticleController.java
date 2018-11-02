@@ -24,7 +24,7 @@ import java.util.Map;
  * 文章控制类
  */
 @Controller
-@RequestMapping("/article")
+@RequestMapping("")
 public class ArticleController extends BaseController {
     @Resource
     private ArticleService articleService;
@@ -44,7 +44,7 @@ public class ArticleController extends BaseController {
      * @return json
      */
     @ResponseBody
-    @RequestMapping(value = "/dislike", method = RequestMethod.GET)
+    @RequestMapping(value = "/article/dislike", method = RequestMethod.GET)
     public ObjectNode dislike(Integer id, HttpServletRequest request) {
         objectNode = mapper.createObjectNode();
         // 检测重复操作
@@ -84,7 +84,7 @@ public class ArticleController extends BaseController {
      * @return json
      */
     @ResponseBody
-    @RequestMapping(value = "/like", method = RequestMethod.GET)
+    @RequestMapping(value = "/article/like", method = RequestMethod.GET)
     public ObjectNode like(Integer id, HttpServletRequest request) {
         objectNode = mapper.createObjectNode();
         // 从cookie中获取登陆用户信息
@@ -128,7 +128,7 @@ public class ArticleController extends BaseController {
      * @return json
      */
     @ResponseBody
-    @RequestMapping(value = "/prevAndNext", method = RequestMethod.GET)
+    @RequestMapping(value = "/article/prevAndNext", method = RequestMethod.GET)
     public ObjectNode prevAndNext(Integer id, Integer u_id) {
         objectNode = mapper.createObjectNode();
         if (u_id == null)
@@ -152,7 +152,7 @@ public class ArticleController extends BaseController {
      * @param keyword
      * @return
      */
-    @RequestMapping(value = "/search")
+    @RequestMapping(value = "/article/search")
     public String search(String keyword, Integer page, Integer size, Map<String, Object> map, HttpServletRequest request) {
         // 从cookie中获取登陆用户信息
         User user = userService.getCookieUser(request);
@@ -196,7 +196,7 @@ public class ArticleController extends BaseController {
      * @return JSON
      */
     @ResponseBody
-    @RequestMapping(value = "/removePassword", method = RequestMethod.GET)
+    @RequestMapping(value = "/article/removePassword", method = RequestMethod.GET)
     public ObjectNode removePassword(Integer id, HttpServletRequest request) {
         objectNode = mapper.createObjectNode();
         // 从cookie中获取登陆用户信息
@@ -229,7 +229,7 @@ public class ArticleController extends BaseController {
      * @param map
      * @return 对应页面
      */
-    @RequestMapping(value = "/checkPassword", method = RequestMethod.POST)
+    @RequestMapping(value = "/article/checkPassword", method = RequestMethod.POST)
     public String checkPassword(Article article, Map<String, Object> map, HttpServletRequest request) {
         // 从cookie中获取登陆用户信息
         User user = userService.getCookieUser(request);
@@ -253,8 +253,14 @@ public class ArticleController extends BaseController {
             logService.log(user, request);
             return "article";
         } else {
-            a.setContent("密码错误，请确认密码是否正确");
-            map.put("article", a);
+            Article temp = new Article();
+            temp.setId(a.getId());
+            temp.setTitle("密码错误");
+            temp.setAuthor(a.getAuthor());
+            temp.setLastChangeTime(a.getLastChangeTime());
+            temp.setTime(a.getTime());
+            temp.setTop(a.getTop());
+            map.put("article", temp);
             // 页面根据此字段判断是否该文章是否需要输入密码
             map.put("password", 1);
             map.put("manage", 0);
@@ -273,7 +279,7 @@ public class ArticleController extends BaseController {
      * @return JSON
      */
     @ResponseBody
-    @RequestMapping(value = "/addPassword", method = RequestMethod.POST)
+    @RequestMapping(value = "/article/addPassword", method = RequestMethod.POST)
     public ObjectNode addPassword(Integer id, String password, HttpServletRequest request) {
         objectNode = mapper.createObjectNode();
         // 从cookie中获取登陆用户信息
@@ -313,7 +319,7 @@ public class ArticleController extends BaseController {
      * @return JSON
      */
     @ResponseBody
-    @RequestMapping(value = "/recover", method = RequestMethod.GET)
+    @RequestMapping(value = "/article/recover", method = RequestMethod.GET)
     public ObjectNode recover(Integer id, HttpServletRequest request) {
         objectNode = mapper.createObjectNode();
         // 从cookie中获取登陆用户信息
@@ -352,7 +358,7 @@ public class ArticleController extends BaseController {
      * @param request
      * @return 页面
      */
-    @RequestMapping(value = "/trash", method = RequestMethod.GET)
+    @RequestMapping(value = "/article/trash", method = RequestMethod.GET)
     public String trash(Integer page, Integer size, HttpServletRequest request, Map<String, Object> map) {
         // 从cookie中获取登陆用户信息
         User user = userService.getCookieUser(request);
@@ -398,7 +404,7 @@ public class ArticleController extends BaseController {
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "/delete", method = RequestMethod.GET)
+    @RequestMapping(value = "/article/delete", method = RequestMethod.GET)
     public ObjectNode delete(Integer id, Integer type, HttpServletRequest request) {
         objectNode = mapper.createObjectNode();
         // 从cookie中获取登陆用户
@@ -438,7 +444,7 @@ public class ArticleController extends BaseController {
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "/removeTop", method = RequestMethod.GET)
+    @RequestMapping(value = "/article/removeTop", method = RequestMethod.GET)
     public ObjectNode removeTop(HttpServletRequest request, Integer id) {
         objectNode = mapper.createObjectNode();
         // 从cookie中获取登陆用户
@@ -467,7 +473,7 @@ public class ArticleController extends BaseController {
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "/setTop", method = RequestMethod.GET)
+    @RequestMapping(value = "/article/setTop", method = RequestMethod.GET)
     public ObjectNode setTop(HttpServletRequest request, Integer id) {
         objectNode = mapper.createObjectNode();
         // 从cookie中获取登陆用户
@@ -496,7 +502,7 @@ public class ArticleController extends BaseController {
      * @param id
      * @return
      */
-    @RequestMapping(value = "/updateOne", method = RequestMethod.GET)
+    @RequestMapping(value = "/article/updateOne", method = RequestMethod.GET)
     public String updateOne(HttpServletRequest request, Map<String, Object> map, Integer id) {
         // 从cookie中获取登陆用户
         User user = userService.getCookieUser(request);
@@ -527,7 +533,7 @@ public class ArticleController extends BaseController {
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "/post", method = RequestMethod.POST)
+    @RequestMapping(value = "/article/post", method = RequestMethod.POST)
     public ObjectNode post(HttpServletRequest request, Article article) {
         objectNode = mapper.createObjectNode();
         // 从cookie中获取登陆用户
@@ -591,7 +597,7 @@ public class ArticleController extends BaseController {
      * @param id  ID
      * @return JSON串
      */
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/article/{id}", method = RequestMethod.GET)
     public String one(HttpServletRequest request, Map<String, Object> map, @PathVariable("id") Integer id) {
         // 从cookie中获取登陆用户
         User user = userService.getCookieUser(request);
@@ -625,7 +631,7 @@ public class ArticleController extends BaseController {
      */
     @JsonView({Article.Top.class})
     @ResponseBody
-    @RequestMapping(value = "/top", method = RequestMethod.GET)
+    @RequestMapping(value = "/article/top", method = RequestMethod.GET)
     public List top() {
         return articleService.top(2);
     }
@@ -637,7 +643,7 @@ public class ArticleController extends BaseController {
      */
     @JsonView({Article.Index.class})
     @ResponseBody
-    @RequestMapping(value = "/index", method = RequestMethod.GET)
+    @RequestMapping(value = "/article/index", method = RequestMethod.GET)
     public List index(HttpServletRequest request) {
         objectNode = mapper.createObjectNode();
         // 从 Cookie 中获取登陆信息
@@ -660,7 +666,7 @@ public class ArticleController extends BaseController {
      * @param size 每页条数
      * @return list.html
      */
-    @RequestMapping(value = "/list")
+    @RequestMapping(value = "/article/list")
     public String list(Map<String, Object> map, Integer page, Integer size, HttpServletRequest request) {
         // 从 Cookie 中获取登陆信息
         User user = userService.getCookieUser(request);
@@ -700,7 +706,7 @@ public class ArticleController extends BaseController {
      * @param response
      * @throws IOException
      */
-    @GetMapping("/sitemap.xml")
+    @GetMapping("/site_map.xml")
     public void createSiteMapXml(HttpServletResponse response) throws IOException {
         response.setContentType(MediaType.APPLICATION_XML_VALUE);
         Writer writer = response.getWriter();

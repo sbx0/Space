@@ -183,7 +183,7 @@ var article = new Vue({
         prevAndNext();
         // 配置图片浏览器
         new Viewer(document.getElementById('markdown'), {
-            movable: false,
+            movable: true,
         });
     },
 })

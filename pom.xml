@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>cn.ducsr</groupId>
+    <groupId>cn.sbx0</groupId>
     <artifactId>space</artifactId>
     <version>0.0.1</version>
     <packaging>jar</packaging>
@@ -58,6 +58,12 @@
             <groupId>com.github.dfabulich</groupId>
             <artifactId>sitemapgen4j</artifactId>
             <version>1.0.6</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.belerweb/pinyin4j -->
+        <dependency>
+            <groupId>com.belerweb</groupId>
+            <artifactId>pinyin4j</artifactId>
+            <version>2.5.1</version>
         </dependency>
     </dependencies>
 

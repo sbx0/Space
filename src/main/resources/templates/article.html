@@ -84,7 +84,7 @@
                 </strong>
             </h4>
 
-            <h3 th:text="${article.title}"></h3>
+            <h4 th:text="${article.title}"></h4>
             <p class="blog-post-meta">
                 <a th:href="'../user/'+${article.author.id}+'?page='+${page}+'&size=20#'+${article.id}"
                    th:text="${article.author.name}"></a>
@@ -93,6 +93,7 @@
                       th:if="${article.lastChangeTime != null}"
                       class="text-danger"></span>
             </p>
+
             <div th:if="${password != 1}" id="markdown">
                 <textarea style="display:none;" th:text="${article.content}"></textarea>
             </div>
@@ -100,7 +101,7 @@
             <form th:if="${password == 1}" class="mt-1" action="/article/checkPassword" method="post">
                 <input name="id" type="hidden" th:value="${article.id}">
                 <div class="form-group">
-                    <input type="text" class="form-control" id="password" name="password" placeholder="密码">
+                    <input type="password" class="form-control" id="password" name="password" placeholder="密码">
                 </div>
                 <button type="submit" class="btn btn-primary btn-sm">提交</button>
             </form>

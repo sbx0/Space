@@ -15,144 +15,161 @@ import java.util.Optional;
 public interface ArticleDao extends PagingAndSortingRepository<Article, Integer> {
 
     /**
-     * 查询大于等于某ID的条数
+     * 查询某文章发布时间之后的文章条数
      *
-     * @param id
-     * @return
+     * @param id   文章ID
+     * @param u_id 作者ID
+     * @return 大于等于某ID的文章条数
      */
-    @Query(value = "select  count(*) from articles a where a.top >= 0 and a.id >= ?1 and a.author_id = ?2", nativeQuery = true)
+    @Query(value = "SELECT COUNT(*) FROM articles a WHERE a.top >= 0 AND a.id >= ?1 AND a.author_id = ?2", nativeQuery = true)
     Integer countLargeThanId(Integer id, Integer u_id);
 
     /**
-     * 查询指定用户的上一条博文
+     * 查询指定作者的上一条文章
      *
-     * @param id
-     * @param u_id
-     * @return
+     * @param id   文章ID
+     * @param u_id 用户ID
+     * @return 该作者的上一篇文章
      */
-    @Query(value = "select * from articles a where a.id < ?1 and a.author_id = ?2 and a.top >= 0 order by a.id desc limit 1", nativeQuery = true)
-    Article prev(int id, int u_id);
-
+    @Query(value = "SELECT * FROM articles a WHERE a.id < ?1 AND a.author_id = ?2 AND a.top >= 0 ORDER BY a.id DESC limit 1", nativeQuery = true)
+    Article prev(Integer id, Integer u_id);
 
     /**
-     * 查询上一条博文
+     * 查询上一条文章
      *
-     * @param id
-     * @return
+     * @param id 文章ID
+     * @return 该篇文章的上一篇文章
      */
-    @Query(value = "select * from articles a where a.id < ?1 and a.top >= 0 order by a.id desc limit 1", nativeQuery = true)
-    Article prev(int id);
-
+    @Query(value = "SELECT * FROM articles a WHERE a.id < ?1 AND a.top >= 0 ORDER BY a.id DESC limit 1", nativeQuery = true)
+    Article prev(Integer id);
 
     /**
-     * 查询下一条博文
+     * 查询下一条文章
      *
-     * @param id
-     * @return
+     * @param id 文章ID
+     * @return 该篇文章的下一篇文章
      */
-    @Query(value = "select * from articles a where a.id > ?1 and a.top >= 0 order by a.id asc limit 1", nativeQuery = true)
-    Article next(int id);
-
+    @Query(value = "SELECT * FROM articles a WHERE a.id > ?1 AND a.top >= 0 ORDER BY a.id ASC limit 1", nativeQuery = true)
+    Article next(Integer id);
 
     /**
-     * 查询指定用户的下一条博文
+     * 查询指定作者的下一条文章
      *
-     * @param id
-     * @param u_id
-     * @return
+     * @param id   文章ID
+     * @param u_id 作者ID
+     * @return 该作者的下一篇文章
      */
-    @Query(value = "select * from articles a where a.id > ?1 and a.author_id = ?2 and a.top >= 0 order by a.id asc limit 1", nativeQuery = true)
-    Article next(int id, int u_id);
-
+    @Query(value = "SELECT * FROM articles a WHERE a.id > ?1 AND a.author_id = ?2 AND a.top >= 0 ORDER BY a.id ASC limit 1", nativeQuery = true)
+    Article next(Integer id, Integer u_id);
 
     /**
-     * 查询文章列表
+     * 查询全部文章(包含隐藏文章)
+     *
+     * @param pageable 分页查询
+     * @return 对应页数和条数的文章列表
      */
-    @Query(value = "select  * from articles", nativeQuery = true)
+    @Query(value = "SELECT * FROM articles", nativeQuery = true)
     Page<Article> adminFindAll(Pageable pageable);
 
 
     /**
-     * 查询文章
+     * 按照ID查询某篇文章(包含隐藏文章)
+     *
+     * @param id 文章ID
+     * @return 对应ID的文章
      */
-    @Query(value = "select  * from articles a where a.id = ?1", nativeQuery = true)
+    @Query(value = "SELECT * FROM articles a WHERE a.id = ?1", nativeQuery = true)
     Optional<Article> adminFindById(Integer id);
 
     /**
-     * 查询所有文章
+     * 站点地图查询全部文章(不包含隐藏文章)
+     *
+     * @return 文章列表
      */
-    @Query(value = "select  * from articles a where a.top >= 0 order by a.time desc,a.last_change_time desc", nativeQuery = true)
+    @Query(value = "SELECT * FROM articles a WHERE a.top >= 0 ORDER BY a.id DESC", nativeQuery = true)
     List<Article> findAll();
-
 
     /**
      * 查询未被隐藏的文章列表
+     *
+     * @param pageable 分页查询
+     * @return 对应页数和条数的文章列表
      */
-    @Query(value = "select  * from articles a where a.top >= 0", nativeQuery = true)
+    @Query(value = "SELECT * FROM articles a WHERE a.top >= 0", nativeQuery = true)
     Page<Article> findAll(Pageable pageable);
 
     /**
-     * 查询未被隐藏的文章
+     * 根据关键词查询文章
+     *
+     * @param keyword  关键词
+     * @param pageable 分页查询
+     * @return 对应页数和条数的文章列表
      */
-    @Query(value = "select  * from articles a where a.top >= 0 and (a.title like ?1 or a.content like ?1)", nativeQuery = true)
+    @Query(value = "SELECT * FROM articles a WHERE a.top >= 0 AND (a.title LIKE ?1 OR a.introduction LIKE ?1) ORDER BY LENGTH(REPLACE(a.title,?1,''))", nativeQuery = true)
     Page<Article> findByKeyword(String keyword, Pageable pageable);
 
-
     /**
-     * 查询未被隐藏的文章
+     * 根据ID查询未被隐藏的文章
+     *
+     * @param id 文章ID
+     * @return 对应的文章
      */
-    @Query(value = "select  * from articles a where a.top >= 0 and a.id = ?1", nativeQuery = true)
+    @Query(value = "SELECT * FROM articles a WHERE a.id = ?1 AND a.top >= 0", nativeQuery = true)
     Optional<Article> findById(Integer id);
 
-
     /**
-     * 查询用户文章
+     * 查询相应作者的文章
      *
-     * @param id
-     * @return
+     * @param id       作者ID
+     * @param pageable 分页查询
+     * @return 对应页数和条数的文章列表
      */
-    @Query(value = "select  * from articles a where a.author_id = ?1 and a.top >= 0", nativeQuery = true)
+    @Query(value = "SELECT * FROM articles a WHERE a.author_id = ?1 AND a.top >= 0", nativeQuery = true)
     Page<Article> findByUser(Integer id, Pageable pageable);
 
-
     /**
-     * 查询被隐藏的文章列表
+     * 回收站
+     * 查询被隐藏的文章
+     *
+     * @param pageable 分页查询
+     * @return 对应页数和条数的文章列表
      */
-    @Query(value = "select  * from articles a where a.top < 0", nativeQuery = true)
+    @Query(value = "SELECT * FROM articles a WHERE a.top < 0", nativeQuery = true)
     Page<Article> findTrash(Pageable pageable);
 
-
     /**
-     * 查询被隐藏的文章列表 根据用户
+     * 回收站
+     * 查询对应作者的被隐藏的文章
+     *
+     * @param id       作者ID
+     * @param pageable 分页查询
+     * @return 对应页数和条数的文章列表
      */
-    @Query(value = "select  * from articles a where a.top < 0 and a.author_id = ?1", nativeQuery = true)
+    @Query(value = "SELECT * FROM articles a WHERE a.top < 0 AND a.author_id = ?1", nativeQuery = true)
     Page<Article> findTrashByUser(Integer id, Pageable pageable);
-
 
     /**
      * 获取最大置顶
      *
-     * @return
+     * @return 最大置顶数
      */
-    @Query(value = "select top from articles a where a.top >= 0 order by a.top desc limit 1", nativeQuery = true)
+    @Query(value = "SELECT a.top FROM articles a WHERE a.top >= 0 ORDER BY a.top DESC limit 1", nativeQuery = true)
     Integer getMaxTop();
-
 
     /**
      * 获取当前置顶文章数
      *
-     * @return
+     * @return 置顶文章数
      */
-    @Query(value = "select  count(*) from articles a where a.top > 0", nativeQuery = true)
+    @Query(value = "SELECT count(*) FROM articles a WHERE a.top > 0", nativeQuery = true)
     Integer getTopNumber();
-
 
     /**
      * 查询置顶文章
      *
-     * @param size
-     * @return
+     * @param size 置顶文章条数
+     * @return 相应的置顶文章列表
      */
-    @Query(value = "select * from articles a where a.top > 0 order by a.top desc, a.id desc limit ?1", nativeQuery = true)
+    @Query(value = "SELECT * FROM articles a WHERE a.top > 0 ORDER BY a.top DESC,a.id DESC limit ?1", nativeQuery = true)
     List<Article> top(Integer size);
 }

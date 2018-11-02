@@ -16,7 +16,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class BaseService {
-
     private static String DOMAIN; // 域名
     private static String KEY; // KEY
     public static List<String> COOKIE_NAMES = Arrays.asList("ID", "KEY", "NAME");

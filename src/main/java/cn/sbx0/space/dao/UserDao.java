@@ -10,12 +10,30 @@ import java.util.List;
  * 用户Dao
  */
 public interface UserDao extends PagingAndSortingRepository<User, Integer> {
-    @Query(value = "select 1 from users where name = ?1", nativeQuery = true)
+    /**
+     * 查询某用户名是否存在
+     *
+     * @param name 用户名
+     * @return 有结果则存在 无则不存在
+     */
+    @Query(value = "SELECT 1 FROM users u WHERE u.name = ?1", nativeQuery = true)
     String existsByName(String name);
 
-    @Query(value = "select * from users where name = ?1", nativeQuery = true)
+    /**
+     * 根据用户名查询用户
+     *
+     * @param name 用户名
+     * @return 用户
+     */
+    @Query(value = "SELECT * FROM users u WHERE u.name = ?1", nativeQuery = true)
     User findByName(String name);
 
-    @Query(value = "select * from users", nativeQuery = true)
+    /**
+     * 站点地图
+     * 查询所有用户
+     *
+     * @return 用户列表
+     */
+    @Query(value = "SELECT * FROM users", nativeQuery = true)
     List<User> findAll();
 }

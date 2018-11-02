@@ -7,6 +7,7 @@ import cn.sbx0.space.entity.User;
 import com.redfin.sitemapgenerator.ChangeFreq;
 import com.redfin.sitemapgenerator.WebSitemapGenerator;
 import com.redfin.sitemapgenerator.WebSitemapUrl;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -28,6 +29,8 @@ public class ArticleService extends BaseService {
     private ArticleDao articleDao;
     @Resource
     private UserDao userDao;
+    @Value("${sbx0.SITE_MAP.DOMAIN}")
+    private String SITE_MAP_DOMAIN;
 
     /**
      * 查询某文章在第几页
@@ -353,7 +356,7 @@ public class ArticleService extends BaseService {
      * @return
      */
     public String createSiteMapXmlContent() {
-        String baseUrl = "http://space.sbx0.cn";
+        String baseUrl = "http://" + SITE_MAP_DOMAIN;
         WebSitemapGenerator wsg = null;
         try {
             wsg = new WebSitemapGenerator(baseUrl);
