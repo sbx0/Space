@@ -68,7 +68,28 @@ public class Article implements Serializable {
     @ManyToOne(cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER, targetEntity = User.class, optional = false)
     private User author; // 作者
 
-    // Set Get Begin
+    @Override
+    public String toString() {
+        return "Article{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", time=" + time +
+                ", introduction='" + introduction + '\'' +
+                ", content='" + content + '\'' +
+                ", lastChangeTime=" + lastChangeTime +
+                ", password='" + password + '\'' +
+                ", views=" + views +
+                ", comments=" + comments +
+                ", likes=" + likes +
+                ", dislikes=" + dislikes +
+                ", top=" + top +
+                ", author=" + author +
+                '}';
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
 
     public Integer getId() {
         return id;
@@ -174,22 +195,4 @@ public class Article implements Serializable {
         this.author = author;
     }
 
-    @Override
-    public String toString() {
-        return "Article{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", time=" + time +
-                ", introduction='" + introduction + '\'' +
-                ", content='" + content + '\'' +
-                ", lastChangeTime=" + lastChangeTime +
-                ", password='" + password + '\'' +
-                ", views=" + views +
-                ", comments=" + comments +
-                ", likes=" + likes +
-                ", dislikes=" + dislikes +
-                ", top=" + top +
-                ", author=" + author +
-                '}';
-    }
 }

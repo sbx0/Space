@@ -7,9 +7,9 @@ import cn.sbx0.space.service.ArticleService;
 import cn.sbx0.space.service.BaseService;
 import cn.sbx0.space.service.LogService;
 import cn.sbx0.space.service.UserService;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -36,7 +36,7 @@ public class LogController extends BaseController {
     ArticleService articleService;
     @Autowired
     ObjectMapper mapper;
-    private com.fasterxml.jackson.databind.node.ObjectNode objectNode;
+    private ObjectNode objectNode;
 
     /**
      * 某个时间段统计访问ip数

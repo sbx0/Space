@@ -11,19 +11,18 @@ new Vue({
     el: '#nav',
     data: {
         groceryList: [
-            {id: 1, text: 'Search', url: '../article/search'},
-            {id: 2, text: 'Data', url: '../data.html'},
-            {id: 3, text: 'Upload', url: 'http://upload.sbx0.cn/'},
-            {id: 4, text: 'Map', url: '../site_map.xml'},
-            {id: 5, text: 'GitHub', url: 'https://github.com/sbx0'},
-            {id: 7, text: 'Bilibili', url: 'https://space.bilibili.com/2309570/#/'},
-            {id: 7, text: 'GokouCat', url: 'http://gokoucat.cn/'},
+            {id: 0, text: '消息&nbsp;<span class="badge badge-success">新</span>', url: '../message.html'},
+            {id: 0, text: '搜索', url: '../article/search'},
+            {id: 0, text: '数据', url: '../data.html'},
+            {id: 0, text: '上传', url: 'http://upload.sbx0.cn/'},
+            {id: 0, text: '开源', url: 'https://github.com/sbx0'},
+            {id: 0, text: '福利', url: 'http://gokoucat.cn/'},
         ]
     },
     components: {
         'nav-bar': {
             props: ['nav'],
-            template: '<a class="p-2 text-muted" :href="nav.url">{{nav.text}}</a>',
+            template: '<a class="p-2 text-muted" :href="nav.url" v-html="nav.text"></a>',
         },
     },
 })

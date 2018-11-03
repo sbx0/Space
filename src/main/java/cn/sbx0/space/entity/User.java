@@ -47,30 +47,25 @@ public class User implements Serializable {
     @Column(nullable = false, columnDefinition = "Decimal(10,1) default '100.0'")
     private double exp_max; // 当前等级的最大经验值，超过清空升级
 
-    // Set Get Begin
-
-    public Integer getLevel() {
-        return level;
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", password='" + password + '\'' +
+                ", signature='" + signature + '\'' +
+                ", registerTime=" + registerTime +
+                ", birthday=" + birthday +
+                ", integral=" + integral +
+                ", authority=" + authority +
+                ", level=" + level +
+                ", exp=" + exp +
+                ", exp_max=" + exp_max +
+                '}';
     }
 
-    public void setLevel(Integer level) {
-        this.level = level;
-    }
-
-    public double getExp() {
-        return exp;
-    }
-
-    public void setExp(double exp) {
-        this.exp = exp;
-    }
-
-    public double getExp_max() {
-        return exp_max;
-    }
-
-    public void setExp_max(double exp_max) {
-        this.exp_max = exp_max;
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
     }
 
     public Integer getId() {
@@ -81,30 +76,12 @@ public class User implements Serializable {
         this.id = id;
     }
 
-    public String getSignature() {
-        return signature;
-    }
-
-    public void setSignature(String signature) {
-        this.signature = signature;
-    }
-
-    public Integer getAuthority() {
-        return authority;
-    }
-
-    public void setAuthority(Integer authority) {
-        this.authority = authority;
-    }
-
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
-        name = name.replace(" ", "");
-        if (name.length() > 30) name = name.substring(0, 30);
-        this.name = name.trim();
+        this.name = name;
     }
 
     public String getPassword() {
@@ -112,8 +89,15 @@ public class User implements Serializable {
     }
 
     public void setPassword(String password) {
-        if (password.length() > 40) password = password.substring(0, 40);
         this.password = password;
+    }
+
+    public String getSignature() {
+        return signature;
+    }
+
+    public void setSignature(String signature) {
+        this.signature = signature;
     }
 
     public Date getRegisterTime() {
@@ -140,22 +124,36 @@ public class User implements Serializable {
         this.integral = integral;
     }
 
-    // Set Get End
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", password='" + password + '\'' +
-                ", signature='" + signature + '\'' +
-                ", registerTime=" + registerTime +
-                ", birthday=" + birthday +
-                ", integral=" + integral +
-                ", authority=" + authority +
-                ", level=" + level +
-                ", exp=" + exp +
-                ", exp_max=" + exp_max +
-                '}';
+    public Integer getAuthority() {
+        return authority;
     }
+
+    public void setAuthority(Integer authority) {
+        this.authority = authority;
+    }
+
+    public Integer getLevel() {
+        return level;
+    }
+
+    public void setLevel(Integer level) {
+        this.level = level;
+    }
+
+    public double getExp() {
+        return exp;
+    }
+
+    public void setExp(double exp) {
+        this.exp = exp;
+    }
+
+    public double getExp_max() {
+        return exp_max;
+    }
+
+    public void setExp_max(double exp_max) {
+        this.exp_max = exp_max;
+    }
+
 }

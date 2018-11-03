@@ -27,6 +27,23 @@ public class Log implements Serializable {
     @Column(nullable = false)
     private String url; // url
 
+    @Override
+    public String toString() {
+        return "Log{" +
+                "id=" + id +
+                ", ip='" + ip + '\'' +
+                ", user=" + user +
+                ", time=" + time +
+                ", query='" + query + '\'' +
+                ", method='" + method + '\'' +
+                ", url='" + url + '\'' +
+                '}';
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
     public Integer getId() {
         return id;
     }
@@ -83,16 +100,4 @@ public class Log implements Serializable {
         this.url = url;
     }
 
-    @Override
-    public String toString() {
-        return "Log{" +
-                "id=" + id +
-                ", ip='" + ip + '\'' +
-                ", user=" + user +
-                ", time=" + time +
-                ", query='" + query + '\'' +
-                ", method='" + method + '\'' +
-                ", url='" + url + '\'' +
-                '}';
-    }
 }

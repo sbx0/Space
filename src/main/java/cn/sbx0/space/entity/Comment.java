@@ -43,7 +43,28 @@ public class Comment implements Serializable {
     @Column(nullable = false)
     private Integer top; // 置顶排序
 
-    // Set Get Begin
+    @Override
+    public String toString() {
+        return "Comment{" +
+                "id=" + id +
+                ", user_id=" + user_id +
+                ", user_name='" + user_name + '\'' +
+                ", user_ip='" + user_ip + '\'' +
+                ", floor=" + floor +
+                ", content='" + content + '\'' +
+                ", time=" + time +
+                ", lastChangeTime=" + lastChangeTime +
+                ", likes=" + likes +
+                ", dislikes=" + dislikes +
+                ", entity_type='" + entity_type + '\'' +
+                ", entity_id=" + entity_id +
+                ", top=" + top +
+                '}';
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
 
     public Integer getId() {
         return id;
@@ -149,25 +170,4 @@ public class Comment implements Serializable {
         this.top = top;
     }
 
-    // Set Get End
-
-
-    @Override
-    public String toString() {
-        return "Comment{" +
-                "id=" + id +
-                ", user_id=" + user_id +
-                ", user_name='" + user_name + '\'' +
-                ", user_ip='" + user_ip + '\'' +
-                ", floor=" + floor +
-                ", content='" + content + '\'' +
-                ", time=" + time +
-                ", lastChangeTime=" + lastChangeTime +
-                ", likes=" + likes +
-                ", dislikes=" + dislikes +
-                ", entity_type='" + entity_type + '\'' +
-                ", entity_id=" + entity_id +
-                ", top=" + top +
-                '}';
-    }
 }

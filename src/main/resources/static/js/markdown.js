@@ -3,6 +3,7 @@ var editor = editormd("editor", {
     height: 640,
     path: "../lib/",
     emoji: true,
+    watch : false,
 });
 
 // 自动登陆
