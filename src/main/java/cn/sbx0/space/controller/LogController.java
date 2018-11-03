@@ -137,17 +137,20 @@ public class LogController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/list")
-    public String list(Integer page, Integer size, Map<String, Object> map, HttpServletRequest request) {
+    public String list(Integer page, Integer size, String ip,
+                       Map<String, Object> map, HttpServletRequest request) {
         // 从cookie中获取登陆用户
         User user = userService.getCookieUser(request);
         // 只有管理员才可查看
         if (user != null && user.getAuthority() == 0) {
             if (page == null) page = 1;
             if (size == null) size = 50;
-            Page<Log> logPage = logService.findAll(page - 1, size);
+            Page<Log> logPage = logService.findAll(page - 1, size, ip);
             if (logPage.getContent().size() > 0) {
                 // 将数据返回到页面
                 map.put("logs", logPage.getContent());
+                if (!BaseService.checkNullStr(ip))
+                    map.put("ip", ip);
                 map.put("size", logPage.getPageable().getPageSize());
                 map.put("page", logPage.getPageable().getPageNumber() + 1);
                 map.put("totalPages", logPage.getTotalPages());

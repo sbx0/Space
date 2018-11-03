@@ -15,6 +15,15 @@ import java.util.List;
 public interface LogDao extends PagingAndSortingRepository<Log, Integer> {
 
     /**
+     * 根据IP查询日志
+     *
+     * @param ip       IP
+     * @param pageable 分页查询
+     * @return 对应页数和条数的日志
+     */
+    Page<Log> findByIp(String ip, Pageable pageable);
+
+    /**
      * 某个时间段统计访问ip数
      *
      * @param begin 开始日期

@@ -26,6 +26,7 @@ public class LogService extends BaseService {
 
     /**
      * 某个时间段统计访问ip数
+     *
      * @param begin
      * @param end
      * @return
@@ -84,7 +85,7 @@ public class LogService extends BaseService {
      * @param size
      * @return
      */
-    public Page<Log> findAll(Integer page, Integer size) {
+    public Page<Log> findAll(Integer page, Integer size, String ip) {
         // 页数控制
         if (page > 9999) page = 9999;
         if (page < 0) page = 0;
@@ -96,7 +97,10 @@ public class LogService extends BaseService {
         Sort sort = new Sort(Sort.Direction.DESC, "id");
         Pageable pageable = PageRequest.of(page, size, sort);
         try {
-            return logDao.findAll(pageable);
+            if (BaseService.checkNullStr(ip))
+                return logDao.findAll(pageable); // 普通查询
+            else
+                return logDao.findByIp(ip, pageable); // 按照IP查询
         } catch (Exception e) {
             return null;
         }
@@ -126,6 +130,9 @@ public class LogService extends BaseService {
      * @return
      */
     public User log(User user, HttpServletRequest request) {
+        // 不记录自己
+        if (user != null && user.getId() == 1)
+            return user;
         // Log
         Log log = new Log();
         // 记录ip

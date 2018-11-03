@@ -76,7 +76,7 @@
                             <a th:text="${log?.user?.name}" th:href="'../user/' + ${log?.user?.id}"></a>
                         </span>
                         <span>
-                            <a th:text="${log?.ip}" th:href="'https://ip.cn/index.php?ip=' + ${log?.ip}"></a>
+                            <a th:text="${log?.ip}" th:href="'?ip=' + ${log?.ip}"></a>
                         </span>
                     </p>
                     <p>
@@ -100,7 +100,7 @@
 
             <nav th:if="${logs != null}" class="blog-pagination text-center">
                 <a th:if="${prev_page != null}"
-                   th:href="'?page=' + ${prev_page} + '&size=' + ${size}"
+                   th:href="'?ip='+${ip}+'&page='+${prev_page}+'&size='+${size}"
                    class="btn btn-sm btn-outline-primary float-left">
                     {{prev}}
                 </a>
@@ -110,7 +110,7 @@
                 </a>
                 <a th:if="${page != null}" href="javascript:void(0)" th:text="${page} + '/' + ${totalPages}"></a>
                 <a th:if="${next_page != null}"
-                   th:href="'?page=' + ${next_page} + '&size=' + ${size}"
+                   th:href="'?ip='+${ip}+'&page='+${next_page}+'&size='+${size}"
                    class="btn btn-sm btn-outline-primary float-right">
                     {{next}}
                 </a>
@@ -128,6 +128,12 @@
                 <h4 class="font-italic">数据</h4>
                 <p class="mb-0" th:text="'共 ' + ${totalElements} + ' 篇日志'"></p>
                 <br>
+                <br>
+                <div class="form-group">
+                    <label for="page">IP：</label>
+                    <input id="ip" type="text" class="form-control"
+                           th:value="${ip}">
+                </div>
                 <div class="form-group">
                     <label for="page">页数：</label>
                     <input id="page" type="number" class="form-control"
@@ -143,7 +149,6 @@
                            th:min="1">
                 </div>
                 <button class="btn btn-sm btn-primary" onclick="javascript:jump_page();">跳页</button>
-                </form>
             </div>
         </aside>
     </div>
@@ -173,7 +178,8 @@
         function jump_page() {
             var page = $("#page").val()
             var size = $("#size").val()
-            var url = "list?page=" + page + "&size=" + size
+            var ip = $("#ip").val()
+            var url = "list?ip=" + ip + "&page=" + page + "&size=" + size
             location.replace(url)
         }
 
