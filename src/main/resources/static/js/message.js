@@ -14,7 +14,7 @@ function history_chat() {
                 if (data[i].u_name != null)
                     $("#chat_content").append("<p class='chat-user-name'>" + data[i].u_name + "</p><p class=\"chat-receive\">" + data[i].content + "</p>");
                 else
-                    $("#chat_content").append("<p>" + data[i].ip + "</p><p class=\"chat-receive\">" + data[i].content + "</p>");
+                    $("#chat_content").append("<p class='chat-user-name'>" + data[i].ip + "</p><p class=\"chat-receive\">" + data[i].content + "</p>");
                 scrollToBottom();
             }
         }
@@ -23,25 +23,37 @@ function history_chat() {
 
 // 开启连接
 function connect() {
-    $("#chat_content").append("<p class=\"chat-notification\">已加入聊天</p>");
-    scrollToBottom();
+    // 建立连接对象（还未发起连接）
     var socket = new SockJS('../stomp');
-    stompClient = Stomp.over(socket);
-    stompClient.connect({}, function () {
-        // 进入公共频道
-        stompClient.subscribe('/channel/public', function (response) {
-            printMessage(response.body);
-        });
-    });
+    // 获取STOMP子协议的客户端对象
+    var stompClient = Stomp.over(socket);
+    // 向服务器发起WebSocket连接并发送CONNECT帧
+    stompClient.connect({},
+        function connectCallback(frame) {
+            // 连接成功时（服务器响应 CONNECTED 帧）的回调方法
+            printMessage("加入聊天", "notification");
+            console.log('已连接[' + frame + ']');
+            // 订阅公共频道
+            stompClient.subscribe('/channel/public', function (response) {
+                printMessage(response.body);
+            });
+        },
+        function errorCallBack(error) {
+            // 连接失败时（服务器响应 ERROR 帧）的回调方法
+            printMessage("连接失败", "notification");
+            console.log('连接失败[' + error + ']');
+        }
+    );
 }
 
-// 断开连接
-function disconnect() {
-    if (stompClient != null) {
-        stompClient.disconnect();
-    }
-    setConnected(false);
-}
+//
+// // 断开连接
+// function disconnect() {
+//     if (stompClient != null) {
+//         stompClient.disconnect();
+//     }
+//     setConnected(false);
+// }
 
 // 发送按钮点击
 $("#send_button").click(function () {
@@ -71,8 +83,14 @@ function send() {
 }
 
 // 打印接收到的消息
-function printMessage(message) {
-    $("#chat_content").append(message);
+function printMessage(message, type) {
+    switch (type) {
+        case "notification":
+            $("#chat_content").append("<p class=\"chat-notification\">" + message + "</p>");
+            break;
+        default:
+            $("#chat_content").append(message);
+    }
     scrollToBottom();
 }
 
@@ -89,8 +107,8 @@ if (login()) {
         success: function (data) {
             if (data.status == 0) {
                 blog_header.login = data.username;
-                $("#user_name").val(data.username);
-                $("#user_name").toggle();
+            } else {
+                $("#user_ip").html("您将以" + data.ip + "作为标识参与聊天");
             }
         }
     })

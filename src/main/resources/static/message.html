@@ -45,7 +45,7 @@
         </div>
     </header>
 
-    <div class="nav-scroller py-1 mb-2">
+    <div class="nav-scroller py-1">
         <nav id="nav" class="nav d-flex justify-content-between">
             <nav-bar v-for="nav in groceryList" v-bind:nav="nav" v-bind:key="nav.id"></nav-bar>
         </nav>
@@ -53,8 +53,7 @@
 
 </div>
 
-
-<div class="chat container mt-1 mb-1">
+<div class="chat container mt-3 mb-3">
     <div class="chat-head">
         <ul class="nav nav-tabs">
             <li class="nav-item">
@@ -64,12 +63,12 @@
                     <span class="badge badge-success">新</span>
                 </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="javascript:void(0);"
-                   data-toggle="tab" href="#channel" role="tab" aria-controls="home" aria-selected="true">
-                    私聊 Coming soon
-                </a>
-            </li>
+            <!--<li class="nav-item">-->
+                <!--<a class="nav-link disabled" href="javascript:void(0);"-->
+                   <!--data-toggle="tab" href="#channel" role="tab" aria-controls="home" aria-selected="true">-->
+                    <!--开发中-->
+                <!--</a>-->
+            <!--</li>-->
         </ul>
     </div>
     <div id="channel">
@@ -77,15 +76,15 @@
         <div class="chat-foot">
             <form id="send_message_form">
                 <div class="input-group">
-                    <input id="user_name" type="text" class="form-control" placeholder="匿名">
                     <input id="message_content" name="content" type="text" class="form-control">
                     <div class="input-group-append">
                         <button id="send_button" type="submit" class="btn btn-secondary">
-                            回复
+                            发送
                         </button>
                     </div>
                 </div>
             </form>
+            <p class="text-center alert-warning" id="user_ip"></p>
         </div>
     </div>
 </div>

@@ -20,14 +20,40 @@ public class BaseService {
     private static String KEY; // KEY
     public static List<String> COOKIE_NAMES = Arrays.asList("ID", "KEY", "NAME");
 
-    // 获得某天最大时间 2017-10-15 23:59:59
+    /**
+     * 只显示ip的头和尾
+     *
+     * @param ip IP
+     * @return 隐藏后的ip
+     */
+    public static String hideFullIp(String ip) {
+        String[] ipNumber = ip.split("\\.");
+        ip = ipNumber[0] + ".";
+        for (int i = 1; i < ipNumber.length - 1; i++) {
+            ip += "*.";
+        }
+        ip += ipNumber[ipNumber.length - 1];
+        return ip;
+    }
+
+    /**
+     * 获得某天最大时间 2017-10-15 23:59:59
+     *
+     * @param date 某天
+     * @return 某天的结束时间
+     */
     public static Date getEndOfDay(Date date) {
-        LocalDateTime localDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(date.getTime()), ZoneId.systemDefault());;
+        LocalDateTime localDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(date.getTime()), ZoneId.systemDefault());
         LocalDateTime endOfDay = localDateTime.with(LocalTime.MAX);
         return Date.from(endOfDay.atZone(ZoneId.systemDefault()).toInstant());
     }
 
-    // 获得某天最小时间 2017-10-15 00:00:00
+    /**
+     * 获得某天最小时间 2017-10-15 00:00:00
+     *
+     * @param date 某天
+     * @return 某天的起始时间
+     */
     public static Date getStartOfDay(Date date) {
         LocalDateTime localDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(date.getTime()), ZoneId.systemDefault());
         LocalDateTime startOfDay = localDateTime.with(LocalTime.MIN);

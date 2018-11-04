@@ -65,7 +65,7 @@ public class MessageController {
                 objectNode.put("u_id", message.getSendUser().getId());
                 objectNode.put("u_name", message.getSendUser().getName());
             }
-            objectNode.put("ip", message.getIp());
+            objectNode.put("ip", BaseService.hideFullIp(message.getIp()));
             objectNode.put("content", message.getContent());
             arrayNode.add(objectNode);
         }
@@ -104,7 +104,7 @@ public class MessageController {
             if (user != null)
                 simpMessagingTemplate.convertAndSend("/channel/public", "<p class=\"chat-user-name\">" + user.getName() + "</p><p class=\"chat-receive\">" + message.getContent() + "</p>");
             else
-                simpMessagingTemplate.convertAndSend("/channel/public", "<p class=\"chat-user-name\">" + message.getIp() + "</p><p class=\"chat-receive\">" + message.getContent() + "</p>");
+                simpMessagingTemplate.convertAndSend("/channel/public", "<p class=\"chat-user-name\">" + BaseService.hideFullIp(message.getIp()) + "</p><p class=\"chat-receive\">" + message.getContent() + "</p>");
             // 日志记录
             logService.log(user, request);
         }

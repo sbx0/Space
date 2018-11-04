@@ -64,24 +64,7 @@ function checkSpecialStr(str) {
 
 // 判断是否登陆
 function login() {
-    var isLogin = false;
-    $.ajax({
-        url: "/user/cookie",
-        type: "GET",
-        async: false, // ajax 默认是异步调用的，所以得到的返回值是空值，false表示同步
-        success: function (data) {
-            var status = data.status;
-            if (status == 0) {
-                isLogin = true;
-                console.log("Login success.");
-            } else {
-                console.log("no user.")
-            }
-
-        },
-    })
-    if (isLogin) return true;
-    else return false;
+    return true;
 }
 
 // 获取日期

@@ -99,7 +99,8 @@ public class UserController extends BaseController {
     public ObjectNode info(HttpServletRequest request, HttpServletResponse response) {
         objectNode = mapper.createObjectNode();
         User user = userService.getCookieUser(request);
-        if (user.getId() != null) {
+        objectNode.put("ip", BaseService.hideFullIp(BaseService.getIpAddress(request)));
+        if (user != null && user.getId() != null) {
             try {
                 // 用户信息
                 objectNode.put("id", user.getId());
@@ -138,28 +139,6 @@ public class UserController extends BaseController {
             // 操作状态保存
             objectNode.put("status", "0");
         } catch (Exception e) {
-            // 操作状态保存
-            objectNode.put("status", "1");
-        }
-        return objectNode;
-    }
-
-    /**
-     * 获取cookie判断是否之前登陆过
-     * 若登陆过将用户信息保存在session中
-     *
-     * @param request
-     * @return json
-     */
-    @ResponseBody
-    @RequestMapping(value = "/cookie", method = RequestMethod.GET)
-    public ObjectNode cookie(HttpServletRequest request) {
-        objectNode = mapper.createObjectNode();
-        User user = userService.getCookieUser(request);
-        if (user != null) {
-            // 操作状态保存
-            objectNode.put("status", "0");
-        } else {
             // 操作状态保存
             objectNode.put("status", "1");
         }

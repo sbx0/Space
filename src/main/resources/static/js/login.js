@@ -34,13 +34,13 @@ var login_div = new Vue({
 
 // 如果当前已经登陆
 if (login()) {
-    login_div.info_seen = true;
-    login_div.form_seen = false;
     $.ajax({
         url: '../user/info',
         type: 'GET',
         success: function (data) {
             if (data.status == 0) {
+                login_div.info_seen = true;
+                login_div.form_seen = false;
                 login_div.info_username = data.username;
                 login_div.info_level = data.level;
                 login_div.info_exp = data.exp;
