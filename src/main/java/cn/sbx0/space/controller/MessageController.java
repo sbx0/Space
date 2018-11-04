@@ -83,15 +83,15 @@ public class MessageController {
     @RequestMapping("/send")
     @ResponseBody
     public ObjectNode send(Message message, String to, HttpServletRequest request) {
+        // 防止html注入
+        message.setContent(BaseService.killHTML(message.getContent()));
         objectNode = mapper.createObjectNode();
         // 从cookie中获取登陆用户信息
         User user = userService.getCookieUser(request);
-        // 日志记录
-        logService.log(user, request);
         // 检测重复操作
-//        if (!logService.check(request, 0)) {
-//            objectNode.put("status", 1);
-        if (BaseService.checkNullStr(to) || BaseService.checkNullStr(message.getContent())) {
+        if (!logService.check(request, 0.1)) {
+            objectNode.put("status", 1);
+        } else if (BaseService.checkNullStr(to) || BaseService.checkNullStr(message.getContent())) {
             objectNode.put("status", 2);
         } else if (to.equals("public")) {
             message.setSendTime(new Date());
@@ -102,11 +102,22 @@ public class MessageController {
             messageService.save(message);
             objectNode.put("status", 0);
             if (user != null)
-                simpMessagingTemplate.convertAndSend("/channel/public", user.getName() + ":" + message.getContent());
+                simpMessagingTemplate.convertAndSend("/channel/public", "<p class=\"chat-user-name\">" + user.getName() + "</p><p class=\"chat-receive\">" + message.getContent() + "</p>");
             else
-                simpMessagingTemplate.convertAndSend("/channel/public", ip + ":" + message.getContent());
+                simpMessagingTemplate.convertAndSend("/channel/public", "<p class=\"chat-user-name\">" + message.getIp() + "</p><p class=\"chat-receive\">" + message.getContent() + "</p>");
+            // 日志记录
+            logService.log(user, request);
         }
         return objectNode;
     }
+
+//    /**
+//     * 定时推送
+//     */
+//    @Scheduled(fixedRate = 10000)
+//    public void timePush() {
+//        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        simpMessagingTemplate.convertAndSend("/channel/public", "<p class=\"chat-notification\">" + df.format(new Date()) + "</p>");
+//    }
 
 }

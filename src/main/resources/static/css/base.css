@@ -32,10 +32,19 @@ body {
     margin-bottom: 10px;
 }
 
-.chat-send {
+.chat-user-name {
     margin-top: 5px;
+    padding: 1px 10px 1px 10px;
+    font-weight: bold;
+    width: 100%;
+    float: left;
+    display: block;
+}
+
+.chat-notification {
+    margin-bottom: 5px;
     background-color: #f3fef2;
-    width: 95%;
+    width: 100%;
     padding: 5px 10px 5px 10px;
     float: right;
     display: block;
@@ -43,9 +52,9 @@ body {
 }
 
 .chat-receive {
-    margin-top: 5px;
+    margin-bottom: 5px;
     background-color: #eceff6;
-    width: 95%;
+    width: 100%;
     padding: 5px 10px 5px 10px;
     float: left;
     display: block;

@@ -54,7 +54,7 @@ public class LogService extends BaseService {
      * @param minutes 限制时间
      * @return
      */
-    public boolean check(HttpServletRequest request, int minutes) {
+    public boolean check(HttpServletRequest request, double minutes) {
         String ip = getIpAddress(request); // 用户IP
         String method = request.getServletPath(); // 运行的方法
         String query = request.getQueryString(); // 参数
@@ -71,9 +71,9 @@ public class LogService extends BaseService {
         // 开始检测前一次与这一次的分钟差是否达到要求
         Date prevTime = logs.get(0).getTime();
         Date nowTime = new Date();
-        long prev = prevTime.getTime();
-        long now = nowTime.getTime();
-        int m = (int) ((now - prev) / (1000 * 60));
+        double prev = prevTime.getTime();
+        double now = nowTime.getTime();
+        double m = (now - prev) / (1000.0 * 60.0);
         if (m > minutes) return true;
         else return false;
     }
@@ -145,10 +145,10 @@ public class LogService extends BaseService {
         } else
             log.setUrl(request.getRequestURL().toString());
         log.setMethod(request.getServletPath());
-        // 刷新不记录log
-        List<Log> logs = logDao.findByIpAndUrl(log.getIp(), 1);
-        if (logs.size() > 0 && logs.get(0).getUrl().equals(log.getUrl()))
-            return user;
+//        // 刷新不记录log
+//        List<Log> logs = logDao.findByIpAndUrl(log.getIp(), 1);
+//        if (logs.size() > 0 && logs.get(0).getUrl().equals(log.getUrl()))
+//            return user;
         if (log == null)
             return user;
         try {

@@ -54,33 +54,35 @@
 </div>
 
 
-<div class="chat container mt-5 mb-5">
+<div class="chat container mt-1 mb-1">
     <div class="chat-head">
         <ul class="nav nav-tabs">
             <li class="nav-item">
                 <a class="nav-link active" href="javascript:void(0);"
-                   data-toggle="tab" href="#1" role="tab" aria-controls="home" aria-selected="true">
+                   data-toggle="tab" href="#channel" role="tab" aria-controls="home" aria-selected="true">
                     公共聊天室
                     <span class="badge badge-success">新</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link disabled" href="javascript:void(0);"
-                   data-toggle="tab" href="#1" role="tab" aria-controls="home" aria-selected="true">
+                <a class="nav-link" href="javascript:void(0);"
+                   data-toggle="tab" href="#channel" role="tab" aria-controls="home" aria-selected="true">
                     私聊 Coming soon
                 </a>
             </li>
         </ul>
     </div>
-    <div id="1">
-        <div id="chat-content" class="chat-body"></div>
+    <div id="channel">
+        <div id="chat_content" class="chat-body"></div>
         <div class="chat-foot">
-            <form id="replayForm">
+            <form id="send_message_form">
                 <div class="input-group">
                     <input id="user_name" type="text" class="form-control" placeholder="匿名">
-                    <input id="msg" name="content" type="text" class="form-control">
+                    <input id="message_content" name="content" type="text" class="form-control">
                     <div class="input-group-append">
-                        <button id="replayBtn" type="submit" class="btn btn-secondary">回复</button>
+                        <button id="send_button" type="submit" class="btn btn-secondary">
+                            回复
+                        </button>
                     </div>
                 </div>
             </form>
