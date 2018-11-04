@@ -60,23 +60,17 @@
                 <a class="nav-link active" href="javascript:void(0);"
                    data-toggle="tab" href="#channel" role="tab" aria-controls="home" aria-selected="true">
                     公共聊天室
-                    <span class="badge badge-success">新</span>
                 </a>
             </li>
-            <!--<li class="nav-item">-->
-                <!--<a class="nav-link disabled" href="javascript:void(0);"-->
-                   <!--data-toggle="tab" href="#channel" role="tab" aria-controls="home" aria-selected="true">-->
-                    <!--开发中-->
-                <!--</a>-->
-            <!--</li>-->
         </ul>
     </div>
     <div id="channel">
         <div id="chat_content" class="chat-body"></div>
+        <a href="#go"></a>
         <div class="chat-foot">
             <form id="send_message_form">
                 <div class="input-group">
-                    <input id="message_content" name="content" type="text" class="form-control">
+                    <input id="message_content" name="content" type="text" class="form-control" autofocus>
                     <div class="input-group-append">
                         <button id="send_button" type="submit" class="btn btn-secondary">
                             发送
@@ -89,11 +83,11 @@
     </div>
 </div>
 
-<footer id="blog-footer" class="blog-footer" v-cloak>
-    <p>
-        <span v-html="copyright"></span>
-    </p>
-</footer>
+<!--<footer id="blog-footer" class="blog-footer" v-cloak>-->
+<!--<p>-->
+<!--<span v-html="copyright"></span>-->
+<!--</p>-->
+<!--</footer>-->
 
 <script src="js/jquery.min.js"></script>
 <script src="js/popper.min.js"></script>

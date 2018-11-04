@@ -3,16 +3,14 @@ package cn.sbx0.space.controller;
 import cn.sbx0.space.entity.Article;
 import cn.sbx0.space.entity.Log;
 import cn.sbx0.space.entity.User;
-import cn.sbx0.space.service.ArticleService;
-import cn.sbx0.space.service.BaseService;
-import cn.sbx0.space.service.LogService;
-import cn.sbx0.space.service.UserService;
+import cn.sbx0.space.service.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +18,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -34,6 +34,8 @@ public class LogController extends BaseController {
     UserService userService;
     @Resource
     ArticleService articleService;
+    @Resource
+    private SimpMessagingTemplate simpMessagingTemplate;
     @Autowired
     ObjectMapper mapper;
     private ObjectNode objectNode;
@@ -69,6 +71,9 @@ public class LogController extends BaseController {
      */
     @Scheduled(cron = "00 00 00 * * ?")
     public void countViews() {
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        simpMessagingTemplate.convertAndSend("/channel/public", df.format(new Date()));
+        simpMessagingTemplate.convertAndSend("/channel/public", "开始统计昨日日志");
         // 当前时间
         Date end = new Date();
         Calendar calendar = Calendar.getInstance(); //得到日历
@@ -81,6 +86,7 @@ public class LogController extends BaseController {
         end = BaseService.getEndOfDay(end);
         // 00:00:00 - 23:59:59 之间的日志
         List<Log> logs = logService.countByTime(begin, end);
+        simpMessagingTemplate.convertAndSend("/channel/public", "昨日日志总数：" + logs.size());
         Log log;
         String method;
         // 存我们想要的日志 其实有点浪费空间
@@ -123,9 +129,12 @@ public class LogController extends BaseController {
             if (article == null) continue;
             // 添加阅读数
             int views = article.getViews() + entry.getValue();
+            simpMessagingTemplate.convertAndSend("/channel/public", "文章[" + article.getTitle() + "] +" + entry.getValue() + "=" + views);
             article.setViews(views);
             articleService.save(article);
         }
+        simpMessagingTemplate.convertAndSend("/channel/public", "统计结束");
+        simpMessagingTemplate.convertAndSend("/channel/public", "晚安");
     }
 
     /**

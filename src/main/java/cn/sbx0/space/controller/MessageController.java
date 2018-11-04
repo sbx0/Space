@@ -105,18 +105,7 @@ public class MessageController {
             message.setIp(ip);
             messageService.save(message);
             objectNode.put("status", 0);
-            DateFormat df = new SimpleDateFormat("HH:mm");
-            if (user != null)
-                simpMessagingTemplate.convertAndSend("/channel/public",
-                        "<p class=\"chat-user-name\">" +
-                                user.getName() + "&nbsp;" +
-                                "</p><p class=\"chat-receive\">" + df.format(message.getSendTime()) + "："
-                                + message.getContent() + "</p>");
-            else
-                simpMessagingTemplate.convertAndSend("/channel/public", "<p class=\"chat-user-name\">"
-                        + BaseService.hideFullIp(message.getIp()) + "&nbsp;" + df.format(message.getSendTime()) +
-                        "</p><p class=\"chat-receive\">" + df.format(message.getSendTime()) + "："
-                        + message.getContent() + "</p>");
+            simpMessagingTemplate.convertAndSend("/channel/public", messageService.buildMessage(user, message));
             // 日志记录
             logService.log(user, request);
         }

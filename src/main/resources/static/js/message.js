@@ -2,10 +2,13 @@
 // var msg = $('#msg').val();
 // stompClient.send("/web/send", {}, msg);
 
+window.location.hash = "#go";
+
 var reconnect_times = 0;
 
 // 获取历史消息
 function history_chat() {
+    $("#chat_content").html("");
     $.ajax({
         url: '../message/receive',
         type: 'GET',
@@ -13,12 +16,7 @@ function history_chat() {
         success: function (data) {
             var history = data;
             for (var i = 0; i < history.length; i++) {
-                if (data[i].u_name != null)
-                    $("#chat_content").append("<p class='chat-user-name'>" + data[i].u_name + "</p>" +
-                        "<p class=\"chat-receive\">" + data[i].send_time + "：" + data[i].content + "</p>");
-                else
-                    $("#chat_content").append("<p class='chat-user-name'>" + data[i].ip + "</p>" +
-                        "<p class=\"chat-receive\">" + data[i].send_time + "：" + data[i].content + "</p>");
+                printMessage(data[i], "receive");
                 scrollToBottom();
             }
         }
@@ -35,7 +33,7 @@ function connect() {
     stompClient.connect({},
         function connectCallback() {
             // 连接成功时（服务器响应 CONNECTED 帧）的回调方法
-            printMessage("加入聊天", "notification");
+            printMessage("已加入聊天", "notification");
             // 订阅公共频道
             stompClient.subscribe('/channel/public', function (response) {
                 printMessage(response.body);
@@ -43,7 +41,7 @@ function connect() {
         },
         function errorCallBack() {
             // 连接失败时（服务器响应 ERROR 帧）的回调方法
-            printMessage("连接失败", "notification");
+            printMessage("连接丢失", "notification");
             reconnect();
         }
     );
@@ -51,31 +49,35 @@ function connect() {
 
 // 重连10次
 function reconnect() {
-    if (reconnect_times < 10) {
-        reconnect_times++;
-        printMessage("第" + reconnect_times + "次重连...", "notification");
-        var socket = new SockJS('../stomp');
-        var stompClient = Stomp.over(socket);
-        stompClient.connect({},
-            function connectCallback() {
-                reconnect_times = 0;
-                // 连接成功时（服务器响应 CONNECTED 帧）的回调方法
-                printMessage("加入聊天", "notification");
-                // 订阅公共频道
-                stompClient.subscribe('/channel/public', function (response) {
-                    printMessage(response.body);
-                });
-            },
-            function errorCallBack() {
-                // 连接失败时（服务器响应 ERROR 帧）的回调方法
-                printMessage("第" + reconnect_times + "次重连失败", "notification");
-                reconnect();
-            }
-        );
-    } else {
-        location.replace(location.href);
+    if (reconnect_times > 9) {
+        printMessage("重试失败次数太多，请稍后再试。", "notification");
+        return false;
     }
+    reconnect_times++;
+    printMessage("第" + reconnect_times + "次自动重连...", "notification");
+    var socket = new SockJS('../stomp');
+    var stompClient = Stomp.over(socket);
+    stompClient.connect({},
+        function connectCallback() {
+            reconnect_times = 1;
+            // 连接成功时（服务器响应 CONNECTED 帧）的回调方法
+            printMessage("已加入聊天", "notification");
+            // 订阅公共频道
+            stompClient.subscribe('/channel/public', function (response) {
+                printMessage(response.body);
+            });
+        },
+        function errorCallBack() {
+            // 连接失败时（服务器响应 ERROR 帧）的回调方法
+            printMessage("第" + reconnect_times + "次重连失败", "notification");
+            setTimeout(function () {
+                history_chat();
+                reconnect();
+            }, 5000)
+        }
+    );
     return false;
+
 }
 
 //
@@ -95,6 +97,10 @@ $("#send_button").click(function () {
 
 // 发送消息
 function send() {
+    if (checkNullStr($("#message_content").val())) {
+        alert("不能为空！")
+        return false;
+    }
     if (reconnect_times > 0) return false;
     $.ajax({
         url: '../message/send?to=public',
@@ -107,7 +113,7 @@ function send() {
                 alert("发布成功！");
                 $('#message_content').val("");
             } else if (data.status == 1) {
-                alert("6秒内只能评论一次");
+                alert("你太快了，慢点");
             } else {
                 alert("发布失败！");
             }
@@ -122,8 +128,18 @@ function printMessage(message, type) {
         case "notification":
             $("#chat_content").append("<p class=\"chat-notification\">" + message + "</p>");
             break;
+        case "receive":
+            if (message.u_name != null)
+                $("#chat_content").append(
+                    "<p class='chat-user-name'>" + message.u_name + "</p>" +
+                    "<p class=\"chat-receive\">" + message.send_time + "：" + message.content + "</p>");
+            else
+                $("#chat_content").append(
+                    "<p class='chat-user-name'>" + message.ip + "</p>" +
+                    "<p class=\"chat-receive\">" + message.send_time + "：" + message.content + "</p>");
+            break
         default:
-            $("#chat_content").append(message);
+            $("#chat_content").append("<p class=\"chat-notification\">" + message + "</p>");
     }
     scrollToBottom();
 }
