@@ -33,9 +33,16 @@ body {
 }
 
 .chat-user-name {
-    margin-top: 5px;
     padding: 1px 10px 1px 10px;
     font-weight: bold;
+    width: 100%;
+    float: left;
+    display: block;
+}
+
+.chat-time {
+    margin-top: 5px;
+    padding: 1px 10px 1px 10px;
     width: 100%;
     float: left;
     display: block;

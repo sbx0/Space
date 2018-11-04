@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -65,6 +67,8 @@ public class MessageController {
                 objectNode.put("u_id", message.getSendUser().getId());
                 objectNode.put("u_name", message.getSendUser().getName());
             }
+            DateFormat df = new SimpleDateFormat("HH:mm");
+            objectNode.put("send_time", df.format(message.getSendTime()));
             objectNode.put("ip", BaseService.hideFullIp(message.getIp()));
             objectNode.put("content", message.getContent());
             arrayNode.add(objectNode);
@@ -101,10 +105,18 @@ public class MessageController {
             message.setIp(ip);
             messageService.save(message);
             objectNode.put("status", 0);
+            DateFormat df = new SimpleDateFormat("HH:mm");
             if (user != null)
-                simpMessagingTemplate.convertAndSend("/channel/public", "<p class=\"chat-user-name\">" + user.getName() + "</p><p class=\"chat-receive\">" + message.getContent() + "</p>");
+                simpMessagingTemplate.convertAndSend("/channel/public",
+                        "<p class=\"chat-user-name\">" +
+                                user.getName() + "&nbsp;" +
+                                "</p><p class=\"chat-receive\">" + df.format(message.getSendTime()) + "："
+                                + message.getContent() + "</p>");
             else
-                simpMessagingTemplate.convertAndSend("/channel/public", "<p class=\"chat-user-name\">" + BaseService.hideFullIp(message.getIp()) + "</p><p class=\"chat-receive\">" + message.getContent() + "</p>");
+                simpMessagingTemplate.convertAndSend("/channel/public", "<p class=\"chat-user-name\">"
+                        + BaseService.hideFullIp(message.getIp()) + "&nbsp;" + df.format(message.getSendTime()) +
+                        "</p><p class=\"chat-receive\">" + df.format(message.getSendTime()) + "："
+                        + message.getContent() + "</p>");
             // 日志记录
             logService.log(user, request);
         }
