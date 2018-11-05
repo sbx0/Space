@@ -15,9 +15,14 @@ import java.util.Date;
 @Table(name = "ARTICLES")
 public class Article implements Serializable {
     private static final long serialVersionUID = 1840679258382434964L;
+
     // 置顶
-    public interface Top {}
-    public interface Index extends Top {}
+    public interface Top {
+    }
+
+    public interface Index extends Top {
+    }
+
     @JsonView(Top.class)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -58,11 +63,11 @@ public class Article implements Serializable {
     @Column(nullable = false)
     private Integer top; // 置顶排序
     /**
-     * @ManyToOne 使用此标签建立多对一关联，此属性在“多”方使用注解在我们的“一”方属性上
-     * @cascade 指定级联操作，以数组方式指定，如果只有一个，可以省略“{}”
-     * @fetch 定义抓取策略
-     * @optional 定义是否为必需属性，如果为必需（false），但在持久化时user = null,则会持久化失败
-     * @targetEntity 目标关联对象，默认为被注解属性所在类
+     * ManyToOne 使用此标签建立多对一关联，此属性在“多”方使用注解在我们的“一”方属性上
+     * cascade 指定级联操作，以数组方式指定，如果只有一个，可以省略“{}”
+     * fetch 定义抓取策略
+     * optional 定义是否为必需属性，如果为必需（false），但在持久化时user = null,则会持久化失败
+     * targetEntity 目标关联对象，默认为被注解属性所在类
      */
     @JsonView(Top.class)
     @ManyToOne(cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER, targetEntity = User.class, optional = false)

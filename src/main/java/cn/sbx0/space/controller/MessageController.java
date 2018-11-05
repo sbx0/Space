@@ -34,15 +34,16 @@ public class MessageController {
     UserService userService;
     @Resource
     MessageService messageService;
-    @Autowired
-    ObjectMapper mapper;
+    private final ObjectMapper mapper;
     private ObjectNode objectNode;
+
+    @Autowired
+    public MessageController(ObjectMapper mapper) {
+        this.mapper = mapper;
+    }
 
     /**
      * 接收聊天室的消息
-     *
-     * @param request
-     * @return
      */
     @RequestMapping("/receive")
     @ResponseBody
@@ -78,11 +79,6 @@ public class MessageController {
 
     /**
      * 发送消息到公共聊天室
-     *
-     * @param message
-     * @param to
-     * @param request
-     * @return
      */
     @RequestMapping("/send")
     @ResponseBody
@@ -105,7 +101,7 @@ public class MessageController {
             message.setIp(ip);
             messageService.save(message);
             objectNode.put("status", 0);
-            simpMessagingTemplate.convertAndSend("/channel/public", messageService.buildMessage(user, message));
+            simpMessagingTemplate.convertAndSend("/channel/public", MessageService.buildMessage(user, message));
             // 日志记录
             logService.log(user, request);
         }

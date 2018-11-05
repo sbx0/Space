@@ -34,23 +34,14 @@ public class ArticleService extends BaseService {
 
     /**
      * 查询某文章在第几页
-     *
-     * @param id
-     * @param size
-     * @return
      */
     public Integer whereIsMyPage(Integer id, Integer u_id, Integer size) {
         int me = articleDao.countLargeThanId(id, u_id);
-        int page = me % size == 0 ? me / size : me / size + 1;
-        return page;
+        return me % size == 0 ? me / size : me / size + 1;
     }
 
     /**
      * 查询上一条博文
-     *
-     * @param id
-     * @param u_id
-     * @return
      */
     public Article prev(int id, int u_id) {
         if (u_id > 0)
@@ -61,10 +52,6 @@ public class ArticleService extends BaseService {
 
     /**
      * 查询下一条博文
-     *
-     * @param id
-     * @param u_id
-     * @return
      */
     public Article next(int id, int u_id) {
         if (u_id > 0)
@@ -75,11 +62,6 @@ public class ArticleService extends BaseService {
 
     /**
      * 根据关键词查询
-     *
-     * @param keyword
-     * @param page
-     * @param size
-     * @return
      */
     public Page<Article> findByKeyword(String keyword, Integer page, Integer size) {
         if (BaseService.checkNullStr(keyword))
@@ -97,8 +79,7 @@ public class ArticleService extends BaseService {
         Pageable pageable = PageRequest.of(page, size, sort);
         try {
             // 分页查询
-            Page<Article> articlePage = articleDao.findByKeyword(keyword, pageable);
-            return articlePage;
+            return articleDao.findByKeyword(keyword, pageable);
         } catch (Exception e) {
             return null;
         }
@@ -106,8 +87,6 @@ public class ArticleService extends BaseService {
 
     /**
      * 查询被隐藏的文章列表 根据用户
-     *
-     * @return 文章列表
      */
     public Page<Article> findTrashByUser(Integer id, Integer page, Integer size) {
         // 页数控制
@@ -134,8 +113,6 @@ public class ArticleService extends BaseService {
 
     /**
      * 查询被隐藏的文章列表
-     *
-     * @return 文章列表
      */
     public Page<Article> findTrash(Integer page, Integer size) {
         // 页数控制
@@ -158,9 +135,6 @@ public class ArticleService extends BaseService {
 
     /**
      * 设置置顶
-     *
-     * @param article
-     * @return
      */
     public boolean setTop(Article article) {
         if (articleDao.getTopNumber() > 2) return false;
@@ -176,10 +150,8 @@ public class ArticleService extends BaseService {
 
     /**
      * 获取最大置顶
-     *
-     * @return
      */
-    public Integer getMaxTop() {
+    private Integer getMaxTop() {
         int max = articleDao.getMaxTop();
         if (max < 0) max = 0;
         return max;
@@ -187,11 +159,6 @@ public class ArticleService extends BaseService {
 
     /**
      * 用户文章列表
-     *
-     * @param id
-     * @param page
-     * @param size
-     * @return
      */
     public Page<Article> findByUser(Integer id, Integer page, Integer size) {
         // 页数控制
@@ -215,9 +182,6 @@ public class ArticleService extends BaseService {
 
     /**
      * 查询一篇博文
-     *
-     * @param id 博文ID
-     * @return 博文
      */
     public Article findById(Integer id, Integer type) {
         try {
@@ -232,10 +196,8 @@ public class ArticleService extends BaseService {
 
     /**
      * 查询置顶文章
-     *
-     * @return
      */
-    public List<Article> top(Integer size) {
+    public ArrayList<Article> top(Integer size) {
         if (size > 1000) size = 1000;
         if (size < 1) size = 1;
         return filter(articleDao.top(size));
@@ -243,8 +205,6 @@ public class ArticleService extends BaseService {
 
     /**
      * 查询文章列表
-     *
-     * @return 文章列表
      */
     public Page<Article> findAll(Integer page, Integer size, Integer type) {
         // 页数控制
@@ -275,9 +235,6 @@ public class ArticleService extends BaseService {
 
     /**
      * 保存文章
-     *
-     * @param article 文章
-     * @return 操作成功与否
      */
     @Transactional
     public boolean save(Article article) {
@@ -293,25 +250,20 @@ public class ArticleService extends BaseService {
 
     /**
      * 过滤掉不想让用户看见的信息
-     *
-     * @param articleList 文章列表
-     * @return 文章列表
      */
-    public List<Article> filter(List<Article> articleList) {
-        List<Article> articles = new ArrayList();
-        for (int i = 0; i < articleList.size(); i++) {
-            Article article = filter(articleList.get(i));
-            if (article.getPassword() == null)
+    public ArrayList<Article> filter(List<Article> articleList) {
+        ArrayList<Article> articles = new ArrayList<>();
+        for (Article anArticleList : articleList) {
+            Article article = filter(anArticleList);
+            if (article.getPassword() == null) {
                 articles.add(article);
+            }
         }
         return articles;
     }
 
     /**
      * 过滤掉不想让用户看见的信息
-     *
-     * @param article 文章
-     * @return 文章
      */
     public Article filter(Article article) {
 
@@ -352,56 +304,49 @@ public class ArticleService extends BaseService {
 
     /**
      * 创建站点地图
-     *
-     * @return
      */
     public String createSiteMapXmlContent() {
         String baseUrl = "http://" + SITE_MAP_DOMAIN;
         WebSitemapGenerator wsg = null;
         try {
             wsg = new WebSitemapGenerator(baseUrl);
-            wsg.addUrl(createWebSitemapUrl(baseUrl + "/index.html", 1.0, new Date())); // 首页
-            wsg.addUrl(createWebSitemapUrl(baseUrl + "/article/search", 0.9, new Date())); // 搜索
-            wsg.addUrl(createWebSitemapUrl(baseUrl + "/article/list", 0.9, new Date())); // 发布文章
+            wsg.addUrl(createWebSiteMapUrl(baseUrl + "/index.html", 1.0, new Date())); // 首页
+            wsg.addUrl(createWebSiteMapUrl(baseUrl + "/article/search", 0.9, new Date())); // 搜索
+            wsg.addUrl(createWebSiteMapUrl(baseUrl + "/article/list", 0.9, new Date())); // 发布文章
             // 添加文章详情页
             List<Article> articles = articleDao.findAll();
             for (Article article : articles) {
                 if (article.getLastChangeTime() != null)
-                    wsg.addUrl(createWebSitemapUrl(baseUrl + "/article/" + article.getId(), 0.9, article.getLastChangeTime())); // 文章
+                    wsg.addUrl(createWebSiteMapUrl(baseUrl + "/article/" + article.getId(), 0.9, article.getLastChangeTime())); // 文章
                 else
-                    wsg.addUrl(createWebSitemapUrl(baseUrl + "/article/" + article.getId(), 0.9, article.getTime())); // 文章
+                    wsg.addUrl(createWebSiteMapUrl(baseUrl + "/article/" + article.getId(), 0.9, article.getTime())); // 文章
             }
             // 添加用户详情页
             List<User> users = userDao.findAll();
             for (User user : users) {
-                wsg.addUrl(createWebSitemapUrl(baseUrl + "/user/" + user.getId(), 0.9, new Date())); // 用户
+                wsg.addUrl(createWebSiteMapUrl(baseUrl + "/user/" + user.getId(), 0.9, new Date())); // 用户
             }
-            wsg.addUrl(createWebSitemapUrl(baseUrl + "/log/list", 0.1, new Date())); // 日志列表
-            wsg.addUrl(createWebSitemapUrl(baseUrl + "/article/trash", 0.1, new Date())); // 回收站
-            wsg.addUrl(createWebSitemapUrl(baseUrl + "/login.html", 0.1, new Date())); // 登陆 / 注册
-            wsg.addUrl(createWebSitemapUrl(baseUrl + "/markdown.html", 0.1, new Date())); // 发布文章
+            wsg.addUrl(createWebSiteMapUrl(baseUrl + "/log/list", 0.1, new Date())); // 日志列表
+            wsg.addUrl(createWebSiteMapUrl(baseUrl + "/article/trash", 0.1, new Date())); // 回收站
+            wsg.addUrl(createWebSiteMapUrl(baseUrl + "/login.html", 0.1, new Date())); // 登陆 / 注册
+            wsg.addUrl(createWebSiteMapUrl(baseUrl + "/markdown.html", 0.1, new Date())); // 发布文章
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+        assert wsg != null;
         return String.join("", wsg.writeAsStrings());
     }
 
     /**
-     * 拼接 WebSitemapUrl
-     *
-     * @param url
-     * @param priority
-     * @param date
-     * @return
+     * 拼接 WebSiteMapUrl
      */
-    public WebSitemapUrl createWebSitemapUrl(String url, Double priority, Date date) {
+    public WebSitemapUrl createWebSiteMapUrl(String url, Double priority, Date date) {
         try {
-            WebSitemapUrl webSitemapUrl = new WebSitemapUrl.Options(url)
+            return new WebSitemapUrl.Options(url)
                     .lastMod(date)
                     .priority(priority)
                     .changeFreq(ChangeFreq.DAILY)
                     .build();
-            return webSitemapUrl;
         } catch (Exception e) {
             return null;
         }

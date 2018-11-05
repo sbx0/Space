@@ -30,7 +30,7 @@ public interface LogDao extends PagingAndSortingRepository<Log, Integer> {
      * @param end   结束日期
      * @return 包含日期(2018 - 08 - 01)和对应的访问IP条数(10)
      */
-    @Query(value = " SELECT CAST(l.time AS DATE),COUNT(DISTINCT l.ip) AS number FROM logs l WHERE l.time > ?1 AND l.time < ?2 GROUP BY CAST(l.time AS DATE)", nativeQuery = true)
+    @Query(value = "SELECT CAST(l.time AS DATE),COUNT(DISTINCT l.ip) AS number FROM logs l WHERE l.time > ?1 AND l.time < ?2 GROUP BY CAST(l.time AS DATE)", nativeQuery = true)
     List<Object[]> countIpByTime(Date begin, Date end);
 
     /**

@@ -21,9 +21,6 @@ public class UserService extends BaseService {
 
     /**
      * 根据id查询用户信息
-     *
-     * @param id
-     * @return
      */
     public User findById(int id) {
         return userDao.findById(id).get();
@@ -31,9 +28,6 @@ public class UserService extends BaseService {
 
     /**
      * 保存用户
-     *
-     * @param user
-     * @return 操作成功与否
      */
     @Transactional
     public boolean save(User user) {
@@ -47,9 +41,6 @@ public class UserService extends BaseService {
 
     /**
      * 登陆 / 注册
-     *
-     * @param user
-     * @return
      */
     @Transactional
     public User login(User user, String code) {
@@ -104,21 +95,14 @@ public class UserService extends BaseService {
 
     /**
      * 根据用户名判断用户是否存在
-     *
-     * @param name
-     * @return
      */
-    public boolean existByName(String name) {
+    private boolean existByName(String name) {
         String result = userDao.existsByName(name);
-        if (result != null) return true;
-        else return false;
+        return result != null;
     }
 
     /**
      * 根据cookie查找User
-     *
-     * @param request
-     * @return
      */
     public User getCookieUser(HttpServletRequest request) {
         // 查找是否存在cookie
@@ -148,6 +132,5 @@ public class UserService extends BaseService {
             return null;
         return user;
     }
-
 
 }

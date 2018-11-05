@@ -26,10 +26,6 @@ public class LogService extends BaseService {
 
     /**
      * 某个时间段统计访问ip数
-     *
-     * @param begin
-     * @param end
-     * @return
      */
     public List<Object[]> countIpByTime(Date begin, Date end) {
         return logDao.countIpByTime(begin, end);
@@ -38,10 +34,6 @@ public class LogService extends BaseService {
 
     /**
      * 统计某时间段的日志
-     *
-     * @param begin
-     * @param end
-     * @return
      */
     public List<Log> countByTime(Date begin, Date end) {
         return logDao.countByTime(begin, end);
@@ -49,10 +41,6 @@ public class LogService extends BaseService {
 
     /**
      * 检测重复操作
-     *
-     * @param request
-     * @param minutes 限制时间
-     * @return
      */
     public boolean check(HttpServletRequest request, double minutes) {
         String ip = getIpAddress(request); // 用户IP
@@ -74,16 +62,11 @@ public class LogService extends BaseService {
         double prev = prevTime.getTime();
         double now = nowTime.getTime();
         double m = (now - prev) / (1000.0 * 60.0);
-        if (m > minutes) return true;
-        else return false;
+        return m > minutes;
     }
 
     /**
      * 查询全部
-     *
-     * @param page
-     * @param size
-     * @return
      */
     public Page<Log> findAll(Integer page, Integer size, String ip) {
         // 页数控制
@@ -108,9 +91,6 @@ public class LogService extends BaseService {
 
     /**
      * 保存日志
-     *
-     * @param log
-     * @return 操作成功与否
      */
     @Transactional
     public boolean save(Log log) {
@@ -126,8 +106,6 @@ public class LogService extends BaseService {
 
     /**
      * 获取当前操作的一系列数据
-     *
-     * @return
      */
     public User log(User user, HttpServletRequest request) {
         // 不记录自己
@@ -149,8 +127,6 @@ public class LogService extends BaseService {
 //        List<Log> logs = logDao.findByIpAndUrl(log.getIp(), 1);
 //        if (logs.size() > 0 && logs.get(0).getUrl().equals(log.getUrl()))
 //            return user;
-        if (log == null)
-            return user;
         try {
             save(log);
             return user;

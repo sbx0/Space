@@ -139,7 +139,7 @@ function printMessage(message, type) {
                     "<p class=\"chat-receive\">" + message.send_time + "：" + message.content + "</p>");
             break
         default:
-            $("#chat_content").append("<p class=\"chat-notification\">" + message + "</p>");
+            $("#chat_content").append(message);
     }
     scrollToBottom();
 }

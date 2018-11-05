@@ -36,14 +36,15 @@ public class LogController extends BaseController {
     ArticleService articleService;
     @Resource
     private SimpMessagingTemplate simpMessagingTemplate;
+    private final ObjectMapper mapper;
+
     @Autowired
-    ObjectMapper mapper;
-    private ObjectNode objectNode;
+    public LogController(ObjectMapper mapper) {
+        this.mapper = mapper;
+    }
 
     /**
      * 某个时间段统计访问ip数
-     *
-     * @return
      */
     @ResponseBody
     @RequestMapping(value = "/data/views")
@@ -58,7 +59,7 @@ public class LogController extends BaseController {
         List<Object[]> views = logService.countIpByTime(begin, now);
         ArrayNode arrayNode = mapper.createArrayNode();
         for (Object[] view : views) {
-            objectNode = mapper.createObjectNode();
+            ObjectNode objectNode = mapper.createObjectNode();
             objectNode.put("time", view[0].toString());
             objectNode.put("number", Integer.parseInt(view[1].toString().trim()));
             arrayNode.add(objectNode);
@@ -105,10 +106,10 @@ public class LogController extends BaseController {
         }
         // 开始计数
         Map<Integer, Integer> count = new HashMap<>();
-        for (int i = 0; i < store.length; i++) {
-            if (store[i][0] != null) { // 中间有可能有空 暂时 /comment/post 之类的都会排除
+        for (String[] aStore : store) {
+            if (aStore[0] != null) { // 中间有可能有空 暂时 /comment/post 之类的都会排除
                 try { // 尝试着把 /article/1 中的 1 取出来
-                    int id = Integer.parseInt(store[i][1]);
+                    int id = Integer.parseInt(aStore[1]);
                     if (count.get(id) != null) { // count中已经有了 删掉加一再放回去
                         int number = count.get(id);
                         count.remove(id);
@@ -118,7 +119,6 @@ public class LogController extends BaseController {
                     }
                 } catch (Exception e) {
                     // article/index 之内的不可能可以强制转换成功
-                    continue;
                 }
             }
         }
@@ -139,11 +139,6 @@ public class LogController extends BaseController {
 
     /**
      * 日志列表
-     *
-     * @param page
-     * @param size
-     * @param map
-     * @return
      */
     @RequestMapping(value = "/list")
     public String list(Integer page, Integer size, String ip,

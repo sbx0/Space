@@ -21,10 +21,6 @@ public class MessageService extends BaseService {
 
     /**
      * 构造返回消息的html格式
-     *
-     * @param user
-     * @param message
-     * @return
      */
     public static String buildMessage(User user, Message message) {
         String ipOrName;
@@ -33,17 +29,14 @@ public class MessageService extends BaseService {
         else
             ipOrName = BaseService.hideFullIp(message.getIp());
         DateFormat df = new SimpleDateFormat("HH:mm");
-        String messageString = "<p class=\"chat-user-name\">" +
+        return "<p class=\"chat-user-name\">" +
                 ipOrName + "&nbsp;" +
                 "</p><p class=\"chat-receive\">" + df.format(message.getSendTime()) + "："
                 + message.getContent() + "</p>";
-        return messageString;
     }
 
     /**
      * 保存
-     *
-     * @param message
      */
     public void save(Message message) {
         messageDao.save(message);
@@ -51,10 +44,6 @@ public class MessageService extends BaseService {
 
     /**
      * 某时间段的消息
-     *
-     * @param begin 开始日期
-     * @param end   结束日期
-     * @return 日志列表
      */
     public List<Message> findByTime(Date begin, Date end) {
         return messageDao.findByTime(begin, end);

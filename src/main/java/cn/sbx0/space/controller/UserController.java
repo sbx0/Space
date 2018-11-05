@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -36,16 +35,16 @@ public class UserController extends BaseController {
     private ArticleService articleService;
     @Resource
     private LogService logService;
+    private final ObjectMapper mapper;
+
     @Autowired
-    private ObjectMapper mapper;
+    public UserController(ObjectMapper mapper) {
+        this.mapper = mapper;
+    }
 
 
     /**
      * 获取用户详情
-     *
-     * @param map 返回页面的数据
-     * @param id  ID
-     * @return JSON串
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public String one(Map<String, Object> map, @PathVariable("id") Integer id, Integer page, Integer size, HttpServletRequest request) {
@@ -90,9 +89,6 @@ public class UserController extends BaseController {
 
     /**
      * 获取登陆用户信息
-     *
-     * @param request
-     * @return
      */
     @ResponseBody
     @RequestMapping(value = "/info", method = RequestMethod.GET)
@@ -125,9 +121,6 @@ public class UserController extends BaseController {
 
     /**
      * 退出登陆
-     *
-     * @param response
-     * @return json
      */
     @ResponseBody
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
@@ -147,12 +140,6 @@ public class UserController extends BaseController {
 
     /**
      * 登陆注册聚合
-     *
-     * @param request
-     * @param response
-     * @param session
-     * @param user     表单传递的用户信息
-     * @return json
      */
     @ResponseBody
     @RequestMapping(value = "/login", method = RequestMethod.POST)

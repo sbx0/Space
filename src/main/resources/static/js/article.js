@@ -18,9 +18,9 @@ function attitude(type) {
         type: 'GET',
         success: function (data) {
             if (data.status == 0) {
-                if(data.dislikes != null)
+                if (data.dislikes != null)
                     $("#dislikes").html(data.dislikes)
-                if(data.likes != null)
+                if (data.likes != null)
                     $("#likes").html(data.likes)
             } else if (data.status == 2) {
                 alert("不要重复操作");

@@ -22,25 +22,20 @@ public class BaseService {
 
     /**
      * 只显示ip的头和尾
-     *
-     * @param ip IP
-     * @return 隐藏后的ip
      */
     public static String hideFullIp(String ip) {
         String[] ipNumber = ip.split("\\.");
-        ip = ipNumber[0] + ".";
+        StringBuilder ipBuilder = new StringBuilder(ipNumber[0] + ".");
         for (int i = 1; i < ipNumber.length - 1; i++) {
-            ip += "*.";
+            ipBuilder.append("*.");
         }
+        ip = ipBuilder.toString();
         ip += ipNumber[ipNumber.length - 1];
         return ip;
     }
 
     /**
      * 获得某天最大时间 2017-10-15 23:59:59
-     *
-     * @param date 某天
-     * @return 某天的结束时间
      */
     public static Date getEndOfDay(Date date) {
         LocalDateTime localDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(date.getTime()), ZoneId.systemDefault());
@@ -50,9 +45,6 @@ public class BaseService {
 
     /**
      * 获得某天最小时间 2017-10-15 00:00:00
-     *
-     * @param date 某天
-     * @return 某天的起始时间
      */
     public static Date getStartOfDay(Date date) {
         LocalDateTime localDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(date.getTime()), ZoneId.systemDefault());
@@ -62,13 +54,10 @@ public class BaseService {
 
     /**
      * 去html标签
-     *
-     * @param content
-     * @return
      */
     public static String killHTML(String content) {
-        String regEx_script = "<script[^>]*?>[\\s\\S]*?<\\/script>"; // script
-        String regEx_style = "<style[^>]*?>[\\s\\S]*?<\\/style>"; // style
+        String regEx_script = "<script[^>]*?>[\\s\\S]*?</script>"; // script
+        String regEx_style = "<style[^>]*?>[\\s\\S]*?</style>"; // style
         String regEx_html = "<[^>]+>"; // HTML tag
 
         Pattern p_script = Pattern.compile(regEx_script, Pattern.CASE_INSENSITIVE);
@@ -88,11 +77,6 @@ public class BaseService {
 
     /**
      * cookie 创建
-     *
-     * @param name
-     * @param value
-     * @param day
-     * @return
      */
     public static Cookie createCookie(String name, String value, int day) {
         Cookie cookie = new Cookie(name, value);
@@ -106,24 +90,17 @@ public class BaseService {
 
     /**
      * cookie 验证加密
-     *
-     * @param id
-     * @return
      */
     public static String getKey(int id) {
-        String result = getHash(id + KEY, "MD5");
-        return result;
+        return getHash(id + KEY, "MD5");
     }
 
     /**
      * 清空cookies
-     *
-     * @param response
-     * @return
      */
     public static void removeCookies(HttpServletResponse response) {
-        for (int i = 0; i < COOKIE_NAMES.size(); i++) {
-            Cookie cookie = new Cookie(COOKIE_NAMES.get(i), null);
+        for (String COOKIE_NAME : COOKIE_NAMES) {
+            Cookie cookie = new Cookie(COOKIE_NAME, null);
             cookie.setDomain(DOMAIN);
             cookie.setMaxAge(0);
             cookie.setPath("/");
@@ -133,20 +110,16 @@ public class BaseService {
 
     /**
      * 在一群Cookie中根据名称查找想要的
-     *
-     * @param name    Cookie名数组
-     * @param cookies 一群Cookie
-     * @return
      */
-    public static Map<String, Cookie> getCookiesByName(List<String> name, Cookie[] cookies) {
+    static Map<String, Cookie> getCookiesByName(List<String> name, Cookie[] cookies) {
         // 一群Cookie为空，放弃寻找
         if (cookies == null) return null;
         // 名字有几个就找几个
         Map<String, Cookie> getCookies = new HashMap<>();
-        for (int i = 0; i < cookies.length; i++) { // 遍历一群Cookie
+        for (Cookie cookie : cookies) { // 遍历一群Cookie
             for (int j = 0; j < name.size(); j++) { // 匹配名称
-                if (cookies[i].getName().equals(name.get(j))) { // 找到一个
-                    getCookies.put(name.get(j), cookies[i]); // 存下来
+                if (cookie.getName().equals(name.get(j))) { // 找到一个
+                    getCookies.put(name.get(j), cookie); // 存下来
                     if (getCookies.size() == name.size()) break; // 全找到了
                 }
             }
@@ -156,11 +129,8 @@ public class BaseService {
 
     /**
      * 获取请求主机IP地址,如果通过代理进来，则透过防火墙获取真实IP地址;
-     *
-     * @param request
-     * @return
      */
-    public final static String getIpAddress(HttpServletRequest request) {
+    public static String getIpAddress(HttpServletRequest request) {
         // 获取请求主机IP地址,如果通过代理进来，则透过防火墙获取真实IP地址
         String ip = request.getHeader("X-Forwarded-For");
         if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
@@ -181,8 +151,7 @@ public class BaseService {
             }
         } else if (ip.length() > 15) {
             String[] ips = ip.split(",");
-            for (int index = 0; index < ips.length; index++) {
-                String strIp = ips[index];
+            for (String strIp : ips) {
                 if (!("unknown".equalsIgnoreCase(strIp))) {
                     ip = strIp;
                     break;
@@ -196,14 +165,11 @@ public class BaseService {
 
     /**
      * 检测字符串是否为空
-     *
-     * @param str
-     * @return
      */
     public static boolean checkNullStr(String str) {
         if (str == null) return true;
         if (str.length() == 0) return true;
-        if (str.trim() == "") return true;
+        if (str.trim().equals("")) return true;
         if (str.trim().length() == 0) return true;
         // 纯html标签
         if (killHTML(str).trim().length() == 0) return false;
@@ -212,10 +178,6 @@ public class BaseService {
 
     /**
      * 密码哈希
-     *
-     * @param source
-     * @param hashType
-     * @return
      */
     public static String getHash(String source, String hashType) {
         StringBuilder sb = new StringBuilder();

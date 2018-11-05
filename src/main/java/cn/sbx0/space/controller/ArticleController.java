@@ -32,16 +32,16 @@ public class ArticleController extends BaseController {
     private UserService userService;
     @Resource
     private LogService logService;
-    @Autowired
-    ObjectMapper mapper;
+    private final ObjectMapper mapper;
     private ObjectNode objectNode;
+
+    @Autowired
+    public ArticleController(ObjectMapper mapper) {
+        this.mapper = mapper;
+    }
 
     /**
      * 给文章点踩
-     *
-     * @param id      文章ID
-     * @param request
-     * @return json
      */
     @ResponseBody
     @RequestMapping(value = "/article/dislike", method = RequestMethod.GET)
@@ -78,10 +78,6 @@ public class ArticleController extends BaseController {
 
     /**
      * 给文章点赞
-     *
-     * @param id      文章ID
-     * @param request
-     * @return json
      */
     @ResponseBody
     @RequestMapping(value = "/article/like", method = RequestMethod.GET)
@@ -122,10 +118,6 @@ public class ArticleController extends BaseController {
      * 查询上一条下一条
      * 如果u_id不为空 查询的是该用户的上一篇下一篇博文
      * 如果u_id为空 查询的是不限用户的上一篇下一篇
-     *
-     * @param id   文章ID
-     * @param u_id 用户ID
-     * @return json
      */
     @ResponseBody
     @RequestMapping(value = "/article/prevAndNext", method = RequestMethod.GET)
@@ -135,11 +127,11 @@ public class ArticleController extends BaseController {
             u_id = -1;
         Article prevA = articleService.prev(id, u_id);
         Article nextA = articleService.next(id, u_id);
-        if (prevA != null && prevA.getId() != id) {
+        if (prevA != null && !prevA.getId().equals(id)) {
             objectNode.put("prev_id", prevA.getId());
             objectNode.put("prev_title", prevA.getTitle());
         }
-        if (nextA != null && nextA.getId() != id) {
+        if (nextA != null && !nextA.getId().equals(id)) {
             objectNode.put("next_id", nextA.getId());
             objectNode.put("next_title", nextA.getTitle());
         }
@@ -147,10 +139,7 @@ public class ArticleController extends BaseController {
     }
 
     /**
-     * 搜索
-     *
-     * @param keyword
-     * @return
+     * 文章搜索
      */
     @RequestMapping(value = "/article/search")
     public String search(String keyword, Integer page, Integer size, Map<String, Object> map, HttpServletRequest request) {
@@ -190,10 +179,6 @@ public class ArticleController extends BaseController {
 
     /**
      * 为文章移除密码
-     *
-     * @param id      ID
-     * @param request
-     * @return JSON
      */
     @ResponseBody
     @RequestMapping(value = "/article/removePassword", method = RequestMethod.GET)
@@ -225,9 +210,6 @@ public class ArticleController extends BaseController {
 
     /**
      * 密码文章验证密码
-     *
-     * @param map
-     * @return 对应页面
      */
     @RequestMapping(value = "/article/checkPassword", method = RequestMethod.POST)
     public String checkPassword(Article article, Map<String, Object> map, HttpServletRequest request) {
@@ -236,18 +218,17 @@ public class ArticleController extends BaseController {
         // 判断密码是否为空字符串
         if (BaseService.checkNullStr(article.getPassword()))
             return "error";
+        String password = BaseService.getHash(article.getPassword().trim(), "MD5"); // 加密密码
         // 获取文章信息
         Article a = articleService.findById(article.getId(), 1);
         // 文章不存在
         if (a == null) return "error";
         map.put("page", articleService.whereIsMyPage(a.getId(), a.getAuthor().getId(), 20));
-        // 加密密码
-        String password = BaseService.getHash(article.getPassword().trim(), "MD5");
         // 验证密码是否正确
-        if (password.equals(a.getPassword())) {
+        if (password != null && password.equals(a.getPassword())) {
             map.put("article", a);
             if (user != null)
-                if (a.getAuthor().getId() == user.getId() || user.getAuthority() == 0)
+                if (a.getAuthor().getId().equals(user.getId()) || user.getAuthority() == 0)
                     map.put("manage", 1);
             // 日志记录
             logService.log(user, request);
@@ -272,11 +253,6 @@ public class ArticleController extends BaseController {
 
     /**
      * 为文章设置密码
-     *
-     * @param id       ID
-     * @param password 密码
-     * @param request
-     * @return JSON
      */
     @ResponseBody
     @RequestMapping(value = "/article/addPassword", method = RequestMethod.POST)
@@ -313,10 +289,6 @@ public class ArticleController extends BaseController {
 
     /**
      * 从回收站恢复文章
-     *
-     * @param id      ID
-     * @param request
-     * @return JSON
      */
     @ResponseBody
     @RequestMapping(value = "/article/recover", method = RequestMethod.GET)
@@ -352,11 +324,6 @@ public class ArticleController extends BaseController {
 
     /**
      * 回收站
-     *
-     * @param page    页码
-     * @param size    条数
-     * @param request
-     * @return 页面
      */
     @RequestMapping(value = "/article/trash", method = RequestMethod.GET)
     public String trash(Integer page, Integer size, HttpServletRequest request, Map<String, Object> map) {
@@ -397,11 +364,6 @@ public class ArticleController extends BaseController {
 
     /**
      * 删除 / 隐藏文章
-     *
-     * @param request
-     * @param id      文章ID
-     * @param type    0为隐藏，1为删除
-     * @return
      */
     @ResponseBody
     @RequestMapping(value = "/article/delete", method = RequestMethod.GET)
@@ -438,10 +400,6 @@ public class ArticleController extends BaseController {
 
     /**
      * 移除置顶 只有最高权限管理员可以做
-     *
-     * @param request
-     * @param id
-     * @return
      */
     @ResponseBody
     @RequestMapping(value = "/article/removeTop", method = RequestMethod.GET)
@@ -467,10 +425,6 @@ public class ArticleController extends BaseController {
 
     /**
      * 设置置顶 只有最高权限管理员可以做
-     *
-     * @param request
-     * @param id
-     * @return
      */
     @ResponseBody
     @RequestMapping(value = "/article/setTop", method = RequestMethod.GET)
@@ -497,10 +451,6 @@ public class ArticleController extends BaseController {
 
     /**
      * 显示修改文章
-     *
-     * @param map
-     * @param id
-     * @return
      */
     @RequestMapping(value = "/article/updateOne", method = RequestMethod.GET)
     public String updateOne(HttpServletRequest request, Map<String, Object> map, Integer id) {
@@ -527,10 +477,6 @@ public class ArticleController extends BaseController {
 
     /**
      * 发布文章
-     *
-     * @param request
-     * @param article
-     * @return
      */
     @ResponseBody
     @RequestMapping(value = "/article/post", method = RequestMethod.POST)
@@ -592,10 +538,6 @@ public class ArticleController extends BaseController {
 
     /**
      * 获取文章详情
-     *
-     * @param map 返回页面的数据
-     * @param id  ID
-     * @return JSON串
      */
     @RequestMapping(value = "/article/{id}", method = RequestMethod.GET)
     public String one(HttpServletRequest request, Map<String, Object> map, @PathVariable("id") Integer id) {
@@ -613,7 +555,7 @@ public class ArticleController extends BaseController {
         if (article.getPassword() == null || article.getPassword().equals("")) {
             map.put("article", article);
             if (user != null)
-                if (article.getAuthor().getId() == user.getId() || user.getAuthority() == 0)
+                if (article.getAuthor().getId().equals(user.getId()) || user.getAuthority() == 0)
                     map.put("manage", 1);
         } else {
             map.put("article", article);
@@ -626,8 +568,6 @@ public class ArticleController extends BaseController {
 
     /**
      * 查询置顶文章 默认是三个
-     *
-     * @return 返回置顶文章
      */
     @JsonView({Article.Top.class})
     @ResponseBody
@@ -652,19 +592,13 @@ public class ArticleController extends BaseController {
         logService.log(user, request);
         Page<Article> articlePage = articleService.findAll(0, 10, 0);
         if (articlePage != null) {
-            List<Article> articles = articleService.filter(articlePage.getContent());
-            return articles;
+            return articleService.filter(articlePage.getContent());
         } else
             return null;
     }
 
     /**
      * 获取文章列表
-     *
-     * @param map  返回页面的数据
-     * @param page 当前页数
-     * @param size 每页条数
-     * @return list.html
      */
     @RequestMapping(value = "/article/list")
     public String list(Map<String, Object> map, Integer page, Integer size, HttpServletRequest request) {
@@ -702,9 +636,6 @@ public class ArticleController extends BaseController {
 
     /**
      * 创建站点地图
-     *
-     * @param response
-     * @throws IOException
      */
     @GetMapping("/site_map.xml")
     public void createSiteMapXml(HttpServletResponse response) throws IOException {
