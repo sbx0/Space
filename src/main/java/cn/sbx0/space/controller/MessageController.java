@@ -44,9 +44,10 @@ public class MessageController {
 
     /**
      * 接收聊天室的消息
+     * 仅接收从前天到今天的消息
      */
-    @RequestMapping("/receive")
     @ResponseBody
+    @RequestMapping("/receive")
     public ArrayNode receive(HttpServletRequest request) {
         objectNode = mapper.createObjectNode();
         // 从cookie中获取登陆用户信息

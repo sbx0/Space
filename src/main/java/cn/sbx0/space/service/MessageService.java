@@ -20,6 +20,15 @@ public class MessageService extends BaseService {
     private MessageDao messageDao;
 
     /**
+     * 构造通知消息的html格式
+     */
+    public static String buildMessage(String message) {
+        return "<p class=\"chat-notification\">" +
+                message.trim() +
+                "</p>";
+    }
+
+    /**
      * 构造返回消息的html格式
      */
     public static String buildMessage(User user, Message message) {

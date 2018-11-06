@@ -18,8 +18,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -72,9 +70,7 @@ public class LogController extends BaseController {
      */
     @Scheduled(cron = "00 00 00 * * ?")
     public void countViews() {
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        simpMessagingTemplate.convertAndSend("/channel/public", df.format(new Date()));
-        simpMessagingTemplate.convertAndSend("/channel/public", "开始统计昨日日志");
+        simpMessagingTemplate.convertAndSend("/channel/public", MessageService.buildMessage("开始统计昨日日志"));
         // 当前时间
         Date end = new Date();
         Calendar calendar = Calendar.getInstance(); //得到日历
@@ -87,7 +83,7 @@ public class LogController extends BaseController {
         end = BaseService.getEndOfDay(end);
         // 00:00:00 - 23:59:59 之间的日志
         List<Log> logs = logService.countByTime(begin, end);
-        simpMessagingTemplate.convertAndSend("/channel/public", "昨日日志总数：" + logs.size());
+        simpMessagingTemplate.convertAndSend("/channel/public", MessageService.buildMessage("昨日日志总数：" + logs.size()));
         Log log;
         String method;
         // 存我们想要的日志 其实有点浪费空间
@@ -129,12 +125,12 @@ public class LogController extends BaseController {
             if (article == null) continue;
             // 添加阅读数
             int views = article.getViews() + entry.getValue();
-            simpMessagingTemplate.convertAndSend("/channel/public", "文章[" + article.getTitle() + "] +" + entry.getValue() + "=" + views);
+            simpMessagingTemplate.convertAndSend("/channel/public", MessageService.buildMessage("文章[" + article.getTitle() + "]+" + entry.getValue() + "=" + views));
             article.setViews(views);
             articleService.save(article);
         }
-        simpMessagingTemplate.convertAndSend("/channel/public", "统计结束");
-        simpMessagingTemplate.convertAndSend("/channel/public", "晚安");
+        simpMessagingTemplate.convertAndSend("/channel/public", MessageService.buildMessage("统计结束"));
+        simpMessagingTemplate.convertAndSend("/channel/public", MessageService.buildMessage("晚安"));
     }
 
     /**

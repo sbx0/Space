@@ -578,8 +578,6 @@ public class ArticleController extends BaseController {
 
     /**
      * 首页 json
-     *
-     * @return json串
      */
     @JsonView({Article.Index.class})
     @ResponseBody

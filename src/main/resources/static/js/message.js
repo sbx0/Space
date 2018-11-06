@@ -16,7 +16,7 @@ function history_chat() {
         success: function (data) {
             var history = data;
             for (var i = 0; i < history.length; i++) {
-                printMessage(data[i], "receive");
+                printMessage(data[i]);
                 scrollToBottom();
             }
         }
@@ -33,15 +33,15 @@ function connect() {
     stompClient.connect({},
         function connectCallback() {
             // 连接成功时（服务器响应 CONNECTED 帧）的回调方法
-            printMessage("已加入聊天", "notification");
+            printMessage("已加入聊天");
             // 订阅公共频道
             stompClient.subscribe('/channel/public', function (response) {
-                printMessage(response.body);
+                printPush(response.body);
             });
         },
         function errorCallBack() {
             // 连接失败时（服务器响应 ERROR 帧）的回调方法
-            printMessage("连接丢失", "notification");
+            printMessage("连接丢失");
             reconnect();
         }
     );
@@ -50,18 +50,18 @@ function connect() {
 // 重连10次
 function reconnect() {
     if (reconnect_times > 9) {
-        printMessage("重试失败次数太多，请稍后再试。", "notification");
+        printMessage("重试失败次数太多，请稍后再试。");
         return false;
     }
     reconnect_times++;
-    printMessage("第" + reconnect_times + "次自动重连...", "notification");
+    printMessage("第" + reconnect_times + "次自动重连...");
     var socket = new SockJS('../stomp');
     var stompClient = Stomp.over(socket);
     stompClient.connect({},
         function connectCallback() {
             reconnect_times = 1;
             // 连接成功时（服务器响应 CONNECTED 帧）的回调方法
-            printMessage("已加入聊天", "notification");
+            printMessage("已加入聊天");
             // 订阅公共频道
             stompClient.subscribe('/channel/public', function (response) {
                 printMessage(response.body);
@@ -69,7 +69,7 @@ function reconnect() {
         },
         function errorCallBack() {
             // 连接失败时（服务器响应 ERROR 帧）的回调方法
-            printMessage("第" + reconnect_times + "次重连失败", "notification");
+            printMessage("第" + reconnect_times + "次重连失败");
             setTimeout(function () {
                 history_chat();
                 reconnect();
@@ -122,24 +122,26 @@ function send() {
     return false;
 }
 
+// 打印通知
+function printPush(message) {
+    $("#chat_content").append(message);
+    scrollToBottom();
+}
+
 // 打印接收到的消息
-function printMessage(message, type) {
-    switch (type) {
-        case "notification":
-            $("#chat_content").append("<p class=\"chat-notification\">" + message + "</p>");
-            break;
-        case "receive":
-            if (message.u_name != null)
-                $("#chat_content").append(
-                    "<p class='chat-user-name'>" + message.u_name + "</p>" +
-                    "<p class=\"chat-receive\">" + message.send_time + "：" + message.content + "</p>");
-            else
-                $("#chat_content").append(
-                    "<p class='chat-user-name'>" + message.ip + "</p>" +
-                    "<p class=\"chat-receive\">" + message.send_time + "：" + message.content + "</p>");
-            break
-        default:
-            $("#chat_content").append(message);
+function printMessage(message) {
+    if (message.content != null) {
+        if (message.u_name != null) {
+            $("#chat_content").append(
+                "<p class='chat-user-name'>" + message.u_name + "</p>" +
+                "<p class=\"chat-receive\">" + message.send_time + "：" + message.content + "</p>");
+        } else {
+            $("#chat_content").append(
+                "<p class='chat-user-name'>" + message.ip + "</p>" +
+                "<p class=\"chat-receive\">" + message.send_time + "：" + message.content + "</p>");
+        }
+    } else {
+        $("#chat_content").append("<p class=\"chat-notification\">" + message + "</p>");
     }
     scrollToBottom();
 }
