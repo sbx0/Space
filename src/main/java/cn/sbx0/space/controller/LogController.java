@@ -47,13 +47,11 @@ public class LogController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/data/views")
     public ArrayNode g2Views() {
-        Date now = new Date();
-        now = BaseService.getEndOfDay(now);
+        Date now = BaseService.getEndOfDay(new Date());
         Calendar calendar = Calendar.getInstance(); // 得到日历
         calendar.setTime(now); // 把当前时间赋给日历
         calendar.add(Calendar.DAY_OF_MONTH, -30); // 30天
-        Date begin = calendar.getTime();
-        begin = BaseService.getStartOfDay(begin);
+        Date begin = BaseService.getStartOfDay(calendar.getTime());
         List<Object[]> views = logService.countIpByTime(begin, now);
         ArrayNode arrayNode = mapper.createArrayNode();
         for (Object[] view : views) {
@@ -114,7 +112,7 @@ public class LogController extends BaseController {
                         count.put(id, 1);
                     }
                 } catch (Exception e) {
-                    // article/index 之内的不可能可以强制转换成功
+                    // article/index 之类的不可能可以强制转换成功
                 }
             }
         }
