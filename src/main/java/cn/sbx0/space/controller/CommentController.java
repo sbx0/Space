@@ -33,6 +33,7 @@ public class CommentController extends BaseController {
     @Resource
     private ArticleService articleService;
     private final ObjectMapper mapper;
+    private ObjectNode objectNode;
 
     @Autowired
     public CommentController(ObjectMapper mapper) {
@@ -49,10 +50,10 @@ public class CommentController extends BaseController {
         // 从cookie中获取登陆用户信息
         User user = userService.getCookieUser(request);
         // 检测重复操作
-        if (!logService.check(request, 5))
-            objectNode.put("status", 2);
-        else if (BaseService.checkNullStr(comment.getContent())) {
-            objectNode.put("status", 1);
+        if (!logService.check(request, 5)) {
+            objectNode.put(STATUS_NAME, TIMES_LIMIT_STATUS_CODE);
+        } else if (BaseService.checkNullStr(comment.getContent())) {
+            objectNode.put(STATUS_NAME, NOT_FOUND_STATUS_CODE);
         } else {
             // 若登录
             if (user != null) {
@@ -79,9 +80,9 @@ public class CommentController extends BaseController {
                 commentService.save(comment);
                 Article article = articleService.findById(comment.getEntity_id(), 1);
                 article.setComments(article.getComments() + 1);
-                objectNode.put("status", 0);
+                objectNode.put(STATUS_NAME, SUCCESS_STATUS_CODE);
             } catch (Exception e) {
-                objectNode.put("status", 1);
+                objectNode.put(STATUS_NAME, EXCEPTION_STATUS_CODE);
             }
         }
         // 日志记录

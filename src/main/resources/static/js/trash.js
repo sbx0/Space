@@ -4,16 +4,18 @@ function real_delete(id) {
         $.ajax({
             url: '../article/delete?id=' + id + "&type=1",
             type: 'GET',
-            success: function (data) {
-                if (data.status == 0) {
-                    alert("删除成功");
+            success: function (json) {
+                var status = json.status;
+                if (statusCodeToBool(status)) {
                     location.replace(location.href)
-                } else {
-                    alert("无权限");
                 }
+                alert(statusCodeToAlert(status))
                 return false;
+            },
+            error: function () {
+                alert("网络异常")
             }
-        })
+        });
         return false;
     }
 }
@@ -23,10 +25,13 @@ if (login()) {
     $.ajax({
         url: '../user/info',
         type: 'GET',
-        success: function (data) {
-            if (data.status == 0) {
-                blog_header.login = data.username;
+        success: function (json) {
+            if (statusCodeToBool(json.status)) {
+                blog_header.login = json.username;
             }
+        },
+        error: function () {
+            alert("网络异常")
         }
     })
 }
@@ -36,15 +41,17 @@ function recover(id) {
     $.ajax({
         url: '../article/recover?id=' + id,
         type: 'GET',
-        success: function (data) {
-            if (data.status == 0) {
-                alert("恢复成功");
+        success: function (json) {
+            var status = json.status;
+            if (statusCodeToBool(status)) {
                 location.replace("../article/" + id);
-            } else {
-                alert("操作失败")
             }
+            alert(statusCodeToAlert(status));
+        },
+        error: function () {
+            alert("网络异常")
         }
-    })
+    });
     return false;
 }
 
@@ -63,4 +70,4 @@ new Vue({
         prev: i18N.prev,
         next: i18N.next,
     },
-})
+});

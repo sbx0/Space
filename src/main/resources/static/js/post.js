@@ -23,10 +23,13 @@ if (login()) {
     $.ajax({
         url: 'user/info',
         type: 'GET',
-        success: function (data) {
-            if (data.status == 0) {
-                blog_header.login = data.username;
+        success: function (json) {
+            if (statusCodeToBool(json.status)) {
+                blog_header.login = json.username;
             }
+        },
+        error: function () {
+            alert("网络异常")
         }
     })
 } else {
@@ -51,11 +54,14 @@ function post() {
         type: "post",
         url: "article/post",
         data: $("#article-form").serialize(),
-        success: function (data) {
-            if (data.status == 0) {
+        success: function (json) {
+            if (statusCodeToBool(json.status)) {
                 alert("发布成功");
                 location.replace("../index.html");
             }
+        },
+        error: function () {
+            alert("网络异常")
         }
     })
 }

@@ -25,7 +25,7 @@ import java.util.List;
 
 @RequestMapping("/message")
 @Controller
-public class MessageController {
+public class MessageController extends BaseController {
     @Resource
     private SimpMessagingTemplate simpMessagingTemplate;
     @Resource
@@ -91,9 +91,9 @@ public class MessageController {
         User user = userService.getCookieUser(request);
         // 检测重复操作
         if (!logService.check(request, 0.1)) {
-            objectNode.put("status", 1);
+            objectNode.put(STATUS_NAME, TIMES_LIMIT_STATUS_CODE);
         } else if (BaseService.checkNullStr(to) || BaseService.checkNullStr(message.getContent())) {
-            objectNode.put("status", 2);
+            objectNode.put(STATUS_NAME, NOT_FOUND_STATUS_CODE);
         } else if (to.equals("public")) {
             message.setSendTime(new Date());
             message.setSendUser(user);
@@ -101,7 +101,7 @@ public class MessageController {
             String ip = BaseService.getIpAddress(request);
             message.setIp(ip);
             messageService.save(message);
-            objectNode.put("status", 0);
+            objectNode.put(STATUS_NAME, SUCCESS_STATUS_CODE);
             simpMessagingTemplate.convertAndSend("/channel/public", MessageService.buildMessage(user, message));
             // 日志记录
             logService.log(user, request);

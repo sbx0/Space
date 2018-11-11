@@ -2,10 +2,7 @@ package cn.sbx0.space.controller;
 
 import cn.sbx0.space.entity.Article;
 import cn.sbx0.space.entity.User;
-import cn.sbx0.space.service.ArticleService;
-import cn.sbx0.space.service.BaseService;
-import cn.sbx0.space.service.LogService;
-import cn.sbx0.space.service.UserService;
+import cn.sbx0.space.service.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +33,7 @@ public class UserController extends BaseController {
     @Resource
     private LogService logService;
     private final ObjectMapper mapper;
+    private ObjectNode objectNode;
 
     @Autowired
     public UserController(ObjectMapper mapper) {
@@ -105,16 +103,16 @@ public class UserController extends BaseController {
                 objectNode.put("exp", user.getExp());
                 objectNode.put("integral", user.getIntegral());
                 // 操作状态保存
-                objectNode.put("status", "0");
+                objectNode.put(STATUS_NAME, SUCCESS_STATUS_CODE);
             } catch (Exception e) {
                 // 操作状态保存
-                objectNode.put("status", "1");
+                objectNode.put(STATUS_NAME, EXCEPTION_STATUS_CODE);
             }
         } else {
             // 清除Cookie
             BaseService.removeCookies(response);
             // 操作状态保存
-            objectNode.put("status", "1");
+            objectNode.put(STATUS_NAME, FILED_STATUS_CODE);
         }
         return objectNode;
     }
@@ -130,10 +128,10 @@ public class UserController extends BaseController {
             // 清除Cookie
             BaseService.removeCookies(response);
             // 操作状态保存
-            objectNode.put("status", "0");
+            objectNode.put(STATUS_NAME, SUCCESS_STATUS_CODE);
         } catch (Exception e) {
             // 操作状态保存
-            objectNode.put("status", "1");
+            objectNode.put(STATUS_NAME, FILED_STATUS_CODE);
         }
         return objectNode;
     }
@@ -148,7 +146,7 @@ public class UserController extends BaseController {
         // 判断是否为空
         if (BaseService.checkNullStr(user.getName()) || BaseService.checkNullStr(user.getPassword())) {
             // 操作状态保存
-            objectNode.put("status", "1");
+            objectNode.put(STATUS_NAME, NOT_FOUND_STATUS_CODE);
             return objectNode;
         }
         // 调用登陆，若返回为null，则为密码错误
@@ -161,12 +159,12 @@ public class UserController extends BaseController {
             response.addCookie(BaseService.createCookie(BaseService.COOKIE_NAMES.get(2), user.getName(), 30));
             session.setAttribute("user", user);
             // 操作状态保存
-            objectNode.put("status", "0");
+            objectNode.put(STATUS_NAME, SUCCESS_STATUS_CODE);
         } else {
             // 清除Cookie
             BaseService.removeCookies(response);
             // 操作状态保存
-            objectNode.put("status", "1");
+            objectNode.put(STATUS_NAME, FILED_STATUS_CODE);
         }
         // 日志记录
         logService.log(user, request);

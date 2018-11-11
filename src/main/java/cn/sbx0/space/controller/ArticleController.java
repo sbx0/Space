@@ -42,15 +42,18 @@ public class ArticleController extends BaseController {
 
     /**
      * 给文章点踩
+     *
+     * @param id 文章ID
+     * @return JSON
      */
     @ResponseBody
     @RequestMapping(value = "/article/dislike", method = RequestMethod.GET)
     public ObjectNode dislike(Integer id, HttpServletRequest request) {
         objectNode = mapper.createObjectNode();
         // 检测重复操作
-        if (!logService.check(request, 1440))
-            objectNode.put("status", 2);
-        else {
+        if (!logService.check(request, 1440)) {
+            objectNode.put(STATUS_NAME, TIMES_LIMIT_STATUS_CODE);
+        } else {
             // 日志记录
             logService.log(userService.getCookieUser(request), request);
             Article article = articleService.findById(id, 0);
@@ -65,13 +68,14 @@ public class ArticleController extends BaseController {
                     article.setDislikes(dislikes);
                     articleService.save(article);
                     objectNode.put("dislikes", article.getDislikes());
-                    objectNode.put("status", 0);
+                    objectNode.put(STATUS_NAME, SUCCESS_STATUS_CODE);
                 } catch (Exception e) {
                     objectNode.put("msg", e.getMessage());
-                    objectNode.put("status", 1);
+                    objectNode.put(STATUS_NAME, EXCEPTION_STATUS_CODE);
                 }
-            } else
-                objectNode.put("status", 1);
+            } else {
+                objectNode.put(STATUS_NAME, NOT_FOUND_STATUS_CODE);
+            }
         }
         return objectNode;
     }
@@ -83,14 +87,12 @@ public class ArticleController extends BaseController {
     @RequestMapping(value = "/article/like", method = RequestMethod.GET)
     public ObjectNode like(Integer id, HttpServletRequest request) {
         objectNode = mapper.createObjectNode();
-        // 从cookie中获取登陆用户信息
-        User user = userService.getCookieUser(request);
         // 检测重复操作
-        if (!logService.check(request, 1440))
-            objectNode.put("status", 2);
-        else {
+        if (!logService.check(request, 1440)) {
+            objectNode.put(STATUS_NAME, TIMES_LIMIT_STATUS_CODE);
+        } else {
             // 日志记录
-            logService.log(user, request);
+            logService.log(userService.getCookieUser(request), request);
             Article article = articleService.findById(id, 0);
             if (article != null) {
                 try {
@@ -103,13 +105,14 @@ public class ArticleController extends BaseController {
                     article.setLikes(likes);
                     articleService.save(article);
                     objectNode.put("likes", article.getLikes());
-                    objectNode.put("status", 0);
+                    objectNode.put(STATUS_NAME, SUCCESS_STATUS_CODE);
                 } catch (Exception e) {
                     objectNode.put("msg", e.getMessage());
-                    objectNode.put("status", 1);
+                    objectNode.put(STATUS_NAME, EXCEPTION_STATUS_CODE);
                 }
-            } else
-                objectNode.put("status", 1);
+            } else {
+                objectNode.put(STATUS_NAME, NOT_FOUND_STATUS_CODE);
+            }
         }
         return objectNode;
     }
@@ -123,8 +126,7 @@ public class ArticleController extends BaseController {
     @RequestMapping(value = "/article/prevAndNext", method = RequestMethod.GET)
     public ObjectNode prevAndNext(Integer id, Integer u_id) {
         objectNode = mapper.createObjectNode();
-        if (u_id == null)
-            u_id = -1;
+        if (u_id == null) u_id = -1;
         Article prevA = articleService.prev(id, u_id);
         Article nextA = articleService.next(id, u_id);
         if (prevA != null && !prevA.getId().equals(id)) {
@@ -188,7 +190,7 @@ public class ArticleController extends BaseController {
         User user = userService.getCookieUser(request);
         // 未登录
         if (user == null) {
-            objectNode.put("status", 1);
+            objectNode.put(STATUS_NAME, NOT_LOGIN_STATUS_CODE);
             return objectNode;
         }
         // 获取文章信息
@@ -200,9 +202,9 @@ public class ArticleController extends BaseController {
             try {
                 // 将操作保存到数据库中
                 articleService.save(article);
-                objectNode.put("status", 0);
+                objectNode.put(STATUS_NAME, SUCCESS_STATUS_CODE);
             } catch (Exception e) {
-                objectNode.put("status", 1);
+                objectNode.put(STATUS_NAME, EXCEPTION_STATUS_CODE);
             }
         }
         return objectNode;
@@ -227,9 +229,11 @@ public class ArticleController extends BaseController {
         // 验证密码是否正确
         if (password != null && password.equals(a.getPassword())) {
             map.put("article", a);
-            if (user != null)
-                if (a.getAuthor().getId().equals(user.getId()) || user.getAuthority() == 0)
+            if (user != null) {
+                if (a.getAuthor().getId().equals(user.getId()) || user.getAuthority() == 0) {
                     map.put("manage", 1);
+                }
+            }
             // 日志记录
             logService.log(user, request);
             return "article";
@@ -262,12 +266,12 @@ public class ArticleController extends BaseController {
         User user = userService.getCookieUser(request);
         // 未登录
         if (user == null) {
-            objectNode.put("status", 1);
+            objectNode.put(STATUS_NAME, NOT_LOGIN_STATUS_CODE);
             return objectNode;
         }
         // 密码为空
         if (BaseService.checkNullStr(password)) {
-            objectNode.put("status", 1);
+            objectNode.put(STATUS_NAME, NO_PERMISSION_STATUS_CODE);
             return objectNode;
         }
         // 获取文章信息
@@ -279,9 +283,9 @@ public class ArticleController extends BaseController {
             try {
                 // 将操作保存到数据库中
                 articleService.save(article);
-                objectNode.put("status", 0);
+                objectNode.put(STATUS_NAME, SUCCESS_STATUS_CODE);
             } catch (Exception e) {
-                objectNode.put("status", 1);
+                objectNode.put(STATUS_NAME, EXCEPTION_STATUS_CODE);
             }
         }
         return objectNode;
@@ -298,7 +302,7 @@ public class ArticleController extends BaseController {
         User user = userService.getCookieUser(request);
         // 未登录
         if (user == null) {
-            objectNode.put("status", 1);
+            objectNode.put(STATUS_NAME, NOT_LOGIN_STATUS_CODE);
             return objectNode;
         }
         // 获取文章信息
@@ -310,15 +314,13 @@ public class ArticleController extends BaseController {
             try {
                 // 操作保存到数据库中
                 articleService.save(article);
-                objectNode.put("status", 0);
+                objectNode.put(STATUS_NAME, SUCCESS_STATUS_CODE);
             } catch (Exception e) {
-                objectNode.put("status", 1);
+                objectNode.put(STATUS_NAME, EXCEPTION_STATUS_CODE);
             }
         }
-
         // 日志记录
         logService.log(user, request);
-
         return objectNode;
     }
 
@@ -380,21 +382,19 @@ public class ArticleController extends BaseController {
                     article.setTop(-1);
                     try {
                         articleService.save(article);
-                        objectNode.put("status", "0");
+                        objectNode.put(STATUS_NAME, SUCCESS_STATUS_CODE);
                     } catch (Exception e) {
-                        objectNode.put("status", "1");
+                        objectNode.put(STATUS_NAME, EXCEPTION_STATUS_CODE);
                     }
                 }
                 break;
             // 真删除
             case 1:
             default:
-                objectNode.put("status", 1);
+                objectNode.put(STATUS_NAME, FILED_STATUS_CODE);
         }
-
         // 日志记录
         logService.log(user, request);
-
         return objectNode;
     }
 
@@ -410,13 +410,13 @@ public class ArticleController extends BaseController {
         // 查询文章信息
         Article article = articleService.findById(id, 1);
         // 判断权限
-        if (user.getAuthority() > 0)
-            objectNode.put("status", "1");
-        else {
+        if (user.getAuthority() > 0) {
+            objectNode.put(STATUS_NAME, NO_PERMISSION_STATUS_CODE);
+        } else {
             // 移除置顶
             article.setTop(0);
             articleService.save(article);
-            objectNode.put("status", "0");
+            objectNode.put(STATUS_NAME, SUCCESS_STATUS_CODE);
         }
         // 日志记录
         logService.log(user, request);
@@ -436,13 +436,14 @@ public class ArticleController extends BaseController {
         Article article = articleService.findById(id, 1);
         // 判断权限
         if (user.getAuthority() > 0)
-            objectNode.put("status", "1");
+            objectNode.put(STATUS_NAME, NO_PERMISSION_STATUS_CODE);
         else {
             // 设置置顶
-            if (articleService.setTop(article))
-                objectNode.put("status", "0");
-            else
-                objectNode.put("status", "2");
+            if (articleService.setTop(article)) {
+                objectNode.put(STATUS_NAME, SUCCESS_STATUS_CODE);
+            } else {
+                objectNode.put(STATUS_NAME, FILED_STATUS_CODE);
+            }
         }
         // 日志记录
         logService.log(user, request);
@@ -459,13 +460,15 @@ public class ArticleController extends BaseController {
         Article article;
         if (user != null) {
             // 普通用户无法修改隐藏文章
-            if (user.getAuthority() == 0)
+            if (user.getAuthority() == 0) {
                 article = articleService.findById(id, 1);
-            else
+            } else {
                 article = articleService.findById(id, 0);
+            }
             // 判断权限
-            if (!userService.checkAuthority(user, article.getAuthor().getId(), 0))
+            if (!userService.checkAuthority(user, article.getAuthor().getId(), 0)) {
                 return "login";
+            }
             map.put("article", article);
         } else {
             return "login";
@@ -487,7 +490,7 @@ public class ArticleController extends BaseController {
         // 检测重复操作
         if (article.getId() == null) {
             if (!logService.check(request, 5)) {
-                objectNode.put("status", 2);
+                objectNode.put(STATUS_NAME, TIMES_LIMIT_STATUS_CODE);
                 return objectNode;
             }
         }
@@ -495,18 +498,18 @@ public class ArticleController extends BaseController {
         logService.log(user, request);
         // 检测是否为空
         if (BaseService.checkNullStr(article.getTitle()) || BaseService.checkNullStr(article.getContent())) {
-            // 操作状态保存
-            objectNode.put("status", "1");
+            objectNode.put(STATUS_NAME, FILED_STATUS_CODE);
             return objectNode;
         }
         try {
             // 修改文章
             if (article.getId() != null) {
                 Article a;
-                if (user.getAuthority() == 0)
+                if (user.getAuthority() == 0) {
                     a = articleService.findById(article.getId(), 1);
-                else
+                } else {
                     a = articleService.findById(article.getId(), 0);
+                }
                 a.setTitle(article.getTitle().trim());
                 a.setContent(article.getContent().trim());
                 a.setIntroduction(article.getIntroduction().trim());
@@ -527,11 +530,9 @@ public class ArticleController extends BaseController {
                 article.setLastChangeTime(null);
                 articleService.save(article);
             }
-            // 操作状态保存
-            objectNode.put("status", "0");
+            objectNode.put(STATUS_NAME, SUCCESS_STATUS_CODE);
         } catch (Exception e) {
-            // 操作状态保存
-            objectNode.put("status", "1");
+            objectNode.put(STATUS_NAME, EXCEPTION_STATUS_CODE);
         }
         return objectNode;
     }

@@ -16,15 +16,24 @@ function attitude(type) {
     $.ajax({
         url: '../article/' + att + '?id=' + $("#id").val(),
         type: 'GET',
-        success: function (data) {
-            if (data.status == 0) {
-                if (data.dislikes != null)
-                    $("#dislikes").html(data.dislikes)
-                if (data.likes != null)
-                    $("#likes").html(data.likes)
-            } else if (data.status == 2) {
-                alert("不要重复操作");
+        /**
+         * @param json 请求返回的json
+         * @param json.status 状态码
+         * @param json.dislikes 文章踩数
+         * @param json.likes 文章赞数
+         */
+        success: function (json) {
+            var status = json.status;
+            if (statusCodeToBool(status)) {
+                if (json.dislikes != null)
+                    $("#dislikes").html(json.dislikes)
+                if (json.likes != null)
+                    $("#likes").html(json.likes)
             }
+            alert(statusCodeToAlert(status))
+        },
+        error: function () {
+            alert("网络异常")
         }
     })
 }
@@ -34,15 +43,22 @@ function prevAndNext() {
     $.ajax({
         url: '../article/prevAndNext?id=' + $("#id").val() + '&u_id=' + $("#u_id").val(),
         type: 'GET',
-        success: function (data) {
+        /**
+         * @param json 请求返回的json
+         * @param json.prev_id 上一篇文章的id
+         * @param json.prev_title 上一篇文章的标题
+         * @param json.next_id 下一篇文章的id
+         * @param json.next_title 下一篇文章的标题
+         */
+        success: function (json) {
             article.prevA = false;
             article.nextA = false;
             article.prev = '';
             article.prev_url = '';
             article.next = '';
             article.next_url = '';
-            var prev_id = data.prev_id;
-            var prev_title = data.prev_title;
+            var prev_id = json.prev_id;
+            var prev_title = json.prev_title;
             article.prev_full = prev_title;
             if (prev_id != null) {
                 article.prevA = true;
@@ -51,8 +67,8 @@ function prevAndNext() {
                 article.prev = prev_title;
                 article.prev_url = "../article/" + prev_id;
             }
-            var next_id = data.next_id;
-            var next_title = data.next_title;
+            var next_id = json.next_id;
+            var next_title = json.next_title;
             article.next_full = next_title;
             if (next_id != null) {
                 article.nextA = true;
@@ -61,6 +77,9 @@ function prevAndNext() {
                 article.next = next_title;
                 article.next_url = "../article/" + next_id;
             }
+        },
+        error: function () {
+            alert("网络异常")
         }
     })
 }
@@ -82,19 +101,18 @@ function comment() {
         url: '../comment/post',
         type: 'POST',
         data: $("#commentForm").serialize(),
-        success: function (data) {
-            var status = data.status;
-            if (status == 0) {
-                alert("发布成功！");
+        success: function (json) {
+            var status = json.status;
+            if (statusCodeToBool(status)) {
                 $("#content").val("");
                 loadComment('0');
-            } else if (data.status == 2) {
-                alert("5分钟内只能评论一次");
-            } else {
-                alert("发布失败！");
             }
+            alert(statusCodeToAlert(status))
+        },
+        error: function () {
+            alert("网络异常")
         }
-    })
+    });
     return false;
 }
 
@@ -121,23 +139,23 @@ function loadComment() {
     $.ajax({
         url: '../comment/list?type=article&id=' + $("#id").val() + '&page=' + page + '&size=' + size,
         type: 'GET',
-        success: function (data) {
-            if (data.length == 0) {
+        success: function (json) {
+            if (json.length === 0) {
                 article.prevC = false;
                 article.nextC = false;
                 if (page > 1)
                     loadComment(page--);
-            } else if (data.length == 10) {
+            } else if (json.length === 10) {
                 article.nextC = true;
                 article.prevC = false;
                 if (page > 1)
                     article.prevC = true;
-            } else if (page == 1 && data.length > 0 && data.length < size) {
+            } else if (page === 1 && json.length > 0 && json.length < size) {
                 article.prevC = false;
                 article.nextC = true;
-                if (data.length < size)
+                if (json.length < size)
                     article.nextC = false;
-            } else if (page > 1 && data.length > 0 && data.length == size) {
+            } else if (page > 1 && json.length > 0 && json.length === size) {
                 article.nextC = true;
                 article.prevC = true;
             } else {
@@ -145,9 +163,12 @@ function loadComment() {
                 article.nextC = false;
                 article.prevC = true;
             }
-            article.comments = formate(data);
+            article.comments = formate(json);
+        },
+        error: function () {
+            alert("网络异常")
         }
-    })
+    });
     return false;
 }
 
@@ -189,18 +210,17 @@ var article = new Vue({
 })
 
 // 格式化评论列表的阅读链接与日期格式
-function formate(data) {
-    for (var i = 0; i < data.length; i++) {
-        data[i].id = data[i].id;
-        data[i].user_id = "../user/" + data[i].user_id;
-        if (data[i].user_id == "../user/null")
-            data[i].user_id = "#";
-        var d = new Date(data[i].time);
+function formate(json) {
+    for (var i = 0; i < json.length; i++) {
+        json[i].user_id = "../user/" + json[i].user_id;
+        if (json[i].user_id === "../user/null") {
+            json[i].user_id = "#";
+        }
+        var d = new Date(json[i].time);
         var times = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + ' ' + d.getHours() + ':' + d.getMinutes();
-        var time = Format(getDate(times.toString()), "yyyy-MM-dd HH:mm")
-        data[i].time = time;
+        json[i].time = Format(getDate(times.toString()), "yyyy-MM-dd HH:mm");
     }
-    return data;
+    return json;
 }
 
 // 自动登陆
@@ -208,13 +228,17 @@ if (login()) {
     $.ajax({
         url: '../user/info',
         type: 'GET',
-        success: function (data) {
-            if (data.status == 0) {
+        success: function (json) {
+            var status = json.status;
+            if (statusCodeToBool(status)) {
                 blog_about.isAuthority = true;
-                blog_header.login = data.username;
+                blog_header.login = json.username;
             } else {
                 blog_header.login = i18N.login;
             }
+        },
+        error: function () {
+            alert("网络异常")
         }
     })
 }
@@ -224,15 +248,17 @@ function del() {
     $.ajax({
         url: '/article/delete?id=' + $("#id").val() + '&type=0',
         type: 'GET',
-        success: function (data) {
-            if (data.status == 0) {
-                alert("删除成功");
+        success: function (json) {
+            var status = json.status;
+            alert(statusCodeToAlert(status))
+            if (statusCodeToBool(status)) {
                 location.replace("../index.html");
-            } else {
-                alert("无权限");
             }
             return false;
+        },
+        error: function () {
+            alert("网络异常")
         }
-    })
+    });
     return false;
 }

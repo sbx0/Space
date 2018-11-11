@@ -4,7 +4,7 @@ var editor = editormd("editor", {
     height: 640,
     path: "../lib/",
     emoji: true,
-    watch : false,
+    watch: false,
 });
 
 // 添加密码
@@ -13,13 +13,15 @@ function addPassword() {
         url: '../article/addPassword',
         data: $("#add_password_form").serialize(),
         type: 'POST',
-        success: function (data) {
-            if (data.status == 0) {
-                alert("设置成功");
-                location.replace(location.href)
+        success: function (json) {
+            var status = json.status;
+            if (statusCodeToBool(status)) {
+                location.replace(location.href);
             }
-            else
-                alert("无权限");
+            alert(statusCodeToAlert(status));
+        },
+        error: function () {
+            alert("网络异常")
         }
     })
 }
@@ -30,12 +32,15 @@ function removePassword() {
     $.ajax({
         url: '../article/removePassword?id=' + id,
         type: 'GET',
-        success: function (data) {
-            if (data.status == 0) {
-                alert("操作成功");
-                location.replace(location.href)
-            } else
-                alert("无权限");
+        success: function (json) {
+            var status = json.status;
+            if (statusCodeToBool(status)) {
+                location.replace(location.href);
+            }
+            alert(statusCodeToAlert(status));
+        },
+        error: function () {
+            alert("网络异常")
         }
     })
 }
@@ -46,14 +51,15 @@ function setTop() {
     $.ajax({
         url: '../article/setTop?id=' + id,
         type: 'GET',
-        success: function (data) {
-            if (data.status == 0) {
-                alert("设置成功");
-                location.replace(location.href)
+        success: function (json) {
+            var status = json.status;
+            if (statusCodeToBool(status)) {
+                location.replace(location.href);
             }
-            else
-                alert("无权限");
-
+            alert(statusCodeToAlert(status));
+        },
+        error: function () {
+            alert("网络异常")
         }
     })
 }
@@ -64,12 +70,15 @@ function removeTop() {
     $.ajax({
         url: '../article/removeTop?id=' + id,
         type: 'GET',
-        success: function (data) {
-            if (data.status == 0) {
-                alert("设置成功");
-                location.replace(location.href)
-            } else
-                alert("无权限");
+        success: function (json) {
+            var status = json.status;
+            if (statusCodeToBool(status)) {
+                location.replace(location.href);
+            }
+            alert(statusCodeToAlert(status));
+        },
+        error: function () {
+            alert("网络异常")
         }
     })
 }
@@ -79,10 +88,13 @@ if (login()) {
     $.ajax({
         url: '../user/info',
         type: 'GET',
-        success: function (data) {
-            if (data.status == 0) {
-                blog_header.login = data.username;
+        success: function (json) {
+            if (statusCodeToBool(status)) {
+                blog_header.login = json.username;
             }
+        },
+        error: function () {
+            alert("网络异常")
         }
     })
 } else {
@@ -107,11 +119,14 @@ function post() {
         type: "post",
         url: "../article/post",
         data: $("#article-form").serialize(),
-        success: function (data) {
-            if (data.status == 0) {
+        success: function (json) {
+            if (statusCodeToBool(json.status)) {
                 alert("发布成功！");
                 location.replace("../article/" + id);
             }
+        },
+        error: function () {
+            alert("网络异常")
         }
     })
 }

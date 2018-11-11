@@ -6,12 +6,50 @@
 // var time = Format(getDate(TIME.toString()), "yyyy-MM-dd HH:mm:ss")
 // ------------------------------------------------------------------------------------------------------ //
 
+//  状态码转换成语句
+function statusCodeToAlert(status) {
+    switch (status) {
+        case 0:
+            return "操作成功";
+            break;
+        case 1:
+            return "操作失败";
+            break;
+        case 2:
+            return "异常错误"
+            break;
+        case 3:
+            return "未登录"
+            break;
+        case 4:
+            return "超出限制"
+            break;
+        case 5:
+            return "参数不合法"
+            break;
+        case 6:
+            return "无权限"
+            break;
+    }
+}
+
+// 状态码转换成true或false
+function statusCodeToBool(status) {
+    switch (status) {
+        case 0:
+            return true;
+            break;
+        default:
+            return false;
+    }
+}
+
 // 给nav-bar赋值
 new Vue({
     el: '#nav',
     data: {
         groceryList: [
-            {id: 0, text: '消息&nbsp;<span class="badge badge-success">新</span>', url: '../message.html'},
+            {id: 0, text: '消息', url: '../message.html'},
             {id: 0, text: '搜索', url: '../article/search'},
             {id: 0, text: '数据', url: '../data.html'},
             {id: 0, text: '上传', url: 'http://upload.sbx0.cn/'},
@@ -43,11 +81,11 @@ $(function () {
 // 检测字符串是否为空
 function checkNullStr(str) {
     if (str == null) return true;
-    if (str.length == 0) return true;
-    if (str.trim() == "") return true;
-    if (str.trim().length == 0) return true;
+    if (str.length === 0) return true;
+    if (str.trim() === "") return true;
+    if (str.trim().length === 0) return true;
     // wangEditor默认
-    if (str == "<p><br></p>") return true;
+    if (str === "<p><br></p>") return true;
     return false;
 }
 

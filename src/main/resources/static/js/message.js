@@ -13,12 +13,15 @@ function history_chat() {
         url: '../message/receive',
         type: 'GET',
         async: false,
-        success: function (data) {
-            var history = data;
+        success: function (json) {
+            var history = json;
             for (var i = 0; i < history.length; i++) {
-                printMessage(data[i]);
+                printMessage(json[i]);
                 scrollToBottom();
             }
+        },
+        error: function () {
+            alert("网络异常")
         }
     })
 }
@@ -93,7 +96,7 @@ function reconnect() {
 $("#send_button").click(function () {
     send();
     return false;
-})
+});
 
 // 发送消息
 function send() {
@@ -107,18 +110,21 @@ function send() {
         type: 'POST',
         async: false,
         data: $("#send_message_form").serialize(),
-        success: function (data) {
-            var status = data.status;
+        success: function (json) {
+            var status = json.status;
             if (status == 0) {
                 alert("发布成功！");
                 $('#message_content').val("");
-            } else if (data.status == 1) {
+            } else if (json.status == 1) {
                 alert("你太快了，慢点");
             } else {
                 alert("发布失败！");
             }
+        },
+        error: function () {
+            alert("网络异常")
         }
-    })
+    });
     return false;
 }
 
@@ -156,12 +162,15 @@ if (login()) {
     $.ajax({
         url: '../user/info',
         type: 'GET',
-        success: function (data) {
-            if (data.status == 0) {
-                blog_header.login = data.username;
+        success: function (json) {
+            if (statusCodeToBool(json.status)) {
+                blog_header.login = json.username;
             } else {
-                $("#user_ip").html("您将以" + data.ip + "作为标识参与聊天");
+                $("#user_ip").html("您将以" + json.ip + "作为标识参与聊天");
             }
+        },
+        error: function () {
+            alert("网络异常")
         }
     })
 }

@@ -3,10 +3,13 @@ if (login()) {
     $.ajax({
         url: 'user/info',
         type: 'GET',
-        success: function (data) {
-            if (data.status == 0) {
-                blog_header.login = data.username;
+        success: function (json) {
+            if (statusCodeToBool(json.status)) {
+                blog_header.login = json.username;
             }
+        },
+        error: function () {
+            alert("网络异常")
         }
     })
 }
@@ -37,12 +40,15 @@ var list_article = new Vue({
         $.ajax({
             url: i18N.json.article.list,
             type: 'GET',
-            success: function (data) {
-                if (data.length > 0) {
-                    list_article.articles = formate(data);
+            success: function (json) {
+                if (json.length > 0) {
+                    list_article.articles = formate(json);
                 } else {
                     alert(i18N.query + i18N.result + i18N.null);
                 }
+            },
+            error: function () {
+                alert("网络异常")
             }
         })
     },
@@ -71,10 +77,13 @@ var top_article = new Vue({
         $.ajax({
             url: i18N.json.article.top,
             type: 'GET',
-            success: function (data) {
-                if (data.length > 0) {
-                    top_article.articles = formate(data)
+            success: function (json) {
+                if (json.length > 0) {
+                    top_article.articles = formate(json)
                 }
+            },
+            error: function () {
+                alert("网络异常")
             }
         })
     },
@@ -87,8 +96,8 @@ function formate(data) {
         data[i].author.id = "../user/" + data[i].author.id;
         var d = new Date(data[i].time);
         var times = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + ' ' + d.getHours() + ':' + d.getMinutes();
-        var time = Format(getDate(times.toString()), "yyyy-MM-dd HH:mm")
+        var time = Format(getDate(times.toString()), "yyyy-MM-dd HH:mm");
         data[i].time = time;
     }
-    return data
+    return data;
 }

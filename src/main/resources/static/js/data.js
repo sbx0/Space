@@ -1,17 +1,19 @@
 var data = [];
+
 var chart = new G2.Chart({
     id: 'c1',
     forceFit: true,
     height: 450,
 });
+
 G2.track(false);
+
 $.ajax({
     url: "../log/data/views",
     type: "GET",
     async: true,
-    success: function (d) {
-        data = d;
-        chart.source(data, {
+    success: function (json) {
+        chart.source(json, {
             time: {
                 alias: '日期',
                 range: [0, 1]
@@ -23,17 +25,23 @@ $.ajax({
         chart.line().position('time*number').size(3);
         chart.render();
     },
-})
+    error: function () {
+        alert("网络异常")
+    }
+});
 
 // 自动登陆
 if (login()) {
     $.ajax({
         url: 'user/info',
         type: 'GET',
-        success: function (data) {
-            if (data.status == 0) {
-                blog_header.login = data.username;
+        success: function (json) {
+            if (statusCodeToBool(json.status)) {
+                blog_header.login = json.username;
             }
+        },
+        error: function () {
+            alert("网络异常")
         }
     })
 }

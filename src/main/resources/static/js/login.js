@@ -1,12 +1,15 @@
-// 人机检测
+// 退出登陆
 function logout() {
     $.ajax({
         type: "get",
         url: "../user/logout",
-        success: function (data) {
+        success: function () {
             location.replace(location.href);
+        },
+        error: function () {
+            alert("网络异常")
         }
-    })
+    });
     return false;
 }
 
@@ -30,23 +33,35 @@ var login_div = new Vue({
         info_exp: i18N.loading,
         info_integral: i18N.loading,
     },
-})
+});
 
 // 如果当前已经登陆
 if (login()) {
     $.ajax({
         url: '../user/info',
         type: 'GET',
-        success: function (data) {
-            if (data.status == 0) {
+        /**
+         * @param json
+         * @param json.status 状态码
+         * @param json.username 用户名
+         * @param json.level 等级
+         * @param json.exp 经验
+         * @param json.integral 积分
+         * @param json.id 用户id
+         */
+        success: function (json) {
+            if (statusCodeToBool(json.status)) {
                 login_div.info_seen = true;
                 login_div.form_seen = false;
-                login_div.info_username = data.username;
-                login_div.info_level = data.level;
-                login_div.info_exp = data.exp;
-                login_div.info_integral = data.integral;
-                login_div.user_home = "../user/" + data.id;
+                login_div.info_username = json.username;
+                login_div.info_level = json.level;
+                login_div.info_exp = json.exp;
+                login_div.info_integral = json.integral;
+                login_div.user_home = "../user/" + json.id;
             }
+        },
+        error: function () {
+            alert("网络异常")
         }
     })
 }
@@ -58,7 +73,7 @@ $("#login").click(function () {
         alert("用户名不能为空")
         return false;
     }
-    if (username.indexOf(" ") != -1) {
+    if (username.indexOf(" ") !== -1) {
         alert("用户名中不能有空格");
         return false;
     }
@@ -76,16 +91,19 @@ $("#login").click(function () {
         url: "../user/login",
         data: $("#loginForm").serialize(),
         dataType: "json",
-        success: function (data) {
-            var status = data.status;
-            if (status == 0) {
+        success: function (json) {
+            var status = json.status;
+            if (statusCodeToBool(status)) {
                 alert(i18N.login + i18N.success);
                 location.replace("index.html");
             } else {
                 alert(i18N.please + i18N.check + i18N.username + i18N.and + i18N.password + i18N.is_or_not + i18N.right);
                 alert(i18N.login + i18N.fail);
             }
+        },
+        error: function () {
+            alert("网络异常")
         }
-    })
+    });
     return false;
 })
