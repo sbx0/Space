@@ -6,10 +6,22 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
+import java.net.CookieHandler;
+import java.util.List;
+
 /**
  * 评论Dao
  */
 public interface CommentDao extends PagingAndSortingRepository<Comment, Integer> {
+
+    /**
+     * 查询最新的limit条评论
+     *
+     * @param limit 条数
+     * @return 评论列表
+     */
+    @Query(value = "SELECT * FROM comments c ORDER BY c.id DESC LIMIT ?1", nativeQuery = true)
+    List<Comment> findNew(Integer limit);
 
     /**
      * 查询某实体类评论总条数

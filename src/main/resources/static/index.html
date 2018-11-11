@@ -77,15 +77,17 @@
 
         </div>
 
-        <aside id="blog-about" class="col-md-4 blog-sidebar small-font" v-cloak>
-            <div class="p-3 mb-3 bg-light rounded">
-                <h4 class="font-italic">{{about}}</h4>
-                <p class="mb-0"><span v-html="about_content"></span></p>
-            </div>
+        <aside class="col-md-4 text-right" v-cloak>
+            <h4 class="pb-2 mb-3 font-italic border-bottom">
+                最新评论
+            </h4>
+            <comment-list v-for="comment in comments"
+                          v-bind:key="comment.id"
+                          v-bind:comment="comment">
+            </comment-list>
         </aside>
 
     </div>
-
 </main>
 
 <footer id="blog-footer" class="blog-footer" v-cloak>

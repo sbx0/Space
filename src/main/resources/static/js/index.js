@@ -20,6 +20,7 @@ var list_article = new Vue({
     data: {
         more: i18N.read + i18N.more,
         articles: [],
+        comments: [],
     },
     components: {
         'article-list': {
@@ -34,6 +35,13 @@ var list_article = new Vue({
                 '赞[<span>{{article.likes}}</span>]&nbsp;&nbsp;&nbsp;' +
                 '踩[<span>{{article.dislikes}}</span>]</a>' +
                 '</transition>',
+        },
+        'comment-list': {
+            props: ['comment'],
+            template: '<div><transition name="fade"><div :id="comment.id">' +
+                '<div class="media-left"></div><div class="media-body">' +
+                '<a :href="comment.user_id">{{comment.user_name}}</a>&nbsp;{{comment.time}}</p>' +
+                '<p>{{comment.content}}</p></div></div></transition><hr id="endLine"></div>',
         },
     },
     created: function () {
@@ -50,7 +58,21 @@ var list_article = new Vue({
             error: function () {
                 alert("网络异常")
             }
-        })
+        });
+        $.ajax({
+            url: '../comment/index',
+            type: 'GET',
+            success: function (json) {
+                if (json.length > 0) {
+                    list_article.comments = json;
+                } else {
+                    alert(i18N.query + i18N.result + i18N.null);
+                }
+            },
+            error: function () {
+                alert("网络异常")
+            }
+        });
     },
 })
 

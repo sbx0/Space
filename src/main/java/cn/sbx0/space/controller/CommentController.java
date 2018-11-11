@@ -5,6 +5,7 @@ import cn.sbx0.space.entity.Comment;
 import cn.sbx0.space.entity.User;
 import cn.sbx0.space.service.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -38,6 +41,34 @@ public class CommentController extends BaseController {
     @Autowired
     public CommentController(ObjectMapper mapper) {
         this.mapper = mapper;
+    }
+
+    /**
+     * 最新评论
+     */
+    @ResponseBody
+    @RequestMapping(value = "/index", method = RequestMethod.GET)
+    public ArrayNode index(HttpServletRequest request) {
+        // 从cookie中获取登陆用户信息
+        User user = userService.getCookieUser(request);
+        // 日志记录
+        logService.log(user, request);
+        List<Comment> comments = commentService.findNew(10);
+        ArrayNode arrayNode = mapper.createArrayNode();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        for (int i = 0; i < comments.size(); i++) {
+            Comment comment = comments.get(i);
+            objectNode = mapper.createObjectNode();
+            objectNode.put("entity_id", comment.getEntity_id());
+            objectNode.put("entity_type", comment.getEntity_type());
+            objectNode.put("content", comment.getContent());
+            objectNode.put("user_ip", comment.getUser_ip());
+            objectNode.put("user_name", comment.getUser_name());
+            objectNode.put("time", dateFormat.format(comment.getTime()));
+            objectNode.put("id",comment.getId());
+            arrayNode.add(objectNode);
+        }
+        return arrayNode;
     }
 
     /**

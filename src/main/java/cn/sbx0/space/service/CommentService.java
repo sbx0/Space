@@ -9,6 +9,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @Service
 public class CommentService extends BaseService {
@@ -19,6 +20,18 @@ public class CommentService extends BaseService {
         commentDao.save(comment);
     }
 
+    /**
+     * 查询最新的limit条评论
+     *
+     * @param limit 条数
+     * @return 评论列表
+     */
+    public List<Comment> findNew(Integer limit) {
+        if (limit == null) limit = 1;
+        if (limit < 1) limit = 1;
+        if (limit > 100) limit = 99;
+        return commentDao.findNew(limit);
+    }
 
     /**
      * 查询评论总条数
