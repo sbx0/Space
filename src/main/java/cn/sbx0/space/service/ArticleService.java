@@ -310,7 +310,7 @@ public class ArticleService extends BaseService {
         WebSitemapGenerator wsg = null;
         try {
             wsg = new WebSitemapGenerator(baseUrl);
-            wsg.addUrl(createWebSiteMapUrl(baseUrl + "/article.html", 1.0, new Date())); // 首页
+            wsg.addUrl(createWebSiteMapUrl(baseUrl + "/index.html", 1.0, new Date())); // 首页
             wsg.addUrl(createWebSiteMapUrl(baseUrl + "/article/search", 0.9, new Date())); // 搜索
             wsg.addUrl(createWebSiteMapUrl(baseUrl + "/article/list", 0.9, new Date())); // 发布文章
             // 添加文章详情页
