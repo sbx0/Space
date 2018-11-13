@@ -1,56 +1,114 @@
-// 自动登陆
-if (login()) {
-    $.ajax({
-        url: 'user/info',
-        type: 'GET',
-        success: function (json) {
-            if (statusCodeToBool(json.status)) {
-                blog_header.login = json.username;
-            }
-        },
-        error: function () {
-            alert("网络异常")
-        }
-    })
-}
-
-// 文章列表
-var list_article = new Vue({
-    el: '#list-article',
+var index = new Vue({
+    el: '#index',
     data: {
-        more: i18N.read + i18N.more,
-        articles: [],
-        comments: [],
+        nav_bar_data: [
+            {id: 0, text: '首页', url: '../index.html'},
+            {id: 0, text: '登陆', url: '../login.html'},
+            {id: 0, text: '回收', url: '../article/trash'},
+            {id: 0, text: '日志', url: '../log/list'},
+            {id: 0, text: '旧版', url: '../old_index.html'},
+        ],
+        nav_scroller_data: [
+            {id: 0, text: '消息', url: '../message.html'},
+            {id: 0, text: '搜索', url: '../article/search'},
+            {id: 0, text: '数据', url: '../data.html'},
+            {id: 0, text: '上传', url: 'http://upload.sbx0.cn/'},
+            {id: 0, text: '开源', url: 'https://github.com/sbx0'},
+            {id: 0, text: '福利', url: 'http://gokoucat.cn'},
+            {id: 0, text: '登陆', url: '../login.html'},
+            {id: 0, text: '回收', url: '../article/trash'},
+            {id: 0, text: '日志', url: '../log/list'},
+            {id: 0, text: '地图', url: '../site_map.xml'},
+            {id: 0, text: '旧版', url: '../old_index.html'},
+        ],
+        top_data: [],
+        article_data: [],
+        comment_data: [],
     },
     components: {
-        'article-list': {
-            props: ['article'],
-            template: '<transition name="fade"><div class="blog-post">' +
-                '<h2 class="blog-post-title"><a :href="article.id" class="text-dark">{{article.title}}</a></h2>' +
-                '<p class="blog-post-meta"><a :href ="article.author.id">{{article.author.name}}</a>&nbsp;{{article.time}}</p>' +
-                '<div v-html="article.content"></div>' +
-                '<a class="text-dark" :href="article.id">' +
-                '阅[<span>{{article.views}}</span>]&nbsp;&nbsp;&nbsp;' +
-                '评[<span>{{article.comments}}</span>]&nbsp;&nbsp;&nbsp;' +
-                '赞[<span>{{article.likes}}</span>]&nbsp;&nbsp;&nbsp;' +
-                '踩[<span>{{article.dislikes}}</span>]</a>' +
-                '</transition>',
+        'nav_bar_components': {
+            props: ['nav_bar'],
+            template: '<li class="nav-item"><a class="nav-link" :href="nav_bar.url" v-html="nav_bar.text"></a></li>',
         },
-        'comment-list': {
+        'nav_scroller_components': {
+            props: ['nav_scroller'],
+            template: '<a class="nav-link" :href="nav_scroller.url" v-html="nav_scroller.text"></a>',
+        },
+        'top_components': {
+            props: ['top'],
+            template:
+                '<a :href="top.id">' +
+                '<div class="d-flex align-items-center p-3 my-3 text-white-50 bg-purple rounded box-shadow">' +
+                '   <p class="mt-2 mb-2 mr-3">置顶</p>' +
+                '   <div class="lh-100">' +
+                '       <h6 class="mb-0 text-white lh-100">{{top.title}}</h6>' +
+                '       <small>{{top.time}}</small>' +
+                '   </div>' +
+                '</div>' +
+                '</a>',
+        },
+        'article_components': {
+            props: ['article'],
+            template:
+                '<div class="media text-muted pt-3">' +
+                '   <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">' +
+                '       <div class="align-items-center w-100">' +
+                '           <h6>' +
+                '               <strong class="text-gray-dark">' +
+                '                   <a :href="article.id" class="text-dark">{{article.title}}</a>' +
+                '               </strong>' +
+                '           </h6>' +
+                '           <p>' +
+                '               <a :href ="article.author.id">{{article.author.name}}</a>' +
+                '               &nbsp;{{article.time}}' +
+                '           </p>' +
+                '           <p v-html="article.content"></p>' +
+                '           <a class="text-dark" :href="article.id">' +
+                '               阅[<span>{{article.views}}</span>]&nbsp;&nbsp;&nbsp;' +
+                '               评[<span>{{article.comments}}</span>]&nbsp;&nbsp;&nbsp;' +
+                '               赞[<span>{{article.likes}}</span>]&nbsp;&nbsp;&nbsp;' +
+                '               踩[<span>{{article.dislikes}}</span>]' +
+                '           </a>' +
+                '       </div>' +
+                '   </div>' +
+                '</div>',
+        },
+        'comment_components': {
             props: ['comment'],
-            template: '<div><transition name="fade"><div :id="comment.id">' +
-                '<div class="media-left"></div><div class="media-body">' +
-                '<a :href="comment.user_id">{{comment.user_name}}</a>&nbsp;{{comment.time}}</p>' +
-                '<p>{{comment.content}}</p></div></div></transition><hr id="endLine"></div>',
+            template:
+                '<div class="media text-muted pt-3">' +
+                '   <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">' +
+                '       <div class="d-flex justify-content-between align-items-center w-100">' +
+                '           <strong class="text-gray-dark">' +
+                '               <a :href="comment.user_id">{{comment.user_name}}</a>' +
+                '           </strong>' +
+                '           {{comment.time}}' +
+                '           <a href="#">查看</a>' +
+                '       </div>' +
+                '       <p class="d-block mt-3">{{comment.content}}</p>' +
+                '   </div>' +
+                '</div>',
         },
     },
     created: function () {
+        $.ajax({
+            url: i18N.json.article.top,
+            type: 'GET',
+            success: function (json) {
+                if (json.length > 0) {
+                    index.top_data = formate(json);
+                }
+            },
+            error: function () {
+                alert("网络异常")
+            }
+        })
         $.ajax({
             url: i18N.json.article.list,
             type: 'GET',
             success: function (json) {
                 if (json.length > 0) {
-                    list_article.articles = formate(json);
+                    index.article_data = formate(json);
                 } else {
                     alert(i18N.query + i18N.result + i18N.null);
                 }
@@ -64,7 +122,7 @@ var list_article = new Vue({
             type: 'GET',
             success: function (json) {
                 if (json.length > 0) {
-                    list_article.comments = json;
+                    index.comment_data = json;
                 } else {
                     alert(i18N.query + i18N.result + i18N.null);
                 }
@@ -74,42 +132,7 @@ var list_article = new Vue({
             }
         });
     },
-})
-
-// 置顶文章
-var top_article = new Vue({
-    el: '#top-article',
-    data: {
-        articles: [],
-    },
-    components: {
-        'article-top': {
-            props: ['article'],
-            template: '<transition name="fade"><div class="col-md-6"><a :href="article.id">' +
-                '<div class="card flex-md-row mb-2 box-shadow-lg h-md-250">' +
-                '<div class="card-body d-flex flex-column align-items-start">' +
-                '<strong class="d-inline-block mb-2 text-info">' + i18N.top + '</strong>' +
-                '<h5 class="mb-0">' +
-                '<a class="text-dark" :href="article.id">{{article.title}}</a>' +
-                '</h5>' +
-                '</div></a></div></transition>',
-        },
-    },
-    created: function () {
-        $.ajax({
-            url: i18N.json.article.top,
-            type: 'GET',
-            success: function (json) {
-                if (json.length > 0) {
-                    top_article.articles = formate(json)
-                }
-            },
-            error: function () {
-                alert("网络异常")
-            }
-        })
-    },
-})
+});
 
 // 格式化文章列表的阅读链接与日期格式
 function formate(data) {
@@ -123,3 +146,11 @@ function formate(data) {
     }
     return data;
 }
+
+// 打开菜单
+$(function () {
+    'use strict';
+    $('[data-toggle="offcanvas"]').on('click', function () {
+        $('.offcanvas-collapse').toggleClass('open')
+    })
+});

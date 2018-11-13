@@ -17,9 +17,11 @@ public class Article implements Serializable {
     private static final long serialVersionUID = 1840679258382434964L;
 
     // 置顶
-    public interface Top {}
+    public interface Top {
+    }
 
-    public interface Index extends Top {}
+    public interface Index extends Top {
+    }
 
     @JsonView(Top.class)
     @Id
@@ -28,7 +30,7 @@ public class Article implements Serializable {
     @Column(nullable = false, length = 100)
     @JsonView(Top.class)
     private String title; // 标题
-    @JsonView(Index.class)
+    @JsonView(Top.class)
     @Column(nullable = false)
     private Date time; // 时间
     @Column(length = 250)

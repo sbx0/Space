@@ -52,9 +52,9 @@ new Vue({
             {id: 0, text: '消息', url: '../message.html'},
             {id: 0, text: '搜索', url: '../article/search'},
             {id: 0, text: '数据', url: '../data.html'},
+            {id: 0, text: '实验', url: '../test.html'},
             {id: 0, text: '上传', url: 'http://upload.sbx0.cn/'},
             {id: 0, text: '开源', url: 'https://github.com/sbx0'},
-            {id: 0, text: '福利', url: 'http://gokoucat.cn/'},
         ]
     },
     components: {
