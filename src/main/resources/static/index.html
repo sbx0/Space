@@ -35,11 +35,11 @@
                                     v-bind:key="nav_bar.id">
                 </nav_bar_components>
                 <!--<li class="nav-item dropdown">-->
-                    <!--<a class="nav-link dropdown-toggle" href="http://example.com" data-toggle="dropdown"-->
-                       <!--aria-haspopup="true" aria-expanded="false">设置</a>-->
-                    <!--<div class="dropdown-menu" aria-labelledby="dropdown01">-->
-                        <!--<a class="dropdown-item" href="#">暂无</a>-->
-                    <!--</div>-->
+                <!--<a class="nav-link dropdown-toggle" href="http://example.com" data-toggle="dropdown"-->
+                <!--aria-haspopup="true" aria-expanded="false">设置</a>-->
+                <!--<div class="dropdown-menu" aria-labelledby="dropdown01">-->
+                <!--<a class="dropdown-item" href="#">暂无</a>-->
+                <!--</div>-->
                 <!--</li>-->
             </ul>
             <!--<form class="form-inline my-2 my-lg-0">-->
@@ -61,8 +61,8 @@
     <main role="main" class="container">
 
         <top_components v-for="top in top_data"
-                                 v-bind:top="top"
-                                 v-bind:key="top.id">
+                        v-bind:top="top"
+                        v-bind:key="top.id">
         </top_components>
 
         <div class="my-3 p-3 bg-white rounded box-shadow">
@@ -72,7 +72,7 @@
                                 v-bind:key="article.id">
             </article_components>
             <small class="d-block text-right mt-3">
-                <a href="#">查看更多</a>
+                <a href="../article/list?page=2">查看更多</a>
             </small>
         </div>
 
@@ -83,7 +83,7 @@
                                 v-bind:key="comment.id">
             </comment_components>
             <small class="d-block text-right mt-3">
-                <a href="#">查看更多</a>
+                <a href="../article/list?page=1">查看更多</a>
             </small>
         </div>
 
@@ -96,6 +96,8 @@
 <script src="js/popper.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/holder.min.js"></script>
+<script src="js/messenger.min.js"></script>
+<script src="js/messenger-theme-flat.js"></script>
 <script src="js/vue.min.js"></script>
 <!--<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>-->
 <script src="js/i18N_zh_CN.js"></script>

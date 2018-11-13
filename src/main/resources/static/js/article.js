@@ -1,5 +1,160 @@
 var page = 1, size = 10;
 
+var article = new Vue({
+    el: '#article',
+    data: {
+        prev: i18N.prev_article,
+        next: i18N.next_article,
+        prev_url: '#',
+        next_url: '#',
+        prev_full: '',
+        next_full: '',
+        comment: i18N.comment,
+        prevC: false,
+        nextC: true,
+        prevA: false,
+        nextA: false,
+        nav_bar_data: [
+            {id: 0, text: '首页', url: '../index.html'},
+            {id: 0, text: '登陆', url: '../login.html'},
+            {id: 0, text: '回收', url: '../article/trash'},
+            {id: 0, text: '日志', url: '../log/list'},
+        ],
+        nav_scroller_data: [
+            {id: 0, text: '消息', url: '../message.html'},
+            {id: 0, text: '搜索', url: '../article/search'},
+            {id: 0, text: '数据', url: '../data.html'},
+            {id: 0, text: '上传', url: 'http://upload.sbx0.cn/'},
+            {id: 0, text: '开源', url: 'https://github.com/sbx0'},
+            {id: 0, text: '福利', url: 'http://gokoucat.cn'},
+            {id: 0, text: '登陆', url: '../login.html'},
+            {id: 0, text: '回收', url: '../article/trash'},
+            {id: 0, text: '日志', url: '../log/list'},
+            {id: 0, text: '地图', url: '../site_map.xml'},
+        ],
+        comment_data: [],
+    },
+    components: {
+        'nav_bar_components': {
+            props: ['nav_bar'],
+            template: '<li class="nav-item"><a class="nav-link" :href="nav_bar.url" v-html="nav_bar.text"></a></li>',
+        },
+        'nav_scroller_components': {
+            props: ['nav_scroller'],
+            template: '<a class="nav-link" :href="nav_scroller.url" v-html="nav_scroller.text"></a>',
+        },
+        'comment_components': {
+            props: ['comment'],
+            template:
+                '<div class="media text-muted pt-3">' +
+                '   <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">' +
+                '       <div class="d-flex justify-content-between align-items-center w-100">' +
+                '           <strong class="text-gray-dark">' +
+                '               <a :href="comment.user_id">{{comment.user_name}}</a>' +
+                '           </strong>' +
+                '           {{comment.time}}' +
+                '           <a href="#">回复</a>' +
+                '       </div>' +
+                '       <p class="d-block mt-3">{{comment.content}}</p>' +
+                '   </div>' +
+                '</div>',
+        },
+    },
+    created: function () {
+        $.ajax({
+            url: '../article/prevAndNext?id=' + $("#id").val() + '&u_id=' + $("#u_id").val(),
+            type: 'GET',
+            /**
+             * @param json 请求返回的json
+             * @param json.prev_id 上一篇文章的id
+             * @param json.prev_title 上一篇文章的标题
+             * @param json.next_id 下一篇文章的id
+             * @param json.next_title 下一篇文章的标题
+             */
+            success: function (json) {
+                article.prevA = false;
+                article.nextA = false;
+                article.prev = '';
+                article.prev_url = '';
+                article.next = '';
+                article.next_url = '';
+                var prev_id = json.prev_id;
+                var prev_title = json.prev_title;
+                article.prev_full = prev_title;
+                if (prev_id != null) {
+                    article.prevA = true;
+                    if (prev_title.length > 7)
+                        prev_title = prev_title.substring(0, 7) + "..."
+                    article.prev = prev_title;
+                    article.prev_url = "../article/" + prev_id;
+                }
+                var next_id = json.next_id;
+                var next_title = json.next_title;
+                article.next_full = next_title;
+                if (next_id != null) {
+                    article.nextA = true;
+                    if (next_title.length > 7)
+                        next_title = next_title.substring(0, 7) + "..."
+                    article.next = next_title;
+                    article.next_url = "../article/" + next_id;
+                }
+            },
+            error: function () {
+                alert("网络异常")
+            }
+        });
+        loadComments();
+        // 配置图片浏览器
+        new Viewer(document.getElementById('markdown'), {
+            movable: true,
+        });
+    },
+});
+
+
+// 评论
+function comment() {
+    $.ajax({
+        url: '../comment/post',
+        type: 'POST',
+        data: $("#commentForm").serialize(),
+        success: function (json) {
+            var status = json.status;
+            if (statusCodeToBool(status)) {
+                $("#content").val("");
+                loadComments();
+            }
+            alert(statusCodeToAlert(status))
+        },
+        error: function () {
+            alert("网络异常")
+        }
+    });
+    return false;
+}
+
+// 加载评论
+function loadComments() {
+    $.ajax({
+        url: '../comment/list?type=article&id=' + $("#id").val() + '&page=' + page + '&size=' + size,
+        type: 'GET',
+        success: function (json) {
+            article.comment_data = formate(json);
+        },
+        error: function () {
+            alert("网络异常")
+        }
+    });
+}
+
+// 打开菜单
+$(function () {
+    'use strict';
+    $('[data-toggle="offcanvas"]').on('click', function () {
+        $('.offcanvas-collapse').toggleClass('open')
+    })
+});
+
 // 赞 踩
 function attitude(type) {
     var att = '';
@@ -38,52 +193,6 @@ function attitude(type) {
     })
 }
 
-// 上一页 下一页
-function prevAndNext() {
-    $.ajax({
-        url: '../article/prevAndNext?id=' + $("#id").val() + '&u_id=' + $("#u_id").val(),
-        type: 'GET',
-        /**
-         * @param json 请求返回的json
-         * @param json.prev_id 上一篇文章的id
-         * @param json.prev_title 上一篇文章的标题
-         * @param json.next_id 下一篇文章的id
-         * @param json.next_title 下一篇文章的标题
-         */
-        success: function (json) {
-            article.prevA = false;
-            article.nextA = false;
-            article.prev = '';
-            article.prev_url = '';
-            article.next = '';
-            article.next_url = '';
-            var prev_id = json.prev_id;
-            var prev_title = json.prev_title;
-            article.prev_full = prev_title;
-            if (prev_id != null) {
-                article.prevA = true;
-                if (prev_title.length > 7)
-                    prev_title = prev_title.substring(0, 7) + "..."
-                article.prev = prev_title;
-                article.prev_url = "../article/" + prev_id;
-            }
-            var next_id = json.next_id;
-            var next_title = json.next_title;
-            article.next_full = next_title;
-            if (next_id != null) {
-                article.nextA = true;
-                if (next_title.length > 7)
-                    next_title = next_title.substring(0, 7) + "..."
-                article.next = next_title;
-                article.next_url = "../article/" + next_id;
-            }
-        },
-        error: function () {
-            alert("网络异常")
-        }
-    })
-}
-
 // Markdown
 var markdown = editormd.markdownToHTML("markdown", {
     htmlDecode: "style,script,iframe",  // you can filter tags decode
@@ -94,120 +203,6 @@ var markdown = editormd.markdownToHTML("markdown", {
     sequenceDiagram: true,  // 默认不解析
     path: "../lib/",
 });
-
-// 评论
-function comment() {
-    $.ajax({
-        url: '../comment/post',
-        type: 'POST',
-        data: $("#commentForm").serialize(),
-        success: function (json) {
-            var status = json.status;
-            if (statusCodeToBool(status)) {
-                $("#content").val("");
-                loadComment('0');
-            }
-            alert(statusCodeToAlert(status))
-        },
-        error: function () {
-            alert("网络异常")
-        }
-    });
-    return false;
-}
-
-// 上一页评论
-function prevComment() {
-    page--;
-    if (page < 1) {
-        page = 1;
-    }
-    loadComment();
-    location.href = "#comment";
-}
-
-// 下一页评论
-function nextComment() {
-    page++;
-    if (page > 1000) page = 1000;
-    loadComment();
-    location.href = "#comment";
-}
-
-// 加载评论
-function loadComment() {
-    $.ajax({
-        url: '../comment/list?type=article&id=' + $("#id").val() + '&page=' + page + '&size=' + size,
-        type: 'GET',
-        success: function (json) {
-            if (json.length === 0) {
-                article.prevC = false;
-                article.nextC = false;
-                if (page > 1)
-                    loadComment(page--);
-            } else if (json.length === 10) {
-                article.nextC = true;
-                article.prevC = false;
-                if (page > 1)
-                    article.prevC = true;
-            } else if (page === 1 && json.length > 0 && json.length < size) {
-                article.prevC = false;
-                article.nextC = true;
-                if (json.length < size)
-                    article.nextC = false;
-            } else if (page > 1 && json.length > 0 && json.length === size) {
-                article.nextC = true;
-                article.prevC = true;
-            } else {
-                page--;
-                article.nextC = false;
-                article.prevC = true;
-            }
-            article.comments = formate(json);
-        },
-        error: function () {
-            alert("网络异常")
-        }
-    });
-    return false;
-}
-
-
-// 文章列表
-var article = new Vue({
-    el: '#article',
-    data: {
-        prev: i18N.prev_article,
-        next: i18N.next_article,
-        prev_url: '#',
-        next_url: '#',
-        prev_full: '',
-        next_full: '',
-        comment: i18N.comment,
-        comments: [],
-        prevC: false,
-        nextC: true,
-        prevA: false,
-        nextA: false,
-    },
-    components: {
-        'comment-list': {
-            props: ['comment'],
-            template: '<div><hr id="endLine"><transition name="fade"><div :id="comment.id">' +
-                '<div class="media-left"></div><div class="media-body">' +
-                '<p class="media-heading">#{{comment.floor}}&nbsp;<a :href="comment.user_id">{{comment.user_name}}</a>&nbsp;{{comment.time}}</p>' +
-                '<p>{{comment.content}}</p></div></div></transition></div>',
-        },
-    },
-    created: function () {
-        loadComment();
-        prevAndNext();
-        // 配置图片浏览器
-        new Viewer(document.getElementById('markdown'), {
-            movable: true,
-        });
-    },
-})
 
 // 格式化评论列表的阅读链接与日期格式
 function formate(json) {
@@ -221,26 +216,6 @@ function formate(json) {
         json[i].time = Format(getDate(times.toString()), "yyyy-MM-dd HH:mm");
     }
     return json;
-}
-
-// 自动登陆
-if (login()) {
-    $.ajax({
-        url: '../user/info',
-        type: 'GET',
-        success: function (json) {
-            var status = json.status;
-            if (statusCodeToBool(status)) {
-                blog_about.isAuthority = true;
-                blog_header.login = json.username;
-            } else {
-                blog_header.login = i18N.login;
-            }
-        },
-        error: function () {
-            alert("网络异常")
-        }
-    })
 }
 
 // 删除

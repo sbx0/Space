@@ -6,7 +6,6 @@ var index = new Vue({
             {id: 0, text: '登陆', url: '../login.html'},
             {id: 0, text: '回收', url: '../article/trash'},
             {id: 0, text: '日志', url: '../log/list'},
-            {id: 0, text: '旧版', url: '../old_index.html'},
         ],
         nav_scroller_data: [
             {id: 0, text: '消息', url: '../message.html'},
@@ -19,7 +18,6 @@ var index = new Vue({
             {id: 0, text: '回收', url: '../article/trash'},
             {id: 0, text: '日志', url: '../log/list'},
             {id: 0, text: '地图', url: '../site_map.xml'},
-            {id: 0, text: '旧版', url: '../old_index.html'},
         ],
         top_data: [],
         article_data: [],
@@ -92,7 +90,7 @@ var index = new Vue({
     },
     created: function () {
         $.ajax({
-            url: i18N.json.article.top,
+            url: '../article/top',
             type: 'GET',
             success: function (json) {
                 if (json.length > 0) {
@@ -104,7 +102,7 @@ var index = new Vue({
             }
         })
         $.ajax({
-            url: i18N.json.article.list,
+            url: '../article/index',
             type: 'GET',
             success: function (json) {
                 if (json.length > 0) {

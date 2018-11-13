@@ -112,7 +112,7 @@ public class LogController extends BaseController {
                         count.put(id, 1);
                     }
                 } catch (Exception e) {
-                    // article/index 之类的不可能可以强制转换成功
+                    // article/article 之类的不可能可以强制转换成功
                 }
             }
         }
