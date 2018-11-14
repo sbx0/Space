@@ -1,7 +1,7 @@
 var page = 1, size = 10;
 
-var article = new Vue({
-    el: '#article',
+var main = new Vue({
+    el: '#main',
     data: {
         prev: i18N.prev_article,
         next: i18N.next_article,
@@ -56,31 +56,31 @@ var article = new Vue({
              * @param json.next_title 下一篇文章的标题
              */
             success: function (json) {
-                article.prevA = false;
-                article.nextA = false;
-                article.prev = '';
-                article.prev_url = '';
-                article.next = '';
-                article.next_url = '';
+                main.prevA = false;
+                main.nextA = false;
+                main.prev = '';
+                main.prev_url = '';
+                main.next = '';
+                main.next_url = '';
                 var prev_id = json.prev_id;
                 var prev_title = json.prev_title;
-                article.prev_full = prev_title;
+                main.prev_full = prev_title;
                 if (prev_id != null) {
-                    article.prevA = true;
+                    main.prevA = true;
                     if (prev_title.length > 7)
                         prev_title = prev_title.substring(0, 7) + "..."
-                    article.prev = prev_title;
-                    article.prev_url = "../article/" + prev_id;
+                    main.prev = prev_title;
+                    main.prev_url = "../article/" + prev_id;
                 }
                 var next_id = json.next_id;
                 var next_title = json.next_title;
-                article.next_full = next_title;
+                main.next_full = next_title;
                 if (next_id != null) {
-                    article.nextA = true;
+                    main.nextA = true;
                     if (next_title.length > 7)
                         next_title = next_title.substring(0, 7) + "..."
-                    article.next = next_title;
-                    article.next_url = "../article/" + next_id;
+                    main.next = next_title;
+                    main.next_url = "../article/" + next_id;
                 }
             },
             error: function () {
@@ -134,7 +134,7 @@ function loadComments() {
         url: '../comment/list?type=article&id=' + $("#id").val() + '&page=' + page + '&size=' + size,
         type: 'GET',
         success: function (json) {
-            article.comment_data = formate(json);
+            main.comment_data = formate(json);
         },
         error: function () {
             alert("网络异常")

@@ -1,46 +1,64 @@
 <!doctype html>
-<html lang="en" xmlns:th="http://www.springframework.org/schema/data/jaxb">
+<html lang="zh-cmn-Hans" xmlns:th="http://www.springframework.org/schema/data/jaxb">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="sbx0&nbsp;个人博客&nbsp;错误页面">
+    <meta name="description" content="sbx0 个人博客 错误页面">
     <meta name="author" content="sbx0">
     <link rel="icon" th:href="@{~/img/favicon.png}">
 
-    <title>非常抱歉&nbsp;&nbsp;|&nbsp;&nbsp;sbx0</title>
+    <title>非常抱歉 | sbx0</title>
 
     <link rel="stylesheet" th:href="@{~/css/bootstrap.min.css}">
 
-    <!-- 博客模板 -->
-    <link th:href="@{~/css/blog.css}" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{~/css/bootstrap.min.css}">
+
     <!-- 消息提示 -->
     <link th:href="@{~/css/messenger.css}" rel="stylesheet">
     <link th:href="@{~/css/messenger-theme-flat.css}" rel="stylesheet">
-    <link th:href="@{~/css/base.css}" rel="stylesheet">
-
+    <link th:href="@{~/css/offcanvas.css}" rel="stylesheet">
 
 </head>
-<body>
-<div class="container">
-    <h3>
-        <br>
-        非常抱歉，该页面无法正常显示
-    </h3>
-    <p>
-        <br>
-        可能原因：
-        <br>
-        1.发生错误
-        <br>
-        2.该页面已被删除或不存在
-        <br>
-        3.操作速度频繁
-        <br>
-        4.您无权限操作此页
-    </p>
-    <br>
-    <a href="../index.html" class="btn btn-sm btn-danger" role="button">首页</a>
-    <a href="javascript:history.go(-1);" class="btn btn-sm btn-primary" role="button">返回</a>
+
+<body class="bg-light">
+
+<div>
+
+    <nav class="navbar navbar-expand-md fixed-top navbar-dark bg-dark">
+        <a class="navbar-brand" href="../index.html">空间站 Beta</a>
+    </nav>
+
+    <main role="main" class="container">
+
+        <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-dark rounded box-shadow">
+            <div class="lh-100">
+                <h4 class="mb-3 text-white lh-100">非常抱歉，该页面无法正常显示</h4>
+                <p>
+                    <span th:text="'错误:' + ${error}"></span>
+                    <span th:text="'状态:' + ${status}"></span>
+                </p>
+                <p>
+                    <br>
+                    可能原因：
+                    <br>
+                    1.发生错误
+                    <br>
+                    2.该页面已被删除或不存在
+                    <br>
+                    3.操作速度频繁
+                    <br>
+                    4.您无权限操作此页
+                </p>
+                <br>
+                <div>
+                    <a href="../index.html" class="btn btn-sm btn-danger" role="button">首页</a>
+                    <a href="javascript:history.go(-1);" class="btn btn-sm btn-primary" role="button">返回</a>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
 </div>
 
 </body>

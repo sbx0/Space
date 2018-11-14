@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="en" xmlns:th="http://www.springframework.org/schema/data/jaxb">
+<html lang="zh-cmn-Hans" xmlns:th="http://www.springframework.org/schema/jdbc">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="sbx0&nbsp;个人博客">
+    <meta name="description" content="sbx0.cn 个人博客">
     <meta name="description" th:content="${user.signature}">
     <meta name="author" th:content="${user.name}">
     <link rel="icon" th:href="@{~/img/favicon.png}">
@@ -12,191 +12,220 @@
 
     <link rel="stylesheet" th:href="@{~/css/bootstrap.min.css}">
 
-    <!-- 博客模板 -->
-    <link th:href="@{~/css/blog.css}" rel="stylesheet">
     <!-- 消息提示 -->
     <link th:href="@{~/css/messenger.css}" rel="stylesheet">
     <link th:href="@{~/css/messenger-theme-flat.css}" rel="stylesheet">
-    <!-- 图片浏览 -->
-    <link th:href="@{~/css/viewer.min.css}" rel="stylesheet">
-    <!-- 代码高亮 -->
-    <link th:href="@{~/css/prism.css}" rel="stylesheet">
-    <link th:href="@{~/css/base.css}" rel="stylesheet">
+    <link th:href="@{~/css/offcanvas.css}" rel="stylesheet">
 
 </head>
 
-<body>
+<body class="bg-light">
 
-<div class="container">
+<div id="main" v-cloak>
 
-    <header id="blog-header" class="blog-header py-3">
-        <div class="row flex-nowrap justify-content-between align-items-center" v-cloak>
-            <div class="col-4 pt-1">
-                <a class="blog-header-logo text-dark" href="../index.html">{{space}}</a>
-            </div>
-            <div class="col-4 text-center"></div>
-            <div class="col-4 d-flex justify-content-end align-items-center">
-                <a class="text-muted" href="/article/search">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                         class="mx-3">
-                        <circle cx="10.5" cy="10.5" r="7.5"></circle>
-                        <line x1="21" y1="21" x2="15.8" y2="15.8"></line>
-                    </svg>
-                </a>
-                <a class="btn btn-sm btn-outline-secondary" th:href="@{~/login.html}">{{login}}</a>
-            </div>
+    <nav class="navbar navbar-expand-md fixed-top navbar-dark bg-dark">
+        <a class="navbar-brand" href="../index.html">空间站 Beta</a>
+        <button class="navbar-toggler p-0 border-0" type="button" data-toggle="offcanvas">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="navbar-collapse offcanvas-collapse">
+            <ul class="navbar-nav mr-auto">
+                <nav_bar_components v-for="nav_bar in nav_bar_data"
+                                    v-bind:nav_bar="nav_bar"
+                                    v-bind:key="nav_bar.id">
+                </nav_bar_components>
+            </ul>
         </div>
-    </header>
+    </nav>
 
-    <div class="nav-scroller py-1">
-        <nav id="nav" class="nav d-flex justify-content-between">
-            <nav-bar v-for="nav in groceryList" v-bind:nav="nav" v-bind:key="nav.id"></nav-bar>
+    <div class="nav-scroller bg-white box-shadow">
+        <nav class="nav nav-underline">
+            <nav_scroller_components v-for="nav_scroller in nav_scroller_data"
+                                     v-bind:nav_scroller="nav_scroller"
+                                     v-bind:key="nav_scroller.id">
+            </nav_scroller_components>
         </nav>
     </div>
 
-</div>
-
-<div class="container mt-4">
-    <div class="pb-3">
-        <input id="user_id" type="hidden" th:value="${user.id}">
-        <strong>
-            <h2 th:text="${user.name}"></h2>
-        </strong>
-        <p th:text="${user?.signature}" class="font-italic"></p>
-    </div>
-    <div class="col-md-12 blog-main" th:if="${totalElements == null}">
-        <div class="blog-post text-center">
-            <p>该用户未发布任何文章</p>
+    <div th:if="${totalElements == null}" class="container">
+        <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-dark rounded box-shadow">
+            <div class="lh-100">
+                <h6 class="mb-0 text-white lh-100">该用户非常羞涩，以至于到今天都没有一篇博文产出</h6>
+                <small></small>
+            </div>
         </div>
     </div>
-</div>
 
-<main id="list-article" role="main" class="container" th:unless="${totalElements == null}">
-    <div class="row">
-        <div class="col-md-12 blog-main">
+    <div th:else class="container">
 
-            <div class="blog-post" th:each="article,stat:${articles}">
-                <a th:href="'../article/' + ${article?.id}" class="text-dark">
-                    <h2 th:id="${article?.id}" th:text="${article?.title}" class="blog-post-title"></h2>
-                </a>
-                <p class="blog-post-meta">
-                    <a th:text="${article?.author?.name}"
-                       th:href="'../user/' + ${article?.author?.id} + '?page=1&size=10'"></a>
-                    <span th:text="${#dates.format(article?.time,'yyyy-MM-dd HH:mm')}"></span>
-                </p>
-                <div th:utext="${article?.content}"></div>
-                <a th:href="'../article/' + ${article?.id}" class="text-dark">
-                    阅[<span th:text="${article?.views}">0</span>]&nbsp;&nbsp;&nbsp;
-                    评[<span th:text="${article?.comments}">0</span>]&nbsp;&nbsp;&nbsp;
-                    赞[<span th:text="${article?.likes}">0</span>]&nbsp;&nbsp;&nbsp;
-                    踩[<span th:text="${article?.dislikes}">0</span>]</a>
-            </div>
+        <div class="my-3 p-3 bg-white rounded box-shadow">
+            <strong>
+                <h3 th:text="${user.name}"></h3>
+            </strong>
+            <p th:text="${user?.signature}" class="font-italic"></p>
+        </div>
 
-            <nav th:if="${articles != null}" class="blog-pagination text-center" v-cloak>
+        <div th:if="${articles != null}" class="my-3 p-3 bg-white rounded box-shadow">
+
+            <nav class="mb-3 text-center">
                 <a th:if="${prev_page != null}"
                    th:href="'?page=' + ${prev_page} + '&size=' + ${size}"
                    class="btn btn-sm btn-outline-primary float-left">
-                    {{prev}}
+                    上一页
                 </a>
                 <a th:unless="${prev_page != null}"
                    class="btn btn-sm btn-outline-primary float-left disabled">
-                    {{prev}}
+                    上一页
                 </a>
                 <a th:if="${page != null}" href="javascript:void(0)" th:text="${page} + '/' + ${totalPages}"></a>
                 <a th:if="${next_page != null}"
                    th:href="'?page=' + ${next_page} + '&size=' + ${size}"
                    class="btn btn-sm btn-outline-primary float-right">
-                    {{next}}
+                    下一页
                 </a>
                 <a th:unless="${next_page != null}"
                    class="btn btn-sm btn-outline-primary float-right disabled">
-                    {{next}}
+                    下一页
                 </a>
             </nav>
+
+            <div class="media text-muted pt-3" th:each="article,stat:${articles}">
+                <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                    <div class="align-items-center w-100">
+                        <h6>
+                            <strong class="text-gray-dark">
+                                <a th:href="'../article/' + ${article?.id}"
+                                   th:text="${article?.title}"
+                                   class="text-dark">
+                                </a>
+                            </strong>
+                        </h6>
+                        <p>
+                            <a th:text="${article?.author?.name}"
+                               th:href="'../user/' + ${article?.author?.id} + '?page=1&size=10'">
+                            </a>
+                            &nbsp;
+                            <span th:text="${#dates.format(article?.time,'yyyy-MM-dd HH:mm')}">
+                            </span>
+                        </p>
+                        <p th:utext="${article?.content}"></p>
+                        <a th:href="'../article/' + ${article?.id}"
+                           class="text-dark">
+                            阅[<span th:text="${article?.views}">0</span>]
+                            &nbsp;&nbsp;&nbsp;
+                            评[<span th:text="${article?.comments}">0</span>]
+                            &nbsp;&nbsp;&nbsp;
+                            赞[<span th:text="${article?.likes}">0</span>]
+                            &nbsp;&nbsp;&nbsp;
+                            踩[<span th:text="${article?.dislikes}">0</span>]
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <nav th:if="${articles != null}" class="mt-3 text-center">
+                <a th:if="${prev_page != null}"
+                   th:href="'?page=' + ${prev_page} + '&size=' + ${size}"
+                   class="btn btn-sm btn-outline-primary float-left">
+                    上一页
+                </a>
+                <a th:unless="${prev_page != null}"
+                   class="btn btn-sm btn-outline-primary float-left disabled">
+                    上一页
+                </a>
+                <a th:if="${page != null}" href="javascript:void(0)" th:text="${page} + '/' + ${totalPages}"></a>
+                <a th:if="${next_page != null}"
+                   th:href="'?page=' + ${next_page} + '&size=' + ${size}"
+                   class="btn btn-sm btn-outline-primary float-right">
+                    下一页
+                </a>
+                <a th:unless="${next_page != null}"
+                   class="btn btn-sm btn-outline-primary float-right disabled">
+                    下一页
+                </a>
+            </nav>
+
         </div>
+
+        <div th:if="${articles != null}" class="my-3 p-3 bg-white rounded box-shadow">
+            <h6 class="border-bottom border-gray pb-2 mb-3">日志</h6>
+            <p class="mb-0" th:text="'共 ' + ${totalElements} + ' 篇日志'"></p>
+            <br>
+            <div class="form-group">
+                <label for="page">页数：</label>
+                <input id="page" type="number" class="form-control"
+                       th:value="${page}"
+                       th:max="${totalPages}"
+                       th:min="1">
+            </div>
+            <div class="form-group">
+                <label for="size">条数：</label>
+                <input id="size" type="number" class="form-control"
+                       th:value="${size}"
+                       th:max="100"
+                       th:min="1">
+            </div>
+            <button class="btn btn-sm btn-primary" onclick="javascript:jump_page();">跳页</button>
+        </div>
+        </main>
 
     </div>
 
-</main>
+    <input id="user_id" type="hidden" th:value="${user.id}">
 
-<div class="container pb-2 mt-3 mb-3 ">
-    <div class="p-3 mb-3" th:if="${totalElements != null}">
-        <h4 class="font-italic">数据</h4>
-        <p class="mb-0" th:text="'共 ' + ${totalElements} + ' 篇日志'"></p>
-        <br>
-        <div class="form-group">
-            <label for="page">页数：</label>
-            <input id="page" type="number" class="form-control"
-                   th:value="${page}"
-                   th:max="${totalPages}"
-                   th:min="1">
-        </div>
-        <div class="form-group">
-            <label for="size">条数：</label>
-            <input id="size" type="number" class="form-control"
-                   th:value="${size}"
-                   th:max="100"
-                   th:min="1">
-        </div>
-        <button class="btn btn-sm btn-primary" onclick="javascript:jump_page();">跳页</button>
-        </form>
-    </div>
-</div>
+    <script th:src="@{~/js/jquery.min.js}"></script>
+    <script th:src="@{~/js/popper.min.js}"></script>
+    <script th:src="@{~/js/bootstrap.min.js}"></script>
+    <script th:src="@{~/js/vue.min.js}"></script>
+    <script th:src="@{~/js/messenger.min.js}"></script>
+    <script th:src="@{~/js/messenger-theme-flat.js}"></script>
+    <script th:src="@{~/js/viewer.min.js}"></script>
+    <script th:src="@{~/js/editormd.js}"></script>
+    <script th:src="@{~/lib/marked.min.js}"></script>
+    <script th:src="@{~/lib/prettify.min.js}"></script>
+    <script th:src="@{~/lib/raphael.min.js}"></script>
+    <script th:src="@{~/lib/underscore.min.js}"></script>
+    <script th:src="@{~/lib/sequence-diagram.min.js}"></script>
+    <script th:src="@{~/lib/flowchart.min.js}"></script>
+    <script th:src="@{~/lib/jquery.flowchart.min.js}"></script>
+    <script th:src="@{~/js/i18N_zh_CN.js}"></script>
+    <script th:src="@{~/js/base.js}"></script>
+    <section>
+        <script>
+            var main = new Vue({
+                el: '#main',
+                data: {
+                    nav_bar_data: i18N.nav_bar_data,
+                    nav_scroller_data: i18N.nav_scroller_data,
+                },
+                components: {
+                    'nav_bar_components': {
+                        props: ['nav_bar'],
+                        template:
+                            '<li class="nav-item">' +
+                            '   <a class="nav-link" :href="nav_bar.url" v-html="nav_bar.text"></a>' +
+                            '</li>',
+                    },
+                    'nav_scroller_components': {
+                        props: ['nav_scroller'],
+                        template: '<a class="nav-link" :href="nav_scroller.url" v-html="nav_scroller.text"></a>',
+                    },
+                },
+                created: function () {
 
-<footer id="blog-footer" class="blog-footer" v-cloak>
-    <p>
-        <span v-html="copyright"></span>
-    </p>
-</footer>
+                },
+            });
 
-<script th:src="@{~/js/jquery.min.js}"></script>
-<script th:src="@{~/js/popper.min.js}"></script>
-<script th:src="@{~/js/bootstrap.min.js}"></script>
-<script th:src="@{~/js/vue.min.js}"></script>
-<script th:src="@{~/js/messenger.min.js}"></script>
-<script th:src="@{~/js/messenger-theme-flat.js}"></script>
-<script th:src="@{~/js/prism.js}"></script>
-<script th:src="@{~/js/i18N_zh_CN.js}"></script>
-<script th:src="@{~/js/base.js}"></script>
-<script th:src="@{~/js/viewer.min.js}"></script>
-<section>
-    <script>
-
-        // 配置图片浏览器
-        var viewer = new Viewer(document.getElementById('list-article'));
-
-        // 跳页
-        function jump_page() {
-            var id = $("#user_id").val()
-            var page = $("#page").val()
-            var size = $("#size").val()
-            var url = "../user/" + id + "?page=" + page + "&size=" + size
-            location.replace(url)
-        }
-
-        // 上一页 下一页
-        new Vue({
-            el: '#list-article',
-            data: {
-                prev: i18N.prev,
-                next: i18N.next,
-            },
-        })
-
-        // 自动登陆
-        if (login()) {
-            $.ajax({
-                url: '../user/info',
-                type: 'GET',
-                success: function (data) {
-                    if (data.status == 0) {
-                        blog_header.login = data.username;
-                    }
-                }
-            })
-        }
-    </script>
-</section>
+            // 跳页
+            function jump_page() {
+                var id = $("#user_id").val()
+                var page = $("#page").val()
+                var size = $("#size").val()
+                var url = "../user/" + id + "?page=" + page + "&size=" + size
+                location.replace(url)
+            }
+        </script>
+    </section>
 </body>
 </html>
