@@ -3,45 +3,93 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="sbx0&nbsp;个人博客&nbsp;登陆">
+    <meta name="description" content="sbx0&nbsp;个人博客&nbsp;首页">
     <meta name="author" content="sbx0">
     <link rel="icon" href="img/favicon.png">
 
-    <title>登陆&nbsp;&nbsp;|&nbsp;&nbsp;sbx0</title>
+    <title>空间站&nbsp;&nbsp;|&nbsp;&nbsp;sbx0</title>
 
     <link rel="stylesheet" href="css/bootstrap.min.css">
 
-    <!-- 登陆模板 -->
-    <link href="css/signin.css" rel="stylesheet">
     <!-- 消息提示 -->
     <link href="css/messenger.css" rel="stylesheet">
     <link href="css/messenger-theme-flat.css" rel="stylesheet">
-    <link href="css/base.css" rel="stylesheet">
+    <link href="css/offcanvas.css" rel="stylesheet">
+
 </head>
 
-<body>
-<div id="login_div" class="form-signin" v-cloak>
-    <div v-if="info_seen">
-        <div class="my-3 p-3 bg-white rounded shadow-sm">
-            <h5 class="border-bottom border-gray pb-2 mb-0">已登录</h5>
-            <div class="media text-muted pt-3">
-                <p class="media-body pb-3 mb-0 lh-125 border-bottom border-gray">
-                    <strong class="d-block text-gray-dark">{{info_username}}</strong>
-                    等级：{{info_level}}<br>
-                    经验：{{info_exp}}<br>
-                    积分：{{info_integral}}
-                </p>
+<body class="bg-light">
+
+<div id="login" v-cloak>
+
+    <nav class="navbar navbar-expand-md fixed-top navbar-dark bg-dark">
+        <a class="navbar-brand" href="../index.html">空间站 Beta</a>
+        <button class="navbar-toggler p-0 border-0" type="button" data-toggle="offcanvas">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="navbar-collapse offcanvas-collapse">
+            <ul class="navbar-nav mr-auto">
+                <nav_bar_components v-for="nav_bar in nav_bar_data"
+                                    v-bind:nav_bar="nav_bar"
+                                    v-bind:key="nav_bar.id">
+                </nav_bar_components>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="nav-scroller bg-white box-shadow">
+        <nav class="nav nav-underline">
+            <nav_scroller_components v-for="nav_scroller in nav_scroller_data"
+                                     v-bind:nav_scroller="nav_scroller"
+                                     v-bind:key="nav_scroller.id">
+            </nav_scroller_components>
+        </nav>
+    </div>
+
+    <main role="main" class="container">
+
+        <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-dark rounded box-shadow">
+            <div class="lh-100">
+                <h6 class="mb-0 text-white lh-100">新版UI并未完全适配，若有问题请在任意文章下留言</h6>
+                <small></small>
             </div>
+        </div>
+
+        <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-dark rounded box-shadow">
+            <div class="lh-100">
+                <h6 class="mb-0 text-white lh-100">注册暂时关闭</h6>
+                <small></small>
+            </div>
+        </div>
+
+        <div v-if="not_login" class="my-3 p-3 bg-white rounded box-shadow">
+            <h6 class="border-bottom border-gray pb-2 mb-0">登陆</h6>
+            <div class="col-md-12 order-md-1 mt-3">
+                <form id="login_form">
+                    <div class="mb-3">
+                        <label for="username">用户名</label>
+                        <input type="text" class="form-control" id="username" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password">密码</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    <button id="login_btn" class="btn btn-outline-dark btn-block" type="button">登陆</button>
+                    <a href="javascript:history.go(-1);" class="btn btn-secondary btn-block" role="button">返回</a>
+                </form>
+            </div>
+        </div>
+
+        <div v-else class="my-3 p-3 bg-white rounded box-shadow">
+            <h6 class="pb-2 mb-0">已登陆：{{info_username}}</h6>
             <div class="media text-muted pt-3">
-                <p class="media-body pb-3 mb-0 lh-125 border-bottom border-gray">
+                <p class="media-body pb-3 mb-0 lh-125">
                     <a href="markdown.html" class="btn btn-sm btn-outline-primary" role="button">
                         Markdown
                     </a>
                     <a href="index.html" class="btn btn-sm btn-outline-primary" role="button">
                         首页
-                    </a>
-                    <a :href="user_home" class="btn btn-sm btn-outline-primary" role="button">
-                        {{home}}
                     </a>
                     <a href="/article/trash" class="btn btn-sm btn-outline-dark" role="button">
                         回收站
@@ -53,43 +101,24 @@
             </div>
             <div class="d-block text-right mt-3">
                 <a id="logout" href="javascript:void(0)" class="btn btn-sm btn-danger" onclick="logout()">
-                    {{logout}}
+                    退出登陆
                 </a>
             </div>
         </div>
-    </div>
 
-    <form v-if="form_seen" id="loginForm" action="/user/login" method="post" v-cloak>
-        <h2 class="h2 mb-3 font-weight-normal">{{website}}</h2>
-        <label for="username" class="sr-only">{{username}}</label>
-        <input type="text" id="username" name="name" class="form-control" :placeholder="username" required autofocus>
-        <label for="password" class="sr-only">{{password}}</label>
-        <input type="password" id="password" name="password" class="form-control" :placeholder="password" required>
-        <label for="code" class="sr-only">{{code}}</label>
-        <input type="text" id="code" name="code" class="form-control mb-2" :placeholder="code">
-        <div class="checkbox mb-3" hidden>
-            <label>
-                <input type="checkbox" value="remember-me">
-                记住我
-            </label>
-        </div>
-        <button id="login" class="btn btn-md btn-primary btn-block" type="submit">登陆</button>
-        <a href="javascript:history.go(-1);" class="btn btn-sm btn-secondary btn-block btn-md" role="button">返回</a>
-        <small id="passwordHelpBlock" class="form-text text-muted">
-            若您是第一次使用本站，登陆即注册。登陆有效期默认为30天。
-        </small>
-        <p class="mt-5 mb-3 text-muted">&copy; <a href="index.html">sbx0.cn</a> 2017-2018</p>
-    </form>
+    </main>
 
 </div>
-</body>
+
 
 <script src="js/jquery.min.js"></script>
 <script src="js/popper.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
-<script src="js/vue.min.js"></script>
+<script src="js/holder.min.js"></script>
 <script src="js/messenger.min.js"></script>
 <script src="js/messenger-theme-flat.js"></script>
+<script src="js/vue.min.js"></script>
+<!--<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>-->
 <script src="js/i18N_zh_CN.js"></script>
 <script src="js/base.js"></script>
 <script src="js/login.js"></script>

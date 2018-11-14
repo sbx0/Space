@@ -14,24 +14,8 @@ var article = new Vue({
         nextC: true,
         prevA: false,
         nextA: false,
-        nav_bar_data: [
-            {id: 0, text: '首页', url: '../index.html'},
-            {id: 0, text: '登陆', url: '../login.html'},
-            {id: 0, text: '回收', url: '../article/trash'},
-            {id: 0, text: '日志', url: '../log/list'},
-        ],
-        nav_scroller_data: [
-            {id: 0, text: '消息', url: '../message.html'},
-            {id: 0, text: '搜索', url: '../article/search'},
-            {id: 0, text: '数据', url: '../data.html'},
-            {id: 0, text: '上传', url: 'http://upload.sbx0.cn/'},
-            {id: 0, text: '开源', url: 'https://github.com/sbx0'},
-            {id: 0, text: '福利', url: 'http://gokoucat.cn'},
-            {id: 0, text: '登陆', url: '../login.html'},
-            {id: 0, text: '回收', url: '../article/trash'},
-            {id: 0, text: '日志', url: '../log/list'},
-            {id: 0, text: '地图', url: '../site_map.xml'},
-        ],
+        nav_bar_data: i18N.nav_bar_data,
+        nav_scroller_data: i18N.nav_scroller_data,
         comment_data: [],
     },
     components: {
@@ -47,7 +31,7 @@ var article = new Vue({
             props: ['comment'],
             template:
                 '<div class="media text-muted pt-3">' +
-                '   <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">' +
+                '   <div class="media-body mb-0 small lh-125 border-bottom border-gray">' +
                 '       <div class="d-flex justify-content-between align-items-center w-100">' +
                 '           <strong class="text-gray-dark">' +
                 '               <a :href="comment.user_id">{{comment.user_name}}</a>' +
@@ -104,13 +88,24 @@ var article = new Vue({
             }
         });
         loadComments();
-        // 配置图片浏览器
-        new Viewer(document.getElementById('markdown'), {
-            movable: true,
-        });
     },
 });
 
+// Markdown
+var markdown = editormd.markdownToHTML("markdown", {
+    htmlDecode: "style,script,iframe",  // you can filter tags decode
+    emoji: true,
+    taskList: true,
+    tex: true,  // 默认不解析
+    flowChart: true,  // 默认不解析
+    sequenceDiagram: true,  // 默认不解析
+    path: "../lib/",
+});
+
+// 配置图片浏览器
+var viewer = new Viewer(document.getElementById('markdown'), {
+    movable: false,
+});
 
 // 评论
 function comment() {
@@ -192,17 +187,6 @@ function attitude(type) {
         }
     })
 }
-
-// Markdown
-var markdown = editormd.markdownToHTML("markdown", {
-    htmlDecode: "style,script,iframe",  // you can filter tags decode
-    emoji: true,
-    taskList: true,
-    tex: true,  // 默认不解析
-    flowChart: true,  // 默认不解析
-    sequenceDiagram: true,  // 默认不解析
-    path: "../lib/",
-});
 
 // 格式化评论列表的阅读链接与日期格式
 function formate(json) {

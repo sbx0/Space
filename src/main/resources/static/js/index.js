@@ -1,24 +1,8 @@
 var index = new Vue({
     el: '#index',
     data: {
-        nav_bar_data: [
-            {id: 0, text: '首页', url: '../index.html'},
-            {id: 0, text: '登陆', url: '../login.html'},
-            {id: 0, text: '回收', url: '../article/trash'},
-            {id: 0, text: '日志', url: '../log/list'},
-        ],
-        nav_scroller_data: [
-            {id: 0, text: '消息', url: '../message.html'},
-            {id: 0, text: '搜索', url: '../article/search'},
-            {id: 0, text: '数据', url: '../data.html'},
-            {id: 0, text: '上传', url: 'http://upload.sbx0.cn/'},
-            {id: 0, text: '开源', url: 'https://github.com/sbx0'},
-            {id: 0, text: '福利', url: 'http://gokoucat.cn'},
-            {id: 0, text: '登陆', url: '../login.html'},
-            {id: 0, text: '回收', url: '../article/trash'},
-            {id: 0, text: '日志', url: '../log/list'},
-            {id: 0, text: '地图', url: '../site_map.xml'},
-        ],
+        nav_bar_data: i18N.nav_bar_data,
+        nav_scroller_data: i18N.nav_scroller_data,
         top_data: [],
         article_data: [],
         comment_data: [],
@@ -36,7 +20,7 @@ var index = new Vue({
             props: ['top'],
             template:
                 '<a :href="top.id">' +
-                '<div class="d-flex align-items-center p-3 my-3 text-white-50 bg-purple rounded box-shadow">' +
+                '<div class="d-flex align-items-center p-3 my-3 text-white-50 bg-dark rounded box-shadow">' +
                 '   <p class="mt-2 mb-2 mr-3">置顶</p>' +
                 '   <div class="lh-100">' +
                 '       <h6 class="mb-0 text-white lh-100">{{top.title}}</h6>' +
@@ -75,7 +59,7 @@ var index = new Vue({
             props: ['comment'],
             template:
                 '<div class="media text-muted pt-3">' +
-                '   <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">' +
+                '   <div class="media-body mb-0 small lh-125 border-bottom border-gray">' +
                 '       <div class="d-flex justify-content-between align-items-center w-100">' +
                 '           <strong class="text-gray-dark">' +
                 '               <a :href="comment.user_id">{{comment.user_name}}</a>' +

@@ -1,43 +1,3 @@
-/* 自定义 */
-
-a:hover {
-    text-decoration: none;
-}
-
-.markdown-body blockquote {
-    margin-top: 0px;
-    margin-bottom: 5px;
-}
-
-.markdown-body img {
-    max-height: 400px;
-    margin: 10px auto;
-    display: block;
-}
-
-.media-heading {
-    line-height: normal;
-}
-
-.editormd {
-    z-index: 99999;
-}
-
-.editormd-html-preview, .editormd-preview-container {
-    text-align: left;
-    font-size: 16px;
-    line-height: 1.8;
-    padding: 5px 0px;
-    overflow: auto;
-    width: 100%;
-    background-color: #FFFFFF;
-}
-
-[v-cloak] {
-    display: none;
-}
-
-/* 自定义 */
 html,
 body {
     overflow-x: hidden; /* Prevent scroll on narrow devices */
@@ -47,7 +7,7 @@ body {
     padding-top: 56px;
 }
 
-@media (max-width: 767.98px) {
+@media (max-width: 768px) {
     .offcanvas-collapse {
         position: fixed;
         top: 56px; /* Height of navbar */
@@ -131,3 +91,54 @@ body {
 .lh-150 {
     line-height: 1.5;
 }
+
+/* 自定义 begin */
+body {
+    font-size: 15px;
+    font-family: Tahoma, "Times New Roman",
+    "Microsoft YaHei", "微软雅黑",
+    STXihei, "华文细黑",
+    serif;
+}
+
+p {
+    font-size: 15px !important;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+.markdown-body img {
+    max-height: 400px;
+    margin: 10px auto;
+    display: block;
+}
+
+.media-heading {
+    line-height: normal;
+}
+
+.editormd {
+    z-index: 99999;
+}
+
+.editormd-html-preview, .editormd-preview-container {
+    line-height: 1.8;
+    font-size: 15px !important;
+    padding: 5px 0px;
+    background-color: #FFFFFF;
+}
+
+.editormd-html-preview pre.prettyprint, .editormd-preview-container pre.prettyprint {
+    padding: 10px;
+    border: 1px solid #ddd;
+    white-space: nowrap;
+    word-wrap: break-word;
+}
+
+[v-cloak] {
+    display: none;
+}
+
+/* 自定义 end */

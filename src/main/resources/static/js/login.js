@@ -1,63 +1,35 @@
-// 退出登陆
-function logout() {
-    $.ajax({
-        type: "get",
-        url: "../user/logout",
-        success: function () {
-            location.replace(location.href);
-        },
-        error: function () {
-            alert("网络异常")
-        }
-    });
-    return false;
-}
-
-// 登陆信息提示
-var login_div = new Vue({
-    el: '#login_div',
+var login = new Vue({
+    el: '#login',
     data: {
-        info_seen: false,
-        form_seen: true,
-        info: '加载中',
-        website: '空间站',
-        username: '用户名',
-        password: '密码',
-        code: '邀请码（可不填）',
-        logout: '退出登陆',
-        post: '发布博文',
-        home: '用户首页',
-        user_home: '../user/1?page=1&size=10',
+        not_login: true,
         info_username: i18N.loading,
-        info_level: i18N.loading,
-        info_exp: i18N.loading,
-        info_integral: i18N.loading,
+        nav_bar_data: i18N.nav_bar_data,
+        nav_scroller_data: i18N.nav_scroller_data,
+    },
+    components: {
+        'nav_bar_components': {
+            props: ['nav_bar'],
+            template: '<li class="nav-item"><a class="nav-link" :href="nav_bar.url" v-html="nav_bar.text"></a></li>',
+        },
+        'nav_scroller_components': {
+            props: ['nav_scroller'],
+            template: '<a class="nav-link" :href="nav_scroller.url" v-html="nav_scroller.text"></a>',
+        },
+    },
+    created: function () {
+        get_user_info();
     },
 });
 
 // 如果当前已经登陆
-if (login()) {
+function get_user_info() {
     $.ajax({
         url: '../user/info',
         type: 'GET',
-        /**
-         * @param json
-         * @param json.status 状态码
-         * @param json.username 用户名
-         * @param json.level 等级
-         * @param json.exp 经验
-         * @param json.integral 积分
-         * @param json.id 用户id
-         */
         success: function (json) {
             if (statusCodeToBool(json.status)) {
-                login_div.info_seen = true;
-                login_div.form_seen = false;
-                login_div.info_username = json.username;
-                login_div.info_level = json.level;
-                login_div.info_exp = json.exp;
-                login_div.info_integral = json.integral;
-                login_div.user_home = "../user/" + json.id;
+                login.not_login = false;
+                login.info_username = json.username;
             }
         },
         error: function () {
@@ -67,7 +39,7 @@ if (login()) {
 }
 
 // 登陆按钮点击
-$("#login").click(function () {
+$("#login_btn").click(function () {
     var username = $("#username").val().trim();
     if (checkNullStr(username)) {
         alert("用户名不能为空")
@@ -89,13 +61,14 @@ $("#login").click(function () {
     $.ajax({
         type: "post",
         url: "../user/login",
-        data: $("#loginForm").serialize(),
+        data: $("#login_form").serialize(),
         dataType: "json",
         success: function (json) {
             var status = json.status;
             if (statusCodeToBool(status)) {
                 alert(i18N.login + i18N.success);
-                location.replace("index.html");
+                // location.replace(location.href);
+                get_user_info();
             } else {
                 alert(i18N.please + i18N.check + i18N.username + i18N.and + i18N.password + i18N.is_or_not + i18N.right);
                 alert(i18N.login + i18N.fail);
@@ -106,4 +79,27 @@ $("#login").click(function () {
         }
     });
     return false;
-})
+});
+
+// 退出登陆
+function logout() {
+    $.ajax({
+        type: "get",
+        url: "../user/logout",
+        success: function () {
+            location.replace(location.href);
+        },
+        error: function () {
+            alert("网络异常")
+        }
+    });
+    return false;
+}
+
+// 打开菜单
+$(function () {
+    'use strict';
+    $('[data-toggle="offcanvas"]').on('click', function () {
+        $('.offcanvas-collapse').toggleClass('open')
+    })
+});

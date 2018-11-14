@@ -12,8 +12,6 @@
 
     <link rel="stylesheet" th:href="@{~/css/bootstrap.min.css}">
 
-    <!-- 博客模板 -->
-    <link th:href="@{~/css/blog.css}" rel="stylesheet">
     <!-- 消息提示 -->
     <link th:href="@{~/css/messenger.css}" rel="stylesheet">
     <link th:href="@{~/css/messenger-theme-flat.css}" rel="stylesheet">
@@ -30,7 +28,7 @@
 <div id="article" v-cloak>
 
     <nav class="navbar navbar-expand-md fixed-top navbar-dark bg-dark">
-        <a class="navbar-brand" href="#">空间站 Beta</a>
+        <a class="navbar-brand" href="../index.html">空间站 Beta</a>
         <button class="navbar-toggler p-0 border-0" type="button" data-toggle="offcanvas">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -57,20 +55,22 @@
     <main role="main" class="container">
 
         <div class="my-3 p-3 bg-white rounded box-shadow">
-            <h4 th:if="${article.top < 0}" class="text-danger mb-2">
+            <h5 th:if="${article.top < 0}" class="text-danger mb-2">
                 <strong>
                     该文章已被隐藏
                 </strong>
-            </h4>
+            </h5>
 
-            <h4 th:text="${article.title}"></h4>
+            <h5 th:text="${article.title}"></h5>
             <p class="blog-post-meta">
                 <a th:href="'../user/'+${article.author.id}+'?page='+${page}+'&size=20#'+${article.id}"
                    th:text="${article.author.name}"></a>
-                <span th:text="${#dates.format(article.time,'yyyy-MM-dd HH:mm:ss')}+'发布'"></span>
-                <span th:text="${#dates.format(article.lastChangeTime,'yyyy-MM-dd HH:mm:ss')}+'修改'"
+                <span th:text="${#dates.format(article.time,'yyyy-MM-dd HH:mm')}"
+                      th:unless="${article.lastChangeTime != null}"></span>
+                <span th:text="'于 '+${#dates.format(article.lastChangeTime,'yyyy-MM-dd HH:mm')}+' 修改'"
                       th:if="${article.lastChangeTime != null}"
-                      class="text-danger"></span>
+                      class="text-danger">
+                </span>
             </p>
 
             <div th:if="${password != 1}" id="markdown">
@@ -136,6 +136,9 @@
                 <a th:href="'http://space.sbx0.cn/user/' + ${article.author.id}"
                    th:text="${article.author.name}"></a>
                 <br>
+                时间:
+                <span th:text="${#dates.format(article.time,'yyyy-MM-dd HH:mm')}"></span>
+                <br>
                 链接:
                 <a th:href="'http://space.sbx0.cn' + ${#httpServletRequest.requestURI}"
                    th:text="'http://space.sbx0.cn' + ${#httpServletRequest.requestURI}"></a>
@@ -151,7 +154,7 @@
         </div>
 
         <div th:if="${manage == 1}" class="my-3 p-3 bg-white rounded box-shadow">
-            <h6 class="border-bottom border-gray pb-2 mb-2">管理</h6>
+            <h6 class="pb-2 mb-2">管理</h6>
             <a th:href="'../article/updateOne?id='+${article.id}" class="btn btn-sm btn-outline-success"
                role="button">
                 修改
@@ -162,7 +165,7 @@
         </div>
 
         <div class="my-3 p-3 bg-white rounded box-shadow">
-            <h6 class="border-bottom border-gray pb-2 mb-0">评论</h6>
+            <h6 class="pb-2 mb-2">评论</h6>
             <form id="commentForm">
                 <input name="entity_id" type="hidden" th:value="${article.id}">
                 <input name="entity_type" type="hidden" value="article">
