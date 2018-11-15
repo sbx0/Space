@@ -1,22 +1,19 @@
 var i18N = {
     nav_bar_data: [
-        {id: 0, text: '首页', url: '../index.html'},
         {id: 0, text: '登陆', url: '../login.html'},
-        {id: 0, text: '回收', url: '../article/trash'},
         {id: 0, text: '日志', url: '../log/list'},
+        {id: 0, text: '发布', url: '../markdown.html'},
+        {id: 0, text: '回收', url: '../article/trash'},
+        {id: 0, text: '地图', url: '../site_map.xml'},
     ],
     nav_scroller_data: [
         {id: 0, text: '首页', url: '../index.html'},
-        {id: 0, text: '登陆', url: '../login.html'},
-        {id: 0, text: '消息', url: '../message.html'},
         {id: 0, text: '搜索', url: '../article/search'},
+        {id: 0, text: '消息', url: '../message.html'},
         {id: 0, text: '数据', url: '../data.html'},
         {id: 0, text: '上传', url: 'http://upload.sbx0.cn/'},
         {id: 0, text: '开源', url: 'https://github.com/sbx0'},
         {id: 0, text: '福利', url: 'http://gokoucat.cn'},
-        {id: 0, text: '回收', url: '../article/trash'},
-        {id: 0, text: '日志', url: '../log/list'},
-        {id: 0, text: '地图', url: '../site_map.xml'},
     ],
     json: {
         article: {
@@ -26,7 +23,7 @@ var i18N = {
             save: 'article/save',
         },
     },
-    space: '空间站',
+    space: '空间站 Beta',
     index: '首页',
     tools: '工具',
     login: '登陆',

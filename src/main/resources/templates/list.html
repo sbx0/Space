@@ -23,7 +23,7 @@
 <div id="main" v-cloak>
 
     <nav class="navbar navbar-expand-md fixed-top navbar-dark bg-dark">
-        <a class="navbar-brand" href="../index.html">空间站 Beta</a>
+        <a class="navbar-brand" href="../index.html">{{space}}</a>
         <button class="navbar-toggler p-0 border-0" type="button" data-toggle="offcanvas">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -186,6 +186,7 @@
         var main = new Vue({
             el: '#main',
             data: {
+                space: i18N.space,
                 nav_bar_data: i18N.nav_bar_data,
                 nav_scroller_data: i18N.nav_scroller_data,
             },

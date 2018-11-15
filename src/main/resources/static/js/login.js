@@ -1,6 +1,7 @@
 var login = new Vue({
     el: '#login',
     data: {
+        space: i18N.space,
         not_login: true,
         info_username: i18N.loading,
         nav_bar_data: i18N.nav_bar_data,

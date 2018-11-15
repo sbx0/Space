@@ -3,6 +3,7 @@ var page = 1, size = 10;
 var main = new Vue({
     el: '#main',
     data: {
+        space: i18N.space,
         prev: i18N.prev_article,
         next: i18N.next_article,
         prev_url: '#',

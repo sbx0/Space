@@ -141,4 +141,68 @@ a:hover {
     display: none;
 }
 
+.chat {
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+.chat-head {
+    margin-bottom: 10px;
+}
+
+.chat-body {
+    border-radius: 5px;
+    border: 1px solid rgba(0, 0, 0, .125);
+    padding: 5px 5px 5px 5px;
+    overflow: auto;
+    min-height: 450px;
+    max-height: 450px;
+}
+
+.chat-body p {
+    margin-bottom: 0rem;
+}
+
+.chat-foot {
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+.chat-user-name {
+    padding: 1px 10px 1px 10px;
+    font-weight: bold;
+    width: 100%;
+    float: left;
+    display: block;
+}
+
+.chat-time {
+    margin-top: 5px;
+    padding: 1px 10px 1px 10px;
+    width: 100%;
+    float: left;
+    display: block;
+}
+
+.chat-notification {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    background-color: #f3fef2;
+    width: 100%;
+    padding: 5px 10px 5px 10px;
+    float: right;
+    display: block;
+    border-radius: 10px;
+}
+
+.chat-receive {
+    margin-bottom: 5px;
+    background-color: #eceff6;
+    width: 100%;
+    padding: 5px 10px 5px 10px;
+    float: left;
+    display: block;
+    border-radius: 10px;
+}
+
 /* 自定义 end */

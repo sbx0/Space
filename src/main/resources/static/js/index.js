@@ -1,6 +1,7 @@
-var index = new Vue({
-    el: '#index',
+var main = new Vue({
+    el: '#main',
     data: {
+        space: i18N.space,
         nav_bar_data: i18N.nav_bar_data,
         nav_scroller_data: i18N.nav_scroller_data,
         top_data: [],
@@ -78,7 +79,7 @@ var index = new Vue({
             type: 'GET',
             success: function (json) {
                 if (json.length > 0) {
-                    index.top_data = formate(json);
+                    main.top_data = formate(json);
                 }
             },
             error: function () {
@@ -90,7 +91,7 @@ var index = new Vue({
             type: 'GET',
             success: function (json) {
                 if (json.length > 0) {
-                    index.article_data = formate(json);
+                    main.article_data = formate(json);
                 } else {
                     alert(i18N.query + i18N.result + i18N.null);
                 }
@@ -104,7 +105,7 @@ var index = new Vue({
             type: 'GET',
             success: function (json) {
                 if (json.length > 0) {
-                    index.comment_data = json;
+                    main.comment_data = json;
                 } else {
                     alert(i18N.query + i18N.result + i18N.null);
                 }
