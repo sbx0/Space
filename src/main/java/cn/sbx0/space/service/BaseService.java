@@ -2,9 +2,11 @@ package cn.sbx0.space.service;
 
 import org.springframework.beans.factory.annotation.Value;
 
+import javax.servlet.ServletInputStream;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
@@ -19,6 +21,30 @@ public class BaseService {
     private static String DOMAIN; // 域名
     private static String KEY; // KEY
     public static List<String> COOKIE_NAMES = Arrays.asList("ID", "KEY", "NAME");
+
+    /**
+     * 提取request中的json
+     *
+     * @param request
+     * @return
+     */
+    public static String getJson(HttpServletRequest request) {
+        String str = "NULL";
+        try {
+            ServletInputStream is = request.getInputStream();
+            int nRead = 1;
+            int nTotalRead = 0;
+            byte[] bytes = new byte[10240];
+            while (nRead > 0) {
+                nRead = is.read(bytes, nTotalRead, bytes.length - nTotalRead);
+                if (nRead > 0) nTotalRead = nTotalRead + nRead;
+            }
+            str = new String(bytes, 0, nTotalRead, "utf-8");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return str;
+    }
 
     /**
      * 只显示ip的头和尾

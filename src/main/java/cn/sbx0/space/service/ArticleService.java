@@ -33,6 +33,16 @@ public class ArticleService extends BaseService {
     private String SITE_MAP_DOMAIN;
 
     /**
+     * 文章排行
+     *
+     * @param days 统计的天数
+     * @param size 返回的条数
+     */
+    public List<Article> rank(Integer days, Integer size) {
+        return null;
+    }
+
+    /**
      * 查询某文章在第几页
      */
     public Integer whereIsMyPage(Integer id, Integer u_id, Integer size) {

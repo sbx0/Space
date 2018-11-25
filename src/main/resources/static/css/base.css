@@ -1,9 +1,6 @@
 body {
     font-size: 15px;
-    font-family: Tahoma, "Times New Roman",
-    "Microsoft YaHei", "微软雅黑",
-    STXihei, "华文细黑",
-    serif;
+    font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
     line-height: 1.5;
     background-color: #eee;
     box-shadow: inset 0 0 2rem rgba(0, 0, 0, 0.5);

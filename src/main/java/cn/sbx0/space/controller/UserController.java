@@ -103,16 +103,16 @@ public class UserController extends BaseController {
                 objectNode.put("exp", user.getExp());
                 objectNode.put("integral", user.getIntegral());
                 // 操作状态保存
-                objectNode.put(STATUS_NAME, SUCCESS_STATUS_CODE);
+                objectNode.put(STATUS_NAME, STATUS_CODE_SUCCESS);
             } catch (Exception e) {
                 // 操作状态保存
-                objectNode.put(STATUS_NAME, EXCEPTION_STATUS_CODE);
+                objectNode.put(STATUS_NAME, STATUS_CODE_EXCEPTION);
             }
         } else {
             // 清除Cookie
             BaseService.removeCookies(response);
             // 操作状态保存
-            objectNode.put(STATUS_NAME, FILED_STATUS_CODE);
+            objectNode.put(STATUS_NAME, STATUS_CODE_FILED);
         }
         return objectNode;
     }
@@ -128,10 +128,10 @@ public class UserController extends BaseController {
             // 清除Cookie
             BaseService.removeCookies(response);
             // 操作状态保存
-            objectNode.put(STATUS_NAME, SUCCESS_STATUS_CODE);
+            objectNode.put(STATUS_NAME, STATUS_CODE_SUCCESS);
         } catch (Exception e) {
             // 操作状态保存
-            objectNode.put(STATUS_NAME, FILED_STATUS_CODE);
+            objectNode.put(STATUS_NAME, STATUS_CODE_FILED);
         }
         return objectNode;
     }
@@ -146,7 +146,7 @@ public class UserController extends BaseController {
         // 判断是否为空
         if (BaseService.checkNullStr(user.getName()) || BaseService.checkNullStr(user.getPassword())) {
             // 操作状态保存
-            objectNode.put(STATUS_NAME, NOT_FOUND_STATUS_CODE);
+            objectNode.put(STATUS_NAME, STATUS_CODE_NOT_FOUND);
             return objectNode;
         }
         // 调用登陆，若返回为null，则为密码错误
@@ -159,12 +159,12 @@ public class UserController extends BaseController {
             response.addCookie(BaseService.createCookie(BaseService.COOKIE_NAMES.get(2), user.getName(), 30));
             session.setAttribute("user", user);
             // 操作状态保存
-            objectNode.put(STATUS_NAME, SUCCESS_STATUS_CODE);
+            objectNode.put(STATUS_NAME, STATUS_CODE_SUCCESS);
         } else {
             // 清除Cookie
             BaseService.removeCookies(response);
             // 操作状态保存
-            objectNode.put(STATUS_NAME, FILED_STATUS_CODE);
+            objectNode.put(STATUS_NAME, STATUS_CODE_FILED);
         }
         // 日志记录
         logService.log(user, request);

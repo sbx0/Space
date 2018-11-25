@@ -168,65 +168,92 @@
             </div>
             <button class="btn btn-sm btn-primary" onclick="javascript:jump_page();">跳页</button>
         </div>
-        </main>
+
+        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        <!-- Google Adsense -->
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-7377922292358202"
+             data-ad-slot="2325273723"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
 
     </div>
+</div>
 
-    <input id="user_id" type="hidden" th:value="${user.id}">
+<input id="user_id" type="hidden" th:value="${user.id}">
 
-    <script th:src="@{~/js/jquery.min.js}"></script>
-    <script th:src="@{~/js/popper.min.js}"></script>
-    <script th:src="@{~/js/bootstrap.min.js}"></script>
-    <script th:src="@{~/js/vue.min.js}"></script>
-    <script th:src="@{~/js/messenger.min.js}"></script>
-    <script th:src="@{~/js/messenger-theme-flat.js}"></script>
-    <script th:src="@{~/js/viewer.min.js}"></script>
-    <script th:src="@{~/js/editormd.js}"></script>
-    <script th:src="@{~/lib/marked.min.js}"></script>
-    <script th:src="@{~/lib/prettify.min.js}"></script>
-    <script th:src="@{~/lib/raphael.min.js}"></script>
-    <script th:src="@{~/lib/underscore.min.js}"></script>
-    <script th:src="@{~/lib/sequence-diagram.min.js}"></script>
-    <script th:src="@{~/lib/flowchart.min.js}"></script>
-    <script th:src="@{~/lib/jquery.flowchart.min.js}"></script>
-    <script th:src="@{~/js/i18N_zh_CN.js}"></script>
-    <script th:src="@{~/js/base.js}"></script>
-    <section>
-        <script>
-            var main = new Vue({
-                el: '#main',
-                data: {
-                    space: i18N.space,
-                    nav_bar_data: i18N.nav_bar_data,
-                    nav_scroller_data: i18N.nav_scroller_data,
+<script th:src="@{~/js/jquery.min.js}"></script>
+<script th:src="@{~/js/popper.min.js}"></script>
+<script th:src="@{~/js/bootstrap.min.js}"></script>
+<script th:src="@{~/js/vue.min.js}"></script>
+<script th:src="@{~/js/messenger.min.js}"></script>
+<script th:src="@{~/js/messenger-theme-flat.js}"></script>
+<script th:src="@{~/js/viewer.min.js}"></script>
+<script th:src="@{~/js/editormd.js}"></script>
+<script th:src="@{~/lib/marked.min.js}"></script>
+<script th:src="@{~/lib/prettify.min.js}"></script>
+<script th:src="@{~/lib/raphael.min.js}"></script>
+<script th:src="@{~/lib/underscore.min.js}"></script>
+<script th:src="@{~/lib/sequence-diagram.min.js}"></script>
+<script th:src="@{~/lib/flowchart.min.js}"></script>
+<script th:src="@{~/lib/jquery.flowchart.min.js}"></script>
+<script th:src="@{~/js/i18N_zh_CN.js}"></script>
+<script th:src="@{~/js/base.js}"></script>
+<section>
+    <script>
+        var main = new Vue({
+            el: '#main',
+            data: {
+                space: i18N.space,
+                nav_bar_data: i18N.nav_bar_data,
+                nav_scroller_data: i18N.nav_scroller_data,
+            },
+            components: {
+                'nav_bar_components': {
+                    props: ['nav_bar'],
+                    template:
+                        '<li class="nav-item">' +
+                        '   <a class="nav-link" :href="nav_bar.url" v-html="nav_bar.text"></a>' +
+                        '</li>',
                 },
-                components: {
-                    'nav_bar_components': {
-                        props: ['nav_bar'],
-                        template:
-                            '<li class="nav-item">' +
-                            '   <a class="nav-link" :href="nav_bar.url" v-html="nav_bar.text"></a>' +
-                            '</li>',
-                    },
-                    'nav_scroller_components': {
-                        props: ['nav_scroller'],
-                        template: '<a class="nav-link" :href="nav_scroller.url" v-html="nav_scroller.text"></a>',
-                    },
+                'nav_scroller_components': {
+                    props: ['nav_scroller'],
+                    template: '<a class="nav-link" :href="nav_scroller.url" v-html="nav_scroller.text"></a>',
                 },
-                created: function () {
+            },
+            created: function () {
 
-                },
-            });
+            },
+        });
 
-            // 跳页
-            function jump_page() {
-                var id = $("#user_id").val()
-                var page = $("#page").val()
-                var size = $("#size").val()
-                var url = "../user/" + id + "?page=" + page + "&size=" + size
-                location.replace(url)
-            }
-        </script>
-    </section>
+        // 跳页
+        function jump_page() {
+            var id = $("#user_id").val()
+            var page = $("#page").val()
+            var size = $("#size").val()
+            var url = "../user/" + id + "?page=" + page + "&size=" + size
+            location.replace(url)
+        }
+    </script>
+</section>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-129309220-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'UA-129309220-1');
+</script>
+
 </body>
 </html>

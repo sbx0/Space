@@ -91,9 +91,9 @@ public class MessageController extends BaseController {
         User user = userService.getCookieUser(request);
         // 检测重复操作
         if (!logService.check(request, 0.1)) {
-            objectNode.put(STATUS_NAME, TIMES_LIMIT_STATUS_CODE);
+            objectNode.put(STATUS_NAME, STATUS_CODE_TIMES_LIMIT);
         } else if (BaseService.checkNullStr(to) || BaseService.checkNullStr(message.getContent())) {
-            objectNode.put(STATUS_NAME, NOT_FOUND_STATUS_CODE);
+            objectNode.put(STATUS_NAME, STATUS_CODE_NOT_FOUND);
         } else if (to.equals("public")) {
             message.setSendTime(new Date());
             message.setSendUser(user);
@@ -101,7 +101,7 @@ public class MessageController extends BaseController {
             String ip = BaseService.getIpAddress(request);
             message.setIp(ip);
             messageService.save(message);
-            objectNode.put(STATUS_NAME, SUCCESS_STATUS_CODE);
+            objectNode.put(STATUS_NAME, STATUS_CODE_SUCCESS);
             simpMessagingTemplate.convertAndSend("/channel/public", MessageService.buildMessage(user, message));
             // 日志记录
             logService.log(user, request);

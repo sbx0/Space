@@ -6,6 +6,14 @@
 // var time = Format(getDate(TIME.toString()), "yyyy-MM-dd HH:mm:ss")
 // ------------------------------------------------------------------------------------------------------ //
 
+// 打开菜单
+$(function () {
+    'use strict';
+    $('[data-toggle="offcanvas"]').on('click', function () {
+        $('.offcanvas-collapse').toggleClass('open')
+    })
+});
+
 //  状态码转换成语句
 function statusCodeToAlert(status) {
     switch (status) {
@@ -43,27 +51,6 @@ function statusCodeToBool(status) {
             return false;
     }
 }
-
-// 给nav-bar赋值
-new Vue({
-    el: '#nav',
-    data: {
-        groceryList: [
-            {id: 0, text: '消息', url: '../message.html'},
-            {id: 0, text: '搜索', url: '../article/search'},
-            {id: 0, text: '数据', url: '../data.html'},
-            {id: 0, text: '实验', url: '../test.html'},
-            {id: 0, text: '上传', url: 'http://upload.sbx0.cn/'},
-            {id: 0, text: '开源', url: 'https://github.com/sbx0'},
-        ]
-    },
-    components: {
-        'nav-bar': {
-            props: ['nav'],
-            template: '<a class="p-2 text-muted" :href="nav.url" v-html="nav.text"></a>',
-        },
-    },
-})
 
 // 返回顶部
 $(function () {

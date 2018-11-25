@@ -105,7 +105,7 @@ var markdown = editormd.markdownToHTML("markdown", {
 
 // 配置图片浏览器
 var viewer = new Viewer(document.getElementById('markdown'), {
-    movable: false,
+    movable: true,
 });
 
 // 评论

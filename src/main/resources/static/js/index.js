@@ -129,11 +129,3 @@ function formate(data) {
     }
     return data;
 }
-
-// 打开菜单
-$(function () {
-    'use strict';
-    $('[data-toggle="offcanvas"]').on('click', function () {
-        $('.offcanvas-collapse').toggleClass('open')
-    })
-});

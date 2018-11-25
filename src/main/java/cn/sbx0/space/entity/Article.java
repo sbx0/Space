@@ -20,6 +20,7 @@ public class Article implements Serializable {
     public interface Top {
     }
 
+    // 首页
     public interface Index extends Top {
     }
 

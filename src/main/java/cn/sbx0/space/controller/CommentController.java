@@ -82,9 +82,9 @@ public class CommentController extends BaseController {
         User user = userService.getCookieUser(request);
         // 检测重复操作
         if (!logService.check(request, 5)) {
-            objectNode.put(STATUS_NAME, TIMES_LIMIT_STATUS_CODE);
+            objectNode.put(STATUS_NAME, STATUS_CODE_TIMES_LIMIT);
         } else if (BaseService.checkNullStr(comment.getContent())) {
-            objectNode.put(STATUS_NAME, NOT_FOUND_STATUS_CODE);
+            objectNode.put(STATUS_NAME, STATUS_CODE_NOT_FOUND);
         } else {
             // 若登录
             if (user != null) {
@@ -111,9 +111,9 @@ public class CommentController extends BaseController {
                 commentService.save(comment);
                 Article article = articleService.findById(comment.getEntity_id(), 1);
                 article.setComments(article.getComments() + 1);
-                objectNode.put(STATUS_NAME, SUCCESS_STATUS_CODE);
+                objectNode.put(STATUS_NAME, STATUS_CODE_SUCCESS);
             } catch (Exception e) {
-                objectNode.put(STATUS_NAME, EXCEPTION_STATUS_CODE);
+                objectNode.put(STATUS_NAME, STATUS_CODE_EXCEPTION);
             }
         }
         // 日志记录
