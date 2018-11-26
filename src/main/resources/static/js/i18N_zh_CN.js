@@ -15,7 +15,6 @@ var i18N = {
         {id: 0, text: '工具', url: '../tools.html'},
         {id: 0, text: '上传', url: 'http://upload.sbx0.cn/'},
         {id: 0, text: '开源', url: 'https://github.com/sbx0'},
-        {id: 0, text: '福利', url: 'http://gokoucat.cn'},
     ],
     json: {
         article: {

@@ -19,15 +19,12 @@
 </head>
 
 <body class="bg-light">
-
 <div id="main" v-cloak>
-
     <nav class="navbar navbar-expand-md fixed-top navbar-dark bg-dark">
         <a class="navbar-brand" href="../index.html">{{space}}</a>
         <button class="navbar-toggler p-0 border-0" type="button" data-toggle="offcanvas">
             <span class="navbar-toggler-icon"></span>
         </button>
-
         <div class="navbar-collapse offcanvas-collapse">
             <ul class="navbar-nav mr-auto">
                 <nav_bar_components v-for="nav_bar in nav_bar_data"
@@ -37,7 +34,6 @@
             </ul>
         </div>
     </nav>
-
     <div class="nav-scroller bg-white box-shadow">
         <nav class="nav nav-underline">
             <nav_scroller_components v-for="nav_scroller in nav_scroller_data"
@@ -46,14 +42,112 @@
             </nav_scroller_components>
         </nav>
     </div>
-
     <main role="main" class="container">
-
-        <ol class="breadcrumb">
-            <li><a href="tools.jsp">工具</a></li>
-            <li class="active">反馈中心</li>
-        </ol>
-
+        <div class="my-3 p-3 bg-white rounded box-shadow">
+            <nav>
+                <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                    <a class="nav-item nav-link active" id="nav-submit-tab"
+                       data-toggle="tab" href="#nav-submit" role="tab"
+                       aria-controls="nav-submit" aria-selected="true">提交</a>
+                    <a class="nav-item nav-link" id="nav-my-tab"
+                       data-toggle="tab" href="#nav-my" role="tab"
+                       aria-controls="nav-my" aria-selected="false">我的</a>
+                    <a class="nav-item nav-link" id="nav-solve-tab"
+                       data-toggle="tab" href="#nav-solve" role="tab"
+                       aria-controls="nav-solve" aria-selected="false">解决</a>
+                    <a class="nav-item nav-link" id="nav-solved-tab"
+                       data-toggle="tab" href="#nav-solved" role="tab"
+                       aria-controls="nav-solved" aria-selected="false">已解决</a>
+                </div>
+            </nav>
+            <div class="tab-content" id="nav-tabContent">
+                <div class="tab-pane fade show active" id="nav-submit" role="tabpanel" aria-labelledby="nav-submit-tab">
+                    <form id="bugSubForm" class="mt-3">
+                        <div class="form-group">
+                            <label for="bugGrade">评级（<a href="article-one?id=54" target="_Blank">评级标准</a>）</label>
+                            <select id="bugGrade" class="form-control" name="bug.grade">
+                                <option value="1">建议 - P1</option>
+                                <option value="2">低级 - P2</option>
+                                <option value="3">一般 - P3</option>
+                                <option value="4">严重 - P4</option>
+                                <option value="5">致命 - P5</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="bugBewirte">描述</label>
+                            <textarea id="bugBewirte" class="form-control" rows="3" name="bug.bewrite"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="bugEnvironment">运行环境</label>
+                            <input type="text" class="form-control" id="bugEnvironment" name="bug.environment" readonly>
+                        </div>
+                        <div class="form-group">
+                            <button id="subBugButton" type="button" class="btn btn-primary" style="width:100%;">
+                                提交
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="tab-pane fade" id="nav-my" role="tabpanel" aria-labelledby="nav-my-tab">
+                    <ul class="list-group mt-3">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            我的
+                            <span class="badge badge-primary badge-pill">14</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="tab-pane fade" id="nav-solve" role="tabpanel" aria-labelledby="nav-solve-tab">
+                    <ul class="list-group mt-3">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            解决
+                            <span class="badge badge-primary badge-pill">14</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="tab-pane fade" id="nav-solved" role="tabpanel" aria-labelledby="nav-solved-tab">
+                    <ul class="list-group mt-3">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            已解决
+                            <span class="badge badge-primary badge-pill">14</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="my-3 p-3 bg-white rounded box-shadow" hidden>
+            <h6 class="border-bottom border-gray pb-2 mb-2">B12321312</h6>
+            <p>
+                测试
+            </p>
+            <form id="commentForm">
+                <input name="entity_id" type="hidden" value="56">
+                <input name="entity_type" type="hidden" value="article">
+                <div class="form-group">
+                    <input type="text" id="user_name" name="user_name" placeholder="匿名" class="form-control"></div>
+                <div class="form-group">
+                    <textarea id="content" name="content" placeholder="无需登陆" class="form-control"></textarea>
+                </div>
+                <button onclick="javascript:comment();" type="button" class="btn btn-sm btn-primary">
+                    评论
+                </button>
+            </form>
+            <div class="media text-muted pt-3">
+                <div class="media-body mb-0 small lh-125 border-bottom border-gray">
+                    <div class="d-flex justify-content-between align-items-center w-100">
+                        <strong class="text-gray-dark">
+                            <a>匿名</a>
+                        </strong>
+                        2018-11-14 16:10
+                        <a href="#">
+                            查看
+                        </a>
+                    </div>
+                    <p class="d-block mt-3">
+                        垃圾BUG
+                    </p>
+                </div>
+            </div>
+        </div>
         <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
         <!-- Google Adsense -->
         <ins class="adsbygoogle"
@@ -65,11 +159,8 @@
         <script>
             (adsbygoogle = window.adsbygoogle || []).push({});
         </script>
-
     </main>
-
 </div>
-
 
 <script src="js/jquery.min.js"></script>
 <script src="js/popper.min.js"></script>
@@ -81,8 +172,7 @@
 <!--<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>-->
 <script src="js/i18N_zh_CN.js"></script>
 <script src="js/base.js"></script>
-<script src="js/index.js"></script>
-
+<script src="js/bugs.js"></script>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-129309220-1"></script>
 <script>
