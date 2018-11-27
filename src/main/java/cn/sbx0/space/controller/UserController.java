@@ -32,8 +32,8 @@ public class UserController extends BaseController {
     private ArticleService articleService;
     @Resource
     private LogService logService;
-    private final ObjectMapper mapper;
-    private ObjectNode objectNode;
+    private ObjectMapper mapper;
+    private ObjectNode json;
 
     @Autowired
     public UserController(ObjectMapper mapper) {
@@ -91,30 +91,30 @@ public class UserController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/info", method = RequestMethod.GET)
     public ObjectNode info(HttpServletRequest request, HttpServletResponse response) {
-        objectNode = mapper.createObjectNode();
+        json = mapper.createObjectNode();
         User user = userService.getCookieUser(request);
-        objectNode.put("ip", BaseService.hideFullIp(BaseService.getIpAddress(request)));
+        json.put("ip", BaseService.hideFullIp(BaseService.getIpAddress(request)));
         if (user != null && user.getId() != null) {
             try {
                 // 用户信息
-                objectNode.put("id", user.getId());
-                objectNode.put("username", user.getName());
-                objectNode.put("level", user.getLevel());
-                objectNode.put("exp", user.getExp());
-                objectNode.put("integral", user.getIntegral());
+                json.put("id", user.getId());
+                json.put("username", user.getName());
+                json.put("level", user.getLevel());
+                json.put("exp", user.getExp());
+                json.put("integral", user.getIntegral());
                 // 操作状态保存
-                objectNode.put(STATUS_NAME, STATUS_CODE_SUCCESS);
+                json.put(STATUS_NAME, STATUS_CODE_SUCCESS);
             } catch (Exception e) {
                 // 操作状态保存
-                objectNode.put(STATUS_NAME, STATUS_CODE_EXCEPTION);
+                json.put(STATUS_NAME, STATUS_CODE_EXCEPTION);
             }
         } else {
             // 清除Cookie
             BaseService.removeCookies(response);
             // 操作状态保存
-            objectNode.put(STATUS_NAME, STATUS_CODE_FILED);
+            json.put(STATUS_NAME, STATUS_CODE_FILED);
         }
-        return objectNode;
+        return json;
     }
 
     /**
@@ -123,17 +123,17 @@ public class UserController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
     public ObjectNode logout(HttpServletResponse response) {
-        objectNode = mapper.createObjectNode();
+        json = mapper.createObjectNode();
         try {
             // 清除Cookie
             BaseService.removeCookies(response);
             // 操作状态保存
-            objectNode.put(STATUS_NAME, STATUS_CODE_SUCCESS);
+            json.put(STATUS_NAME, STATUS_CODE_SUCCESS);
         } catch (Exception e) {
             // 操作状态保存
-            objectNode.put(STATUS_NAME, STATUS_CODE_FILED);
+            json.put(STATUS_NAME, STATUS_CODE_FILED);
         }
-        return objectNode;
+        return json;
     }
 
     /**
@@ -142,12 +142,12 @@ public class UserController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ObjectNode login(User user, String code, HttpServletRequest request, HttpServletResponse response, HttpSession session) {
-        objectNode = mapper.createObjectNode();
+        json = mapper.createObjectNode();
         // 判断是否为空
         if (BaseService.checkNullStr(user.getName()) || BaseService.checkNullStr(user.getPassword())) {
             // 操作状态保存
-            objectNode.put(STATUS_NAME, STATUS_CODE_NOT_FOUND);
-            return objectNode;
+            json.put(STATUS_NAME, STATUS_CODE_NOT_FOUND);
+            return json;
         }
         // 调用登陆，若返回为null，则为密码错误
         user = userService.login(user, code);
@@ -159,17 +159,17 @@ public class UserController extends BaseController {
             response.addCookie(BaseService.createCookie(BaseService.COOKIE_NAMES.get(2), user.getName(), 30));
             session.setAttribute("user", user);
             // 操作状态保存
-            objectNode.put(STATUS_NAME, STATUS_CODE_SUCCESS);
+            json.put(STATUS_NAME, STATUS_CODE_SUCCESS);
         } else {
             // 清除Cookie
             BaseService.removeCookies(response);
             // 操作状态保存
-            objectNode.put(STATUS_NAME, STATUS_CODE_FILED);
+            json.put(STATUS_NAME, STATUS_CODE_FILED);
         }
         // 日志记录
         logService.log(user, request);
         // 返回json串
-        return objectNode;
+        return json;
     }
 
 }

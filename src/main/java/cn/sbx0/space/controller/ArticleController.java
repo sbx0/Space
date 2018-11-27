@@ -33,8 +33,8 @@ public class ArticleController extends BaseController {
     private UserService userService;
     @Resource
     private LogService logService;
-    private final ObjectMapper mapper;
-    private ObjectNode objectNode;
+    private ObjectMapper mapper;
+    private ObjectNode json;
 
     @Autowired
     public ArticleController(ObjectMapper mapper) {
@@ -50,7 +50,7 @@ public class ArticleController extends BaseController {
         ArrayNode articles = mapper.createArrayNode();
         List<Article> articleList = articleService.rank(days, size);
         for (int i = 0; i < articleList.size(); i++) {
-            objectNode = mapper.createObjectNode();
+            json = mapper.createObjectNode();
         }
         return articles;
     }
@@ -61,10 +61,10 @@ public class ArticleController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/article/dislike", method = RequestMethod.GET)
     public ObjectNode dislike(Integer id, HttpServletRequest request) {
-        objectNode = mapper.createObjectNode();
+        json = mapper.createObjectNode();
         // 检测重复操作
         if (!logService.check(request, 1440)) {
-            objectNode.put(STATUS_NAME, STATUS_CODE_TIMES_LIMIT);
+            json.put(STATUS_NAME, STATUS_CODE_TIMES_LIMIT);
         } else {
             // 日志记录
             logService.log(userService.getCookieUser(request), request);
@@ -79,17 +79,17 @@ public class ArticleController extends BaseController {
                     }
                     article.setDislikes(dislikes);
                     articleService.save(article);
-                    objectNode.put("dislikes", article.getDislikes());
-                    objectNode.put(STATUS_NAME, STATUS_CODE_SUCCESS);
+                    json.put("dislikes", article.getDislikes());
+                    json.put(STATUS_NAME, STATUS_CODE_SUCCESS);
                 } catch (Exception e) {
-                    objectNode.put("msg", e.getMessage());
-                    objectNode.put(STATUS_NAME, STATUS_CODE_EXCEPTION);
+                    json.put("msg", e.getMessage());
+                    json.put(STATUS_NAME, STATUS_CODE_EXCEPTION);
                 }
             } else {
-                objectNode.put(STATUS_NAME, STATUS_CODE_NOT_FOUND);
+                json.put(STATUS_NAME, STATUS_CODE_NOT_FOUND);
             }
         }
-        return objectNode;
+        return json;
     }
 
     /**
@@ -98,10 +98,10 @@ public class ArticleController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/article/like", method = RequestMethod.GET)
     public ObjectNode like(Integer id, HttpServletRequest request) {
-        objectNode = mapper.createObjectNode();
+        json = mapper.createObjectNode();
         // 检测重复操作
         if (!logService.check(request, 1440)) {
-            objectNode.put(STATUS_NAME, STATUS_CODE_TIMES_LIMIT);
+            json.put(STATUS_NAME, STATUS_CODE_TIMES_LIMIT);
         } else {
             // 日志记录
             logService.log(userService.getCookieUser(request), request);
@@ -116,17 +116,17 @@ public class ArticleController extends BaseController {
                     }
                     article.setLikes(likes);
                     articleService.save(article);
-                    objectNode.put("likes", article.getLikes());
-                    objectNode.put(STATUS_NAME, STATUS_CODE_SUCCESS);
+                    json.put("likes", article.getLikes());
+                    json.put(STATUS_NAME, STATUS_CODE_SUCCESS);
                 } catch (Exception e) {
-                    objectNode.put("msg", e.getMessage());
-                    objectNode.put(STATUS_NAME, STATUS_CODE_EXCEPTION);
+                    json.put("msg", e.getMessage());
+                    json.put(STATUS_NAME, STATUS_CODE_EXCEPTION);
                 }
             } else {
-                objectNode.put(STATUS_NAME, STATUS_CODE_NOT_FOUND);
+                json.put(STATUS_NAME, STATUS_CODE_NOT_FOUND);
             }
         }
-        return objectNode;
+        return json;
     }
 
     /**
@@ -137,19 +137,19 @@ public class ArticleController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/article/prevAndNext", method = RequestMethod.GET)
     public ObjectNode prevAndNext(Integer id, Integer u_id) {
-        objectNode = mapper.createObjectNode();
+        json = mapper.createObjectNode();
         if (u_id == null) u_id = -1;
         Article prevA = articleService.prev(id, u_id);
         Article nextA = articleService.next(id, u_id);
         if (prevA != null && !prevA.getId().equals(id)) {
-            objectNode.put("prev_id", prevA.getId());
-            objectNode.put("prev_title", prevA.getTitle());
+            json.put("prev_id", prevA.getId());
+            json.put("prev_title", prevA.getTitle());
         }
         if (nextA != null && !nextA.getId().equals(id)) {
-            objectNode.put("next_id", nextA.getId());
-            objectNode.put("next_title", nextA.getTitle());
+            json.put("next_id", nextA.getId());
+            json.put("next_title", nextA.getTitle());
         }
-        return objectNode;
+        return json;
     }
 
     /**
@@ -197,13 +197,13 @@ public class ArticleController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/article/removePassword", method = RequestMethod.GET)
     public ObjectNode removePassword(Integer id, HttpServletRequest request) {
-        objectNode = mapper.createObjectNode();
+        json = mapper.createObjectNode();
         // 从cookie中获取登陆用户信息
         User user = userService.getCookieUser(request);
         // 未登录
         if (user == null) {
-            objectNode.put(STATUS_NAME, STATUS_CODE_NOT_LOGIN);
-            return objectNode;
+            json.put(STATUS_NAME, STATUS_CODE_NOT_LOGIN);
+            return json;
         }
         // 获取文章信息
         Article article = articleService.findById(id, 1);
@@ -214,12 +214,12 @@ public class ArticleController extends BaseController {
             try {
                 // 将操作保存到数据库中
                 articleService.save(article);
-                objectNode.put(STATUS_NAME, STATUS_CODE_SUCCESS);
+                json.put(STATUS_NAME, STATUS_CODE_SUCCESS);
             } catch (Exception e) {
-                objectNode.put(STATUS_NAME, STATUS_CODE_EXCEPTION);
+                json.put(STATUS_NAME, STATUS_CODE_EXCEPTION);
             }
         }
-        return objectNode;
+        return json;
     }
 
     /**
@@ -273,18 +273,18 @@ public class ArticleController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/article/addPassword", method = RequestMethod.POST)
     public ObjectNode addPassword(Integer id, String password, HttpServletRequest request) {
-        objectNode = mapper.createObjectNode();
+        json = mapper.createObjectNode();
         // 从cookie中获取登陆用户信息
         User user = userService.getCookieUser(request);
         // 未登录
         if (user == null) {
-            objectNode.put(STATUS_NAME, STATUS_CODE_NOT_LOGIN);
-            return objectNode;
+            json.put(STATUS_NAME, STATUS_CODE_NOT_LOGIN);
+            return json;
         }
         // 密码为空
         if (BaseService.checkNullStr(password)) {
-            objectNode.put(STATUS_NAME, STATUS_CODE_NO_PERMISSION);
-            return objectNode;
+            json.put(STATUS_NAME, STATUS_CODE_NO_PERMISSION);
+            return json;
         }
         // 获取文章信息
         Article article = articleService.findById(id, 1);
@@ -295,12 +295,12 @@ public class ArticleController extends BaseController {
             try {
                 // 将操作保存到数据库中
                 articleService.save(article);
-                objectNode.put(STATUS_NAME, STATUS_CODE_SUCCESS);
+                json.put(STATUS_NAME, STATUS_CODE_SUCCESS);
             } catch (Exception e) {
-                objectNode.put(STATUS_NAME, STATUS_CODE_EXCEPTION);
+                json.put(STATUS_NAME, STATUS_CODE_EXCEPTION);
             }
         }
-        return objectNode;
+        return json;
     }
 
     /**
@@ -309,13 +309,13 @@ public class ArticleController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/article/recover", method = RequestMethod.GET)
     public ObjectNode recover(Integer id, HttpServletRequest request) {
-        objectNode = mapper.createObjectNode();
+        json = mapper.createObjectNode();
         // 从cookie中获取登陆用户信息
         User user = userService.getCookieUser(request);
         // 未登录
         if (user == null) {
-            objectNode.put(STATUS_NAME, STATUS_CODE_NOT_LOGIN);
-            return objectNode;
+            json.put(STATUS_NAME, STATUS_CODE_NOT_LOGIN);
+            return json;
         }
         // 获取文章信息
         Article article = articleService.findById(id, 1);
@@ -326,14 +326,14 @@ public class ArticleController extends BaseController {
             try {
                 // 操作保存到数据库中
                 articleService.save(article);
-                objectNode.put(STATUS_NAME, STATUS_CODE_SUCCESS);
+                json.put(STATUS_NAME, STATUS_CODE_SUCCESS);
             } catch (Exception e) {
-                objectNode.put(STATUS_NAME, STATUS_CODE_EXCEPTION);
+                json.put(STATUS_NAME, STATUS_CODE_EXCEPTION);
             }
         }
         // 日志记录
         logService.log(user, request);
-        return objectNode;
+        return json;
     }
 
     /**
@@ -382,7 +382,7 @@ public class ArticleController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/article/delete", method = RequestMethod.GET)
     public ObjectNode delete(Integer id, Integer type, HttpServletRequest request) {
-        objectNode = mapper.createObjectNode();
+        json = mapper.createObjectNode();
         // 从cookie中获取登陆用户
         User user = userService.getCookieUser(request);
         // 查询文章信息
@@ -394,20 +394,20 @@ public class ArticleController extends BaseController {
                     article.setTop(-1);
                     try {
                         articleService.save(article);
-                        objectNode.put(STATUS_NAME, STATUS_CODE_SUCCESS);
+                        json.put(STATUS_NAME, STATUS_CODE_SUCCESS);
                     } catch (Exception e) {
-                        objectNode.put(STATUS_NAME, STATUS_CODE_EXCEPTION);
+                        json.put(STATUS_NAME, STATUS_CODE_EXCEPTION);
                     }
                 }
                 break;
             // 真删除
             case 1:
             default:
-                objectNode.put(STATUS_NAME, STATUS_CODE_FILED);
+                json.put(STATUS_NAME, STATUS_CODE_FILED);
         }
         // 日志记录
         logService.log(user, request);
-        return objectNode;
+        return json;
     }
 
     /**
@@ -416,23 +416,23 @@ public class ArticleController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/article/removeTop", method = RequestMethod.GET)
     public ObjectNode removeTop(HttpServletRequest request, Integer id) {
-        objectNode = mapper.createObjectNode();
+        json = mapper.createObjectNode();
         // 从cookie中获取登陆用户
         User user = userService.getCookieUser(request);
         // 查询文章信息
         Article article = articleService.findById(id, 1);
         // 判断权限
         if (user.getAuthority() > 0) {
-            objectNode.put(STATUS_NAME, STATUS_CODE_NO_PERMISSION);
+            json.put(STATUS_NAME, STATUS_CODE_NO_PERMISSION);
         } else {
             // 移除置顶
             article.setTop(0);
             articleService.save(article);
-            objectNode.put(STATUS_NAME, STATUS_CODE_SUCCESS);
+            json.put(STATUS_NAME, STATUS_CODE_SUCCESS);
         }
         // 日志记录
         logService.log(user, request);
-        return objectNode;
+        return json;
     }
 
     /**
@@ -441,25 +441,25 @@ public class ArticleController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/article/setTop", method = RequestMethod.GET)
     public ObjectNode setTop(HttpServletRequest request, Integer id) {
-        objectNode = mapper.createObjectNode();
+        json = mapper.createObjectNode();
         // 从cookie中获取登陆用户
         User user = userService.getCookieUser(request);
         // 查询文章信息
         Article article = articleService.findById(id, 1);
         // 判断权限
         if (user.getAuthority() > 0)
-            objectNode.put(STATUS_NAME, STATUS_CODE_NO_PERMISSION);
+            json.put(STATUS_NAME, STATUS_CODE_NO_PERMISSION);
         else {
             // 设置置顶
             if (articleService.setTop(article)) {
-                objectNode.put(STATUS_NAME, STATUS_CODE_SUCCESS);
+                json.put(STATUS_NAME, STATUS_CODE_SUCCESS);
             } else {
-                objectNode.put(STATUS_NAME, STATUS_CODE_FILED);
+                json.put(STATUS_NAME, STATUS_CODE_FILED);
             }
         }
         // 日志记录
         logService.log(user, request);
-        return objectNode;
+        return json;
     }
 
     /**
@@ -496,22 +496,22 @@ public class ArticleController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/article/post", method = RequestMethod.POST)
     public ObjectNode post(HttpServletRequest request, Article article) {
-        objectNode = mapper.createObjectNode();
+        json = mapper.createObjectNode();
         // 从cookie中获取登陆用户
         User user = userService.getCookieUser(request);
         // 检测重复操作
         if (article.getId() == null) {
             if (!logService.check(request, 5)) {
-                objectNode.put(STATUS_NAME, STATUS_CODE_TIMES_LIMIT);
-                return objectNode;
+                json.put(STATUS_NAME, STATUS_CODE_TIMES_LIMIT);
+                return json;
             }
         }
         // 日志记录
         logService.log(user, request);
         // 检测是否为空
         if (BaseService.checkNullStr(article.getTitle()) || BaseService.checkNullStr(article.getContent())) {
-            objectNode.put(STATUS_NAME, STATUS_CODE_FILED);
-            return objectNode;
+            json.put(STATUS_NAME, STATUS_CODE_FILED);
+            return json;
         }
         try {
             // 修改文章
@@ -542,11 +542,11 @@ public class ArticleController extends BaseController {
                 article.setLastChangeTime(null);
                 articleService.save(article);
             }
-            objectNode.put(STATUS_NAME, STATUS_CODE_SUCCESS);
+            json.put(STATUS_NAME, STATUS_CODE_SUCCESS);
         } catch (Exception e) {
-            objectNode.put(STATUS_NAME, STATUS_CODE_EXCEPTION);
+            json.put(STATUS_NAME, STATUS_CODE_EXCEPTION);
         }
-        return objectNode;
+        return json;
     }
 
     /**
@@ -596,7 +596,7 @@ public class ArticleController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/article/index", method = RequestMethod.GET)
     public List index(HttpServletRequest request) {
-        objectNode = mapper.createObjectNode();
+        json = mapper.createObjectNode();
         // 从 Cookie 中获取登陆信息
         User user = userService.getCookieUser(request);
         // 日志记录

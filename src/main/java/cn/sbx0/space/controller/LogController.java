@@ -34,7 +34,7 @@ public class LogController extends BaseController {
     ArticleService articleService;
     @Resource
     private SimpMessagingTemplate simpMessagingTemplate;
-    private final ObjectMapper mapper;
+    private ObjectMapper mapper;
 
     @Autowired
     public LogController(ObjectMapper mapper) {

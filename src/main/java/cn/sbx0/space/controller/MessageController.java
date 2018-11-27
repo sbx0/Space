@@ -34,8 +34,8 @@ public class MessageController extends BaseController {
     UserService userService;
     @Resource
     MessageService messageService;
-    private final ObjectMapper mapper;
-    private ObjectNode objectNode;
+    private ObjectMapper mapper;
+    private ObjectNode json;
 
     @Autowired
     public MessageController(ObjectMapper mapper) {
@@ -49,7 +49,7 @@ public class MessageController extends BaseController {
     @ResponseBody
     @RequestMapping("/receive")
     public ArrayNode receive(HttpServletRequest request) {
-        objectNode = mapper.createObjectNode();
+        json = mapper.createObjectNode();
         // 从cookie中获取登陆用户信息
         User user = userService.getCookieUser(request);
         // 日志记录
@@ -64,16 +64,16 @@ public class MessageController extends BaseController {
         List<Message> messages = messageService.findByTime(begin, end);
         ArrayNode arrayNode = mapper.createArrayNode();
         for (Message message : messages) {
-            objectNode = mapper.createObjectNode();
+            json = mapper.createObjectNode();
             if (message.getSendUser() != null) {
-                objectNode.put("u_id", message.getSendUser().getId());
-                objectNode.put("u_name", message.getSendUser().getName());
+                json.put("u_id", message.getSendUser().getId());
+                json.put("u_name", message.getSendUser().getName());
             }
             DateFormat df = new SimpleDateFormat("HH:mm");
-            objectNode.put("send_time", df.format(message.getSendTime()));
-            objectNode.put("ip", BaseService.hideFullIp(message.getIp()));
-            objectNode.put("content", message.getContent());
-            arrayNode.add(objectNode);
+            json.put("send_time", df.format(message.getSendTime()));
+            json.put("ip", BaseService.hideFullIp(message.getIp()));
+            json.put("content", message.getContent());
+            arrayNode.add(json);
         }
         return arrayNode;
     }
@@ -86,14 +86,14 @@ public class MessageController extends BaseController {
     public ObjectNode send(Message message, String to, HttpServletRequest request) {
         // 防止html注入
         message.setContent(BaseService.killHTML(message.getContent()));
-        objectNode = mapper.createObjectNode();
+        json = mapper.createObjectNode();
         // 从cookie中获取登陆用户信息
         User user = userService.getCookieUser(request);
         // 检测重复操作
         if (!logService.check(request, 0.1)) {
-            objectNode.put(STATUS_NAME, STATUS_CODE_TIMES_LIMIT);
+            json.put(STATUS_NAME, STATUS_CODE_TIMES_LIMIT);
         } else if (BaseService.checkNullStr(to) || BaseService.checkNullStr(message.getContent())) {
-            objectNode.put(STATUS_NAME, STATUS_CODE_NOT_FOUND);
+            json.put(STATUS_NAME, STATUS_CODE_NOT_FOUND);
         } else if (to.equals("public")) {
             message.setSendTime(new Date());
             message.setSendUser(user);
@@ -101,12 +101,12 @@ public class MessageController extends BaseController {
             String ip = BaseService.getIpAddress(request);
             message.setIp(ip);
             messageService.save(message);
-            objectNode.put(STATUS_NAME, STATUS_CODE_SUCCESS);
+            json.put(STATUS_NAME, STATUS_CODE_SUCCESS);
             simpMessagingTemplate.convertAndSend("/channel/public", MessageService.buildMessage(user, message));
             // 日志记录
             logService.log(user, request);
         }
-        return objectNode;
+        return json;
     }
 
 //    /**

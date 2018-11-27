@@ -31,8 +31,8 @@ public class UrlController extends BaseController {
     private UserService userService;
     @Resource
     private LogService logService;
-    private final ObjectMapper mapper;
-    private ObjectNode objectNode;
+    private ObjectMapper mapper;
+    private ObjectNode json;
 
     @Autowired
     public UrlController(ObjectMapper mapper) {
@@ -67,8 +67,8 @@ public class UrlController extends BaseController {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        objectNode = mapper.createObjectNode();
-        return objectNode;
+        this.json = mapper.createObjectNode();
+        return this.json;
     }
 
     /**
@@ -83,14 +83,14 @@ public class UrlController extends BaseController {
         ArrayNode arrayNode = mapper.createArrayNode();
         List<Url> urlList = urlService.findByPage(page);
         for (Url url : urlList) {
-            objectNode = mapper.createObjectNode();
-            objectNode.put("id", url.getId());
-            objectNode.put("text", url.getText());
-            objectNode.put("title", url.getTitle());
-            objectNode.put("path", url.getPath());
-            objectNode.put("badge", url.getBadge());
-            objectNode.put("top", url.getTop());
-            arrayNode.add(objectNode);
+            json = mapper.createObjectNode();
+            json.put("id", url.getId());
+            json.put("text", url.getText());
+            json.put("title", url.getTitle());
+            json.put("path", url.getPath());
+            json.put("badge", url.getBadge());
+            json.put("top", url.getTop());
+            arrayNode.add(json);
         }
         return arrayNode;
     }
@@ -101,14 +101,14 @@ public class UrlController extends BaseController {
         ArrayNode arrayNode = mapper.createArrayNode();
         List<Url> urlList = urlService.findHiddenByPage(page);
         for (Url url : urlList) {
-            objectNode = mapper.createObjectNode();
-            objectNode.put("id", url.getId());
-            objectNode.put("text", url.getText());
-            objectNode.put("title", url.getTitle());
-            objectNode.put("path", url.getPath());
-            objectNode.put("badge", url.getBadge());
-            objectNode.put("top", url.getTop());
-            arrayNode.add(objectNode);
+            json = mapper.createObjectNode();
+            json.put("id", url.getId());
+            json.put("text", url.getText());
+            json.put("title", url.getTitle());
+            json.put("path", url.getPath());
+            json.put("badge", url.getBadge());
+            json.put("top", url.getTop());
+            arrayNode.add(json);
         }
         return arrayNode;
     }

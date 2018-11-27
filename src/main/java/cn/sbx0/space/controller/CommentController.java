@@ -35,8 +35,8 @@ public class CommentController extends BaseController {
     private LogService logService;
     @Resource
     private ArticleService articleService;
-    private final ObjectMapper mapper;
-    private ObjectNode objectNode;
+    private ObjectMapper mapper;
+    private ObjectNode json;
 
     @Autowired
     public CommentController(ObjectMapper mapper) {
@@ -58,15 +58,15 @@ public class CommentController extends BaseController {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         for (int i = 0; i < comments.size(); i++) {
             Comment comment = comments.get(i);
-            objectNode = mapper.createObjectNode();
-            objectNode.put("entity_id", comment.getEntity_id());
-            objectNode.put("entity_type", comment.getEntity_type());
-            objectNode.put("content", comment.getContent());
-            objectNode.put("user_ip", comment.getUser_ip());
-            objectNode.put("user_name", comment.getUser_name());
-            objectNode.put("time", dateFormat.format(comment.getTime()));
-            objectNode.put("id",comment.getId());
-            arrayNode.add(objectNode);
+            json = mapper.createObjectNode();
+            json.put("entity_id", comment.getEntity_id());
+            json.put("entity_type", comment.getEntity_type());
+            json.put("content", comment.getContent());
+            json.put("user_ip", comment.getUser_ip());
+            json.put("user_name", comment.getUser_name());
+            json.put("time", dateFormat.format(comment.getTime()));
+            json.put("id",comment.getId());
+            arrayNode.add(json);
         }
         return arrayNode;
     }
@@ -77,14 +77,14 @@ public class CommentController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/post", method = RequestMethod.POST)
     public ObjectNode post(Comment comment, HttpServletRequest request) {
-        objectNode = mapper.createObjectNode();
+        json = mapper.createObjectNode();
         // 从cookie中获取登陆用户信息
         User user = userService.getCookieUser(request);
         // 检测重复操作
         if (!logService.check(request, 5)) {
-            objectNode.put(STATUS_NAME, STATUS_CODE_TIMES_LIMIT);
+            json.put(STATUS_NAME, STATUS_CODE_TIMES_LIMIT);
         } else if (BaseService.checkNullStr(comment.getContent())) {
-            objectNode.put(STATUS_NAME, STATUS_CODE_NOT_FOUND);
+            json.put(STATUS_NAME, STATUS_CODE_NOT_FOUND);
         } else {
             // 若登录
             if (user != null) {
@@ -111,14 +111,14 @@ public class CommentController extends BaseController {
                 commentService.save(comment);
                 Article article = articleService.findById(comment.getEntity_id(), 1);
                 article.setComments(article.getComments() + 1);
-                objectNode.put(STATUS_NAME, STATUS_CODE_SUCCESS);
+                json.put(STATUS_NAME, STATUS_CODE_SUCCESS);
             } catch (Exception e) {
-                objectNode.put(STATUS_NAME, STATUS_CODE_EXCEPTION);
+                json.put(STATUS_NAME, STATUS_CODE_EXCEPTION);
             }
         }
         // 日志记录
         logService.log(user, request);
-        return objectNode;
+        return json;
     }
 
     /**
