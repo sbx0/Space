@@ -17,6 +17,13 @@ public class BugService extends BaseService {
     private BugDao bugDao;
 
     /**
+     * 根据ID寻找未被隐藏的反馈
+     */
+    public Bug findById(Integer id) {
+        return bugDao.findById(id).get();
+    }
+
+    /**
      * 分页查询未被隐藏的反馈列表
      */
     public Page<Bug> findAll(Integer page, Integer size) {

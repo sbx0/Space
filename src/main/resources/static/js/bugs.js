@@ -5,6 +5,15 @@ var main = new Vue({
         nav_bar_data: i18N.nav_bar_data,
         nav_scroller_data: i18N.nav_scroller_data,
         bug_my_data: [],
+        bug_one_data: {
+            id: '_',
+            name: '未选择',
+            grade: '未选择',
+            status: '未选择',
+            content: '未选择',
+            submit_time: '未选择',
+        },
+
     },
     components: {
         'nav_bar_components': {
@@ -18,10 +27,26 @@ var main = new Vue({
         'bug_components': {
             props: ['bug'],
             template:
-                '<a :href="bug.id" class="list-group-item d-flex justify-content-between align-items-center">' +
+                '<a href="javascript:void(0)" v-on:click="getOne(bug.id)"' +
+                'class="list-group-item d-flex justify-content-between align-items-center">' +
                 '   {{bug.name}}' +
                 '   <span class="badge badge-primary badge-pill">{{bug.grade}}</span>' +
                 '</a>',
+            methods: {
+                // 查询一个反馈详情
+                getOne: function (id) {
+                    $.ajax({
+                        type: "get",
+                        url: "bug/" + id,
+                        success: function (json) {
+                            main.bug_one_data = json;
+                        },
+                        error: function () {
+                            alert("网络异常")
+                        }
+                    })
+                }
+            },
         },
     },
     created: function () {
@@ -29,9 +54,7 @@ var main = new Vue({
     },
 });
 
-var ua = navigator.userAgent.toLowerCase();
-$("#bug_environment").val(ua);
-
+// 反馈提交按钮点击提交
 $("#bug_post_btn").click(function () {
     $.ajax({
         type: "POST",
@@ -53,6 +76,7 @@ $("#bug_post_btn").click(function () {
     })
 });
 
+// 点击标签栏 我的
 $("#nav-my-tab").click(function () {
     $.ajax({
         type: "get",
@@ -64,4 +88,8 @@ $("#nav-my-tab").click(function () {
             alert("网络异常")
         }
     })
-})
+});
+
+// 填充反馈环境
+var ua = navigator.userAgent.toLowerCase();
+$("#bug_environment").val(ua);

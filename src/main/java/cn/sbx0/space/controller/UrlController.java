@@ -1,6 +1,7 @@
 package cn.sbx0.space.controller;
 
 import cn.sbx0.space.entity.Url;
+import cn.sbx0.space.entity.User;
 import cn.sbx0.space.service.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -45,9 +46,19 @@ public class UrlController extends BaseController {
     @ResponseBody
     @PostMapping("/update")
     public ObjectNode update(HttpServletRequest request) {
-        String json = BaseService.getJson(request);
+        json = mapper.createObjectNode();
+        // 从cookie中获取登陆用户信息
+        User user = userService.getCookieUser(request);
+        if (user == null) { // 未登录无法更新
+            json.put(STATUS_NAME, STATUS_CODE_NOT_LOGIN);
+            return json;
+        } else if (user.getAuthority() > 0) { // 无权限
+            json.put(STATUS_NAME, STATUS_CODE_NO_PERMISSION);
+            return json;
+        }
+        String jsonString = BaseService.getJson(request);
         try {
-            JSONObject jsonObject = new JSONObject(json);
+            JSONObject jsonObject = new JSONObject(jsonString);
             String show = jsonObject.getString("show");
             String hide = jsonObject.getString("hide");
             JSONObject showJson = new JSONObject(show);
@@ -67,8 +78,7 @@ public class UrlController extends BaseController {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        this.json = mapper.createObjectNode();
-        return this.json;
+        return json;
     }
 
     /**
@@ -95,6 +105,9 @@ public class UrlController extends BaseController {
         return arrayNode;
     }
 
+    /**
+     * 获取隐藏的链接
+     */
     @ResponseBody
     @GetMapping("/getHidden")
     public ArrayNode getHidden(String page) {

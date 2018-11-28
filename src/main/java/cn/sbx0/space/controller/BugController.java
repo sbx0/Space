@@ -9,10 +9,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -30,6 +27,16 @@ public class BugController extends BaseController {
     @Autowired
     public BugController(ObjectMapper mapper) {
         this.mapper = mapper;
+    }
+
+    /**
+     * 反馈详情
+     */
+    @ResponseBody
+    @GetMapping(value = "/{id}")
+    public Bug one(@PathVariable("id") Integer id) {
+        Bug bug = bugService.findById(id);
+        return bug;
     }
 
     /**
