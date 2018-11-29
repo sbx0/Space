@@ -22,7 +22,9 @@ public class Bug implements Serializable {
     private String environment; // 运行环境 一般自动填充
     @Column(nullable = false)
     private String ip;
+    @ManyToOne(cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER, targetEntity = User.class)
     private User sumbitter; // 提交者
+    @ManyToOne(cascade = {CascadeType.MERGE}, fetch = FetchType.EAGER, targetEntity = User.class)
     private User solver; // 解决者
     @Column(nullable = false)
     private Date submitTime; // 提交时间

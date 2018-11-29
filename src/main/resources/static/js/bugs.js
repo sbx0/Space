@@ -1,10 +1,14 @@
 var main = new Vue({
     el: '#main',
     data: {
+        main_show: true,
+        bug_one_show: false,
         space: i18N.space,
         nav_bar_data: i18N.nav_bar_data,
         nav_scroller_data: i18N.nav_scroller_data,
         bug_my_data: [],
+        bug_list_data: [],
+        bug_solved_data: [],
         bug_one_data: {
             id: '_',
             name: '未选择',
@@ -13,7 +17,6 @@ var main = new Vue({
             content: '未选择',
             submit_time: '未选择',
         },
-
     },
     components: {
         'nav_bar_components': {
@@ -30,7 +33,7 @@ var main = new Vue({
                 '<a href="javascript:void(0)" v-on:click="getOne(bug.id)"' +
                 'class="list-group-item d-flex justify-content-between align-items-center">' +
                 '   {{bug.name}}' +
-                '   <span class="badge badge-primary badge-pill">{{bug.grade}}</span>' +
+                '   <span class="badge badge-primary badge-pill">{{bug.status}}</span>' +
                 '</a>',
             methods: {
                 // 查询一个反馈详情
@@ -40,6 +43,8 @@ var main = new Vue({
                         url: "bug/" + id,
                         success: function (json) {
                             main.bug_one_data = json;
+                            main.bug_one_show = true;
+                            main.main_show = false;
                         },
                         error: function () {
                             alert("网络异常")
@@ -76,11 +81,37 @@ $("#bug_post_btn").click(function () {
     })
 });
 
-// 点击标签栏 我的
-$("#nav-my-tab").click(function () {
+// 解决按钮点击
+$("#bug_solved_btn").click(function () {
+    var id = $("#bug_show_id").val();
     $.ajax({
         type: "get",
-        url: "bug/list",
+        url: "bug/solve?id=" + id,
+        success: function (json) {
+            if (statusCodeToBool(json.status)) {
+                alert("操作成功！");
+                goBack();
+            } else {
+                alert(statusCodeToAlert(json.status));
+            }
+        },
+        error: function () {
+            alert("网络异常")
+        }
+    })
+});
+
+// 点击标签栏 提交
+$("#nav-submit-tab").click(function () {
+    main.bug_one_show = false;
+});
+
+// 点击标签栏 我的
+$("#nav-my-tab").click(function () {
+    main.bug_one_show = false;
+    $.ajax({
+        type: "get",
+        url: "bug/my",
         success: function (json) {
             main.bug_my_data = json;
         },
@@ -89,6 +120,42 @@ $("#nav-my-tab").click(function () {
         }
     })
 });
+
+// 点击标签栏 解决
+$("#nav-solve-tab").click(function () {
+    main.bug_one_show = false;
+    $.ajax({
+        type: "get",
+        url: "bug/list",
+        success: function (json) {
+            main.bug_list_data = json;
+        },
+        error: function () {
+            alert("网络异常")
+        }
+    })
+});
+
+// 点击标签栏 已解决
+$("#nav-solved-tab").click(function () {
+    main.bug_one_show = false;
+    $.ajax({
+        type: "get",
+        url: "bug/solved",
+        success: function (json) {
+            main.bug_solved_data = json;
+        },
+        error: function () {
+            alert("网络异常")
+        }
+    })
+});
+
+// 反馈详情返回到原来的页面
+function goBack() {
+    main.main_show = true;
+    main.bug_one_show = false;
+}
 
 // 填充反馈环境
 var ua = navigator.userAgent.toLowerCase();

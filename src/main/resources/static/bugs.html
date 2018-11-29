@@ -43,7 +43,7 @@
         </nav>
     </div>
     <main role="main" class="container">
-        <div class="my-3 p-3 bg-white rounded box-shadow">
+        <div v-show="main_show" class="my-3 p-3 bg-white rounded box-shadow">
             <h6 class="pb-2 mb-0">反馈中心 Beta</h6>
             <nav>
                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -106,28 +106,36 @@
                 </div>
                 <div class="tab-pane fade" id="nav-solve" role="tabpanel" aria-labelledby="nav-solve-tab">
                     <ul class="list-group mt-3">
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            解决
-                            <span class="badge badge-primary badge-pill">14</span>
-                        </li>
+                        <bug_components
+                                v-for="bug in bug_list_data"
+                                v-bind:bug="bug"
+                                b-bind:key="bug.id">
+                        </bug_components>
                     </ul>
                 </div>
                 <div class="tab-pane fade" id="nav-solved" role="tabpanel" aria-labelledby="nav-solved-tab">
                     <ul class="list-group mt-3">
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            已解决
-                            <span class="badge badge-primary badge-pill">14</span>
-                        </li>
+                        <bug_components
+                                v-for="bug in bug_solved_data"
+                                v-bind:bug="bug"
+                                b-bind:key="bug.id">
+                        </bug_components>
                     </ul>
                 </div>
             </div>
         </div>
-        <div class="my-3 p-3 bg-white rounded box-shadow">
-            <p class="pb-2 mb-0">B{{bug_one_data.id}}</p>
-            <h5 class="border-bottom border-gray pb-2 mb-2">{{bug_one_data.name}}</h5>
+        <div v-show="bug_one_show" class="my-3 p-3 bg-white rounded box-shadow">
+            <a href="javascript:goBack()">返回</a>
+            <p class="pb-2 mb-0">代号：B{{bug_one_data.id}}</p>
+            <p class="pb-2 mb-0">提交时间：{{bug_one_data.submitTime}}</p>
+            <p class="pb-2 mb-0">状态：{{bug_one_data.status}}</p>
+            <p class="pb-2 mb-0">评级：{{bug_one_data.grade}}</p>
+            <p class="pb-2 mb-0">名称：{{bug_one_data.name}}</p>
             <p>
-                {{bug_one_data.content}}
+                描述：{{bug_one_data.content}}
             </p>
+            <input id="bug_show_id" type="hidden" :value="bug_one_data.id">
+            <button id="bug_solved_btn" class="btn btn-sm btn-success">标记为已解决</button>
             <form id="commentForm" hidden>
                 <input name="entity_id" type="hidden" value="56">
                 <input name="entity_type" type="hidden" value="article">
