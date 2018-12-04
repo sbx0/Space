@@ -33,7 +33,7 @@ var main = new Vue({
                 '<a href="javascript:void(0)" v-on:click="getOne(bug.id)"' +
                 'class="list-group-item d-flex justify-content-between align-items-center">' +
                 '   {{bug.name}}' +
-                '   <span class="badge badge-primary badge-pill">{{bug.status}}</span>' +
+                '   <div v-html="bug.status"></div>' +
                 '</a>',
             methods: {
                 // 查询一个反馈详情
@@ -42,7 +42,7 @@ var main = new Vue({
                         type: "get",
                         url: "bug/" + id,
                         success: function (json) {
-                            main.bug_one_data = json;
+                            main.bug_one_data = formateOne(json);
                             main.bug_one_show = true;
                             main.main_show = false;
                         },
@@ -91,6 +91,7 @@ $("#bug_solved_btn").click(function () {
             if (statusCodeToBool(json.status)) {
                 alert("操作成功！");
                 goBack();
+                $("#nav-solved-tab").click();
             } else {
                 alert(statusCodeToAlert(json.status));
             }
@@ -111,9 +112,9 @@ $("#nav-my-tab").click(function () {
     main.bug_one_show = false;
     $.ajax({
         type: "get",
-        url: "bug/my",
+        url: "bug/list?type=my",
         success: function (json) {
-            main.bug_my_data = json;
+            main.bug_my_data = formate(json);
         },
         error: function () {
             alert("网络异常")
@@ -128,7 +129,7 @@ $("#nav-solve-tab").click(function () {
         type: "get",
         url: "bug/list",
         success: function (json) {
-            main.bug_list_data = json;
+            main.bug_list_data = formate(json);
         },
         error: function () {
             alert("网络异常")
@@ -141,9 +142,9 @@ $("#nav-solved-tab").click(function () {
     main.bug_one_show = false;
     $.ajax({
         type: "get",
-        url: "bug/solved",
+        url: "bug/list?type=solved",
         success: function (json) {
-            main.bug_solved_data = json;
+            main.bug_solved_data = formate(json);
         },
         error: function () {
             alert("网络异常")
@@ -160,3 +161,62 @@ function goBack() {
 // 填充反馈环境
 var ua = navigator.userAgent.toLowerCase();
 $("#bug_environment").val(ua);
+
+// 格式化反馈
+function formate(json) {
+    for (var i = 0; i < json.length; i++) {
+        formateOne(json[i]);
+    }
+    return json;
+}
+
+function formateOne(bug) {
+    bug.status = statusToHtml(bug.status);
+    bug.grade = gradeToHtml(bug.grade);
+    return bug;
+}
+
+// 状态码转状态
+// 状态 -1 已修复 0 新提交 1 解决中 2 退回
+function statusToHtml(status) {
+    switch (status) {
+        case 0:
+            return "<span class='badge badge-secondary badge-pill'>新提交</span>";
+            break;
+        case 1:
+            return "<span class='badge badge-primary badge-pill'>解决中</span>";
+            break;
+        case 2:
+            return "<span class='badge badge-dark badge-pill'>已关闭</span>";
+            break;
+        case -1:
+            return "<span class='badge badge-success badge-pill'>已修复</span>";
+            break;
+        default:
+            return "<span class='badge badge-dark badge-pill'>未知</span>";
+    }
+}
+
+// 分级码转分级
+// 分级 0 1 2 3 4 建议 低级 一般 严重 致命
+function gradeToHtml(grade) {
+    switch (grade) {
+        case 0:
+            return "<span class='badge badge-secondary badge-pill'>建议</span>";
+            break;
+        case 1:
+            return "<span class='badge badge-dark badge-pill'>低级</span>";
+            break;
+        case 2:
+            return "<span class='badge badge-primary badge-pill'>一般</span>";
+            break;
+        case 3:
+            return "<span class='badge badge-warning badge-pill'>严重</span>";
+            break;
+        case 4:
+            return "<span class='badge badge-danger badge-pill'>致命</span>";
+            break;
+        default:
+            return "<span class='badge badge-danger badge-pill'>未知</span>";
+    }
+}

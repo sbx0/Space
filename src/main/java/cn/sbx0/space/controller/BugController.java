@@ -79,78 +79,27 @@ public class BugController extends BaseController {
     }
 
     /**
-     * 获取未被隐藏的反馈列表
-     */
-    @ResponseBody
-    @GetMapping("/solved")
-    public ArrayNode solved(Integer page, Integer size, HttpServletRequest request) {
-        // 从cookie中获取登陆用户信息
-        User user = userService.getCookieUser(request);
-        if (user == null) { // 未登录无法更新
-            return null;
-        } else if (user.getAuthority() > 0) { // 无权限
-            return null;
-        }
-        if (page == null) page = 1;
-        if (size == null) size = 50;
-        Page<Bug> bugPage = bugService.findSolved(page - 1, size);
-        List<Bug> bugList = bugPage.getContent();
-        ArrayNode bugJsons = mapper.createArrayNode();
-        for (Bug bug : bugList) {
-            json = mapper.createObjectNode();
-            json.put("id", bug.getId());
-            json.put("name", bug.getName());
-            json.put("grade", bug.getGrade());
-            json.put("status", bug.getStatus());
-            bugJsons.add(json);
-        }
-        return bugJsons;
-    }
-
-    /**
-     * 获取未被隐藏的反馈列表
+     * 获取的反馈列表
      */
     @ResponseBody
     @GetMapping("/list")
-    public ArrayNode list(Integer page, Integer size, HttpServletRequest request) {
+    public ArrayNode list(Integer page, Integer size, String type, HttpServletRequest request) {
         // 从cookie中获取登陆用户信息
         User user = userService.getCookieUser(request);
-        if (user == null) { // 未登录无法更新
-            return null;
-        } else if (user.getAuthority() > 0) { // 无权限
-            return null;
-        }
         if (page == null) page = 1;
         if (size == null) size = 50;
-        Page<Bug> bugPage = bugService.findAll(page - 1, size);
-        List<Bug> bugList = bugPage.getContent();
-        ArrayNode bugJsons = mapper.createArrayNode();
-        for (Bug bug : bugList) {
-            json = mapper.createObjectNode();
-            json.put("id", bug.getId());
-            json.put("name", bug.getName());
-            json.put("grade", bug.getGrade());
-            json.put("status", bug.getStatus());
-            bugJsons.add(json);
+        Page<Bug> bugPage = null;
+        if (BaseService.checkNullStr(type)) { // 尚未被解决的
+            bugPage = bugService.findAll(page - 1, size);
+        } else if (type.equals("solved")) { // 获取已被解决的
+            bugPage = bugService.findSolved(page - 1, size);
+        } else if (type.equals("my")) { // 获取登陆用户相关的
+            if (user != null) {
+                bugPage = bugService.findMy(BaseService.getIpAddress(request), user.getId(), page - 1, size);
+            } else {
+                bugPage = bugService.findMy(BaseService.getIpAddress(request), -1, page - 1, size);
+            }
         }
-        return bugJsons;
-    }
-
-    /**
-     * 获取未被隐藏的反馈列表
-     */
-    @ResponseBody
-    @GetMapping("/my")
-    public ArrayNode my(Integer page, Integer size, HttpServletRequest request) {
-        // 从cookie中获取登陆用户信息
-        User user = userService.getCookieUser(request);
-        if (user == null) {
-            user = new User();
-            user.setId(-1);
-        }
-        if (page == null) page = 1;
-        if (size == null) size = 50;
-        Page<Bug> bugPage = bugService.findMy(BaseService.getIpAddress(request), user.getId(), page - 1, size);
         List<Bug> bugList = bugPage.getContent();
         ArrayNode bugJsons = mapper.createArrayNode();
         for (Bug bug : bugList) {

@@ -16,7 +16,7 @@ public interface BugDao extends PagingAndSortingRepository<Bug, Integer> {
     /**
      * 查询已被解决的反馈
      */
-    @Query(nativeQuery = true, value = "SELECT * FROM bugs AS b WHERE b.status < 0")
+    @Query(nativeQuery = true, value = "SELECT * FROM bugs AS b WHERE b.status < 0 ORDER BY b.solved_time DESC")
     Page<Bug> findSolved(Pageable pageable);
 
     /**

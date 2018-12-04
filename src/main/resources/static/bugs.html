@@ -126,13 +126,24 @@
         </div>
         <div v-show="bug_one_show" class="my-3 p-3 bg-white rounded box-shadow">
             <a href="javascript:goBack()">返回</a>
-            <p class="pb-2 mb-0">代号：B{{bug_one_data.id}}</p>
-            <p class="pb-2 mb-0">提交时间：{{bug_one_data.submitTime}}</p>
-            <p class="pb-2 mb-0">状态：{{bug_one_data.status}}</p>
-            <p class="pb-2 mb-0">评级：{{bug_one_data.grade}}</p>
-            <p class="pb-2 mb-0">名称：{{bug_one_data.name}}</p>
+            <div class="row mt-3">
+                <div class="col-6">
+                    <p class="pb-2 mb-0">评级：
+                    <div v-html="bug_one_data.grade"></div>
+                    </p>
+                    <p class="pb-2 mb-0">代号：B{{bug_one_data.id}}</p>
+                    <p class="pb-2 mb-0">名称：{{bug_one_data.name}}</p>
+                </div>
+                <div class="col-6">
+                    <p class="pb-2 mb-0">状态：
+                    <div v-html="bug_one_data.status"></div>
+                    </p>
+                    <p class="pb-2 mb-0">提交时间：<br>{{bug_one_data.submitTime}}</p>
+                    <p v-if="bug_one_data.solvedTime != null" class="pb-2 mb-0">解决时间：<br>{{bug_one_data.solvedTime}}</p>
+                </div>
+            </div>
             <p>
-                描述：{{bug_one_data.content}}
+                描述：<br>{{bug_one_data.content}}
             </p>
             <input id="bug_show_id" type="hidden" :value="bug_one_data.id">
             <button id="bug_solved_btn" class="btn btn-sm btn-success">标记为已解决</button>

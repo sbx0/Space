@@ -143,14 +143,6 @@ function loadComments() {
     });
 }
 
-// 打开菜单
-$(function () {
-    'use strict';
-    $('[data-toggle="offcanvas"]').on('click', function () {
-        $('.offcanvas-collapse').toggleClass('open')
-    })
-});
-
 // 赞 踩
 function attitude(type) {
     var att = '';

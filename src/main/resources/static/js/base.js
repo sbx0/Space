@@ -227,13 +227,13 @@ function getQueryVariable(variable) {
 // 重写alert
 function alert(msg, type) {
     Messenger.options = {
-        extraClasses: 'messenger-fixed messenger-on-top',
+        extraClasses: 'messenger-fixed messenger-on-bottom',
         theme: 'flat'
     }
     Messenger().post({
         message: msg,
         type: type,
-        hideAfter: 5,
+        hideAfter: 3,
         showCloseButton: false
     })
 }

@@ -18,7 +18,7 @@ public class Bug implements Serializable {
     @Column(nullable = false)
     private Integer grade; // 分级 0 1 2 3 4 建议 低级 一般 严重 致命
     @Column(nullable = false)
-    private Integer status; // 状态 -1 已修复 0 新提交 1 解决中 2 退回 3
+    private Integer status; // 状态 -1 0 1 2 已修复 新提交 解决中 已关闭
     private String environment; // 运行环境 一般自动填充
     @Column(nullable = false)
     private String ip;
