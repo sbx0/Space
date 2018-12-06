@@ -96,6 +96,7 @@
                     </form>
                 </div>
                 <div class="tab-pane fade" id="nav-my" role="tabpanel" aria-labelledby="nav-my-tab">
+                    <p class="text-center alert-warning" id="user_ip"></p>
                     <div class="list-group mt-3">
                         <bug_components
                                 v-for="bug in bug_my_data"
@@ -131,8 +132,7 @@
                     <p class="pb-2 mb-0">评级：
                     <div v-html="bug_one_data.grade"></div>
                     </p>
-                    <p class="pb-2 mb-0">代号：B{{bug_one_data.id}}</p>
-                    <p class="pb-2 mb-0">名称：{{bug_one_data.name}}</p>
+                    <p class="pb-2 mb-0">B{{bug_one_data.id}} {{bug_one_data.name}}</p>
                 </div>
                 <div class="col-6">
                     <p class="pb-2 mb-0">状态：

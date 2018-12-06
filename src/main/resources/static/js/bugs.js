@@ -152,6 +152,22 @@ $("#nav-solved-tab").click(function () {
     })
 });
 
+// 自动登陆
+if (login()) {
+    $.ajax({
+        url: '../user/info',
+        type: 'GET',
+        success: function (json) {
+            if (!statusCodeToBool(json.status)) {
+                $("#user_ip").html("未登录，以下是IP:" + json.ip + "提交的反馈");
+            }
+        },
+        error: function () {
+            alert("网络异常")
+        }
+    })
+}
+
 // 反馈详情返回到原来的页面
 function goBack() {
     main.main_show = true;
@@ -162,7 +178,7 @@ function goBack() {
 var ua = navigator.userAgent.toLowerCase();
 $("#bug_environment").val(ua);
 
-// 格式化反馈
+// 格式化反馈列表
 function formate(json) {
     for (var i = 0; i < json.length; i++) {
         formateOne(json[i]);
@@ -170,6 +186,7 @@ function formate(json) {
     return json;
 }
 
+// 格式化一个反馈
 function formateOne(bug) {
     bug.status = statusToHtml(bug.status);
     bug.grade = gradeToHtml(bug.grade);

@@ -90,21 +90,22 @@ public class BugController extends BaseController {
         // 从cookie中获取登陆用户信息
         User user = userService.getCookieUser(request);
         if (page == null) page = 1;
-        if (size == null) size = 50;
+        if (size == null) size = 20;
         Page<Bug> bugPage = null;
+        ArrayNode bugJsons = mapper.createArrayNode();
         if (BaseService.checkNullStr(type)) { // 尚未被解决的
             bugPage = bugService.findAll(page - 1, size);
         } else if (type.equals("solved")) { // 获取已被解决的
             bugPage = bugService.findSolved(page - 1, size);
         } else if (type.equals("my")) { // 获取登陆用户相关的
+            String ip = BaseService.getIpAddress(request);
             if (user != null) {
-                bugPage = bugService.findMy(BaseService.getIpAddress(request), user.getId(), page - 1, size);
+                bugPage = bugService.findMy(ip, user.getId(), page - 1, size);
             } else {
-                bugPage = bugService.findMy(BaseService.getIpAddress(request), -1, page - 1, size);
+                bugPage = bugService.findMy(ip, -1, page - 1, size);
             }
         }
         List<Bug> bugList = bugPage.getContent();
-        ArrayNode bugJsons = mapper.createArrayNode();
         for (Bug bug : bugList) {
             json = mapper.createObjectNode();
             json.put("id", bug.getId());
