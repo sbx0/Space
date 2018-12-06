@@ -1,0 +1,19 @@
+.game_div {
+    min-height: 50px;
+    height: 100px;
+    width: 100%;
+}
+
+.game_main_div {
+    margin: 5px;
+    display: inline-block;
+    border: 1px black solid;
+    height: 50px;
+    width: 50px;
+    padding: 5px;
+}
+
+.game_main_div img {
+    margin: 0px auto;
+    display: block;
+}

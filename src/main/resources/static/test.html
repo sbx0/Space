@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="sbx0 实验室">
+    <meta name="author" content="sbx0">
+    <link rel="icon" href="img/favicon.png">
+
+    <title>实验室 | sbx0</title>
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+
+    <!-- 消息提示 -->
+    <link href="css/messenger.css" rel="stylesheet">
+    <link href="css/messenger-theme-flat.css" rel="stylesheet">
+    <link href="css/offcanvas.css" rel="stylesheet">
+    <link href="css/test.css" rel="stylesheet">
+
+</head>
+
+<body class="bg-light" onload="drawRect()">
+
+<div id="main" v-cloak>
+
+    <nav class="navbar navbar-expand-md fixed-top navbar-dark bg-dark">
+        <a class="navbar-brand" href="../index.html">{{space}}</a>
+        <button class="navbar-toggler p-0 border-0" type="button" data-toggle="offcanvas">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="navbar-collapse offcanvas-collapse">
+            <ul class="navbar-nav mr-auto">
+                <nav_bar_components v-for="nav_bar in nav_bar_data"
+                                    v-bind:nav_bar="nav_bar"
+                                    v-bind:key="nav_bar.id">
+                </nav_bar_components>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="nav-scroller bg-white box-shadow">
+        <nav class="nav nav-underline">
+            <nav_scroller_components v-for="nav_scroller in nav_scroller_data"
+                                     v-bind:nav_scroller="nav_scroller"
+                                     v-bind:key="nav_scroller.id">
+            </nav_scroller_components>
+        </nav>
+    </div>
+
+    <main role="main" class="container">
+
+        <div class="my-3 p-3 bg-white rounded box-shadow">
+            <h6 class="pb-2 mb-0">实验室</h6>
+            <p class="pb-2 mb-0">
+                恭喜您发现隐藏彩蛋！
+            </p>
+        </div>
+
+        <div class="my-3 p-3 bg-white rounded box-shadow">
+            <h6 class="pb-2 mb-0">对手</h6>
+            <div id="opponent" class="game_div">
+                <a href="javascript:void(0)"><div class="game_main_div"></div></a>
+                <a href="javascript:void(0)"><div class="game_main_div"></div></a>
+                <a href="javascript:void(0)"><div class="game_main_div"></div></a>
+                <a href="javascript:void(0)"><div class="game_main_div"></div></a>
+                <a href="javascript:void(0)"><div class="game_main_div"></div></a>
+            </div>
+        </div>
+
+        <div class="my-3 p-3 bg-white rounded box-shadow">
+            <h6 class="pb-2 mb-0">对方战场</h6>
+            <div id="opponent_war" class="game_div">
+                <a href="javascript:void(0)"><div class="game_main_div"></div></a>
+                <a href="javascript:void(0)"><div class="game_main_div"></div></a>
+                <a href="javascript:void(0)"><div class="game_main_div"></div></a>
+                <a href="javascript:void(0)"><div class="game_main_div"></div></a>
+                <a href="javascript:void(0)"><div class="game_main_div"></div></a>
+            </div>
+        </div>
+
+        <div class="my-3 p-3 bg-white rounded box-shadow">
+            <h6 class="pb-2 mb-0">我方战场</h6>
+            <div id="your_war" class="game_div">
+                <a href="javascript:void(0)"><div class="game_main_div"><img src="img/black.png"></div></a>
+                <a href="javascript:void(0)"><div class="game_main_div"><img src="img/black.png"></div></a>
+                <a href="javascript:void(0)"><div class="game_main_div"><img src="img/black.png"></div></a>
+                <a href="javascript:void(0)"><div class="game_main_div"><img src="img/black.png"></div></a>
+                <a href="javascript:void(0)"><div class="game_main_div"><img src="img/black.png"></div></a>
+            </div>
+        </div>
+
+        <div class="my-3 p-3 bg-white rounded box-shadow">
+            <h6 class="pb-2 mb-0">我方</h6>
+            <div id="your" class="game_div">
+                <a href="javascript:void(0)"><div class="game_main_div"><img src="img/black.png"></div></a>
+                <a href="javascript:void(0)"><div class="game_main_div"><img src="img/black.png"></div></a>
+                <a href="javascript:void(0)"><div class="game_main_div"><img src="img/black.png"></div></a>
+                <a href="javascript:void(0)"><div class="game_main_div"><img src="img/black.png"></div></a>
+                <a href="javascript:void(0)"><div class="game_main_div"><img src="img/black.png"></div></a>
+                </divopponent_war>
+            </div>
+
+    </main>
+
+</div>
+
+
+<script src="js/jquery.min.js"></script>
+<script src="js/popper.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/holder.min.js"></script>
+<script src="js/messenger.min.js"></script>
+<script src="js/messenger-theme-flat.js"></script>
+<script src="js/vue.min.js"></script>
+<!--<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>-->
+<script src="js/Sortable.min.js"></script>
+<script src="js/i18N_zh_CN.js"></script>
+<script src="js/base.js"></script>
+<script src="js/test.js"></script>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-129309220-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'UA-129309220-1');
+</script>
+
+</body>
+</html>

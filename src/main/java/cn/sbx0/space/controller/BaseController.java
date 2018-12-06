@@ -13,5 +13,6 @@ public class BaseController {
     public static final int STATUS_CODE_TIMES_LIMIT = 4; // 限制
     public static final int STATUS_CODE_NOT_FOUND = 5; // 不存在
     public static final int STATUS_CODE_NO_PERMISSION = 6; // 无权限
+    public static final int STATUS_CODE_REPEAT = 7; // 重复操作
     // JSON返回操作状态一览 End
 }

@@ -24,19 +24,22 @@ function statusCodeToAlert(status) {
             return "操作失败";
             break;
         case 2:
-            return "异常错误"
+            return "异常错误";
             break;
         case 3:
-            return "未登录"
+            return "未登录";
             break;
         case 4:
-            return "超出限制"
+            return "超出限制";
             break;
         case 5:
-            return "参数不合法"
+            return "参数不合法";
             break;
         case 6:
-            return "无权限"
+            return "无权限";
+            break;
+        case 7:
+            return "重复操作";
             break;
     }
 }
@@ -179,8 +182,8 @@ function Format(now, mask) {
     })
 }
 
-// img 添加 class = "img-responsive"
-$("img").addClass("img-responsive");
+// // img 添加 class = "img-responsive"
+// $("img").addClass("img-responsive");
 
 // 防止浏览器缓存
 function noCache(url) {

@@ -50,8 +50,11 @@ public class BugController extends BaseController {
             return json;
         }
         Bug bug = bugService.findById(id);
-        if (bug == null) {
+        if (bug == null) { // 不存在
             json.put(STATUS_NAME, STATUS_CODE_NOT_FOUND);
+            return json;
+        } else if (bug.getStatus() == -1) { // 已被解决
+            json.put(STATUS_NAME, STATUS_CODE_REPEAT);
             return json;
         } else {
             bug.setSolvedTime(new Date());
