@@ -35,10 +35,16 @@ var main = new Vue({
                 '   <div class="media-body mb-0 small lh-125 border-bottom border-gray">' +
                 '       <div class="d-flex justify-content-between align-items-center w-100">' +
                 '           <strong class="text-gray-dark">' +
-                '               <a :href="comment.user_id">{{comment.user_name}}</a>' +
+                '               <span>#{{comment.floor}}&nbsp;' +
+                '               <i class="fas fa-user"></i>' +
+                '               <a v-if="comment.user_id != null" :href="\'../user/\' + comment.user_id">{{comment.user_name}}</a>' +
+                '               <a v-else>{{comment.user_name}} : {{comment.user_ip}}</a>' +
                 '           </strong>' +
                 '           {{comment.time}}' +
-                '           <a href="#">回复</a>' +
+                '           <a :href="\'javascript:reply(\' + comment.id + \')\'">' +
+                '               <i class="fas fa-reply"></i>' +
+                '               回复' +
+                '           </a>' +
                 '       </div>' +
                 '       <p class="d-block mt-3">{{comment.content}}</p>' +
                 '   </div>' +
@@ -91,6 +97,26 @@ var main = new Vue({
         loadComments();
     },
 });
+
+// 回复
+function reply(id) {
+    $.ajax({
+        url: '../comment/reply?id=' + id,
+        type: 'GET',
+        async: false,
+        success: function (json) {
+            var status = json.status;
+            if (statusCodeToBool(status)) {
+                $("#content").val("回复#" + json.reply_to_floor + "@" + json.reply_to_user_name + ":");
+            } else {
+                alert(statusCodeToAlert(status))
+            }
+        },
+        error: function () {
+            alert("网络异常")
+        }
+    });
+}
 
 // Markdown
 var markdown = editormd.markdownToHTML("markdown", {
@@ -184,10 +210,6 @@ function attitude(type) {
 // 格式化评论列表的阅读链接与日期格式
 function formate(json) {
     for (var i = 0; i < json.length; i++) {
-        json[i].user_id = "../user/" + json[i].user_id;
-        if (json[i].user_id === "../user/null") {
-            json[i].user_id = "#";
-        }
         var d = new Date(json[i].time);
         var times = d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate() + ' ' + d.getHours() + ':' + d.getMinutes();
         json[i].time = Format(getDate(times.toString()), "yyyy-MM-dd HH:mm");

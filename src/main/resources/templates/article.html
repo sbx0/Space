@@ -1,5 +1,6 @@
 <!doctype html>
-<html lang="zh-cmn-Hans" xmlns:th="http://www.springframework.org/schema/jdbc">
+<html lang="zh-cmn-Hans" xmlns:th="http://www.springframework.org/schema/jdbc"
+      xmlns:v-bind="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -56,7 +57,7 @@
 
         <div th:if="${article.introduction ne null}" class="d-flex align-items-center p-3 my-3 text-white-50 bg-light rounded box-shadow">
             <div class="lh-100">
-                <p class="mb-0 text-dark lh-100" th:text="${article.introduction}">注册暂时关闭</p>
+                <p class="mb-0 text-dark lh-100" th:text="${article.introduction}"></p>
             </div>
         </div>
 
@@ -69,6 +70,7 @@
 
             <h5 th:text="${article.title}"></h5>
             <p class="blog-post-meta">
+                <i class="fas fa-user"></i>
                 <a th:href="'../user/'+${article.author.id}+'?page='+${page}+'&size=20#'+${article.id}"
                    th:text="${article.author.name}"></a>
                 <span th:text="${#dates.format(article.time,'yyyy-MM-dd HH:mm')}"
@@ -94,18 +96,28 @@
             <ul class="nav justify-content-center mt-3 border-top">
                 <li class="nav-item">
                     <a class="nav-link text-success" href="javascript:void(0)">
+                        <i class="fas fa-book"></i>
                         阅
                         <span th:text="${article.views}">0</span>
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link text-primary" onclick="attitude(1)" href="javascript:void(0)">
+                        <i class="far fa-comments"></i>
+                        评
+                        <span id="comments" th:text="${article.comments}">0</span>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link text-danger" onclick="attitude(1)" href="javascript:void(0)">
+                        <i class="far fa-thumbs-up"></i>
                         赞
                         <span id="likes" th:text="${article.likes}">0</span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-dark" onclick="attitude(2)" href="javascript:void(0)">
+                        <i class="far fa-thumbs-down"></i>
                         踩
                         <span id="dislikes" th:text="${article.dislikes}">0</span>
                     </a>
@@ -216,6 +228,7 @@
 <script th:src="@{~/js/popper.min.js}"></script>
 <script th:src="@{~/js/bootstrap.min.js}"></script>
 <script th:src="@{~/js/vue.min.js}"></script>
+<script th:src="@{~/js/fontawesome.js}"></script>
 <script th:src="@{~/js/messenger.min.js}"></script>
 <script th:src="@{~/js/messenger-theme-flat.js}"></script>
 <script th:src="@{~/js/viewer.min.js}"></script>

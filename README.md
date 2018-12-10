@@ -21,10 +21,11 @@ JavaScript框架:[Vue.js](https://cn.vuejs.org/index.html "Vue.js")
    
 ------------   
    
-**本项目使用以及即将使用的开源项目目录：**   
+**本项目使用的开源项目目录：**   
 [Bootstrap](https://getbootstrap.com/ "Bootstrap") 前端框架   
 [Editor.md](https://pandao.github.io/editor.md/ "Editor.md")  Markdown 编辑器   
 [Messenger](http://github.hubspot.com/messenger/docs/welcome/ "Messenger") 消息提示   
 [Viewer.js](https://fengyuanchen.github.io/viewerjs/ "Viewer.js") 图片浏览   
 [G2](https://github.com/antvis/g2 "G2") 数据可视化  
-[Sortable](https://github.com/RubaXa/Sortable) HTML5拖拽   
+[Sortable](https://github.com/RubaXa/Sortable) HTML5拖拽  
+[Font-Awesome](https://github.com/FortAwesome/Font-Awesome) 图标  

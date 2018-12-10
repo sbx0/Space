@@ -44,6 +44,34 @@ public class CommentController extends BaseController {
     }
 
     /**
+     * 回复评论
+     *
+     * @return 所选评论的用户名 类似 回复@sbx0:
+     */
+    @ResponseBody
+    @RequestMapping(value = "/reply", method = RequestMethod.GET)
+    public ObjectNode reply(Integer id, HttpServletRequest request) {
+        json = mapper.createObjectNode();
+        // 从cookie中获取登陆用户信息
+        User user = userService.getCookieUser(request);
+        if (user != null) {
+            Comment comment = commentService.findById(id);
+            if (comment.getUser_id() != null) {
+                User replyTo = userService.findById(comment.getUser_id());
+                json.put("reply_to_user_name", replyTo.getName());
+                json.put("reply_to_user_id", replyTo.getId());
+            } else {
+                json.put("reply_to_user_name", comment.getUser_name() + ":" + comment.getUser_ip());
+            }
+            json.put("reply_to_floor", comment.getFloor());
+            json.put(STATUS_NAME, STATUS_CODE_SUCCESS);
+        } else {
+            json.put(STATUS_NAME, STATUS_CODE_NOT_LOGIN);
+        }
+        return json;
+    }
+
+    /**
      * 最新评论
      */
     @ResponseBody
@@ -62,10 +90,13 @@ public class CommentController extends BaseController {
             json.put("entity_id", comment.getEntity_id());
             json.put("entity_type", comment.getEntity_type());
             json.put("content", comment.getContent());
-            json.put("user_ip", comment.getUser_ip());
+            if (comment.getUser_id() != null) {
+                json.put("user_id", comment.getUser_id());
+            }
+            json.put("user_ip", BaseService.hideFullIp(comment.getUser_ip()));
             json.put("user_name", comment.getUser_name());
             json.put("time", dateFormat.format(comment.getTime()));
-            json.put("id",comment.getId());
+            json.put("id", comment.getId());
             arrayNode.add(json);
         }
         return arrayNode;

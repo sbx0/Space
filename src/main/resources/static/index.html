@@ -54,26 +54,31 @@
                         v-bind:key="top.id">
         </top_components>
 
-        <div class="my-3 p-3 bg-white rounded box-shadow">
-            <h6 class="border-bottom border-gray pb-2 mb-0">日志</h6>
-            <article_components v-for="article in article_data"
-                                v-bind:article="article"
-                                v-bind:key="article.id">
-            </article_components>
-            <small class="d-block text-right mt-3">
-                <a href="../article/list?page=2">查看更多</a>
-            </small>
-        </div>
-
-        <div class="my-3 p-3 bg-white rounded box-shadow">
-            <h6 class="border-bottom border-gray pb-2 mb-0">评论</h6>
-            <comment_components v-for="comment in comment_data"
-                                v-bind:comment="comment"
-                                v-bind:key="comment.id">
-            </comment_components>
-            <small class="d-block text-right mt-3">
-                <a href="../article/list?page=1">查看更多</a>
-            </small>
+        <div class="row">
+            <div class="col-xl-8">
+                <div class="my-3 p-3 bg-white rounded box-shadow">
+                    <h6 class="border-bottom border-gray pb-2 mb-0">日志</h6>
+                    <article_components v-for="article in article_data"
+                                        v-bind:article="article"
+                                        v-bind:key="article.id">
+                    </article_components>
+                    <small class="d-block text-right mt-3">
+                        <a href="../article/list?page=2">查看更多</a>
+                    </small>
+                </div>
+            </div>
+            <div class="col-xl-4">
+                <div class="my-3 p-3 bg-white rounded box-shadow">
+                    <h6 class="border-bottom border-gray pb-2 mb-0">评论</h6>
+                    <comment_components v-for="comment in comment_data"
+                                        v-bind:comment="comment"
+                                        v-bind:key="comment.id">
+                    </comment_components>
+                    <small class="d-block text-right mt-3">
+                        <a href="../article/list?page=1">查看更多</a>
+                    </small>
+                </div>
+            </div>
         </div>
 
         <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -100,6 +105,7 @@
 <script src="js/messenger.min.js"></script>
 <script src="js/messenger-theme-flat.js"></script>
 <script src="js/vue.min.js"></script>
+<script src="js/fontawesome.js"></script>
 <!--<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>-->
 <script src="js/i18N_zh_CN.js"></script>
 <script src="js/base.js"></script>

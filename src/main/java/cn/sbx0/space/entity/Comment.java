@@ -1,5 +1,7 @@
 package cn.sbx0.space.entity;
 
+import cn.sbx0.space.service.BaseService;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -91,6 +93,7 @@ public class Comment implements Serializable {
     }
 
     public String getUser_ip() {
+        user_ip = BaseService.hideFullIp(user_ip);
         return user_ip;
     }
 

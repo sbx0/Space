@@ -206,4 +206,8 @@ a:hover {
     border-radius: 10px;
 }
 
+.article-nav-link {
+    padding: 5px 15px 5px 0px;
+}
+
 /* 自定义 end */

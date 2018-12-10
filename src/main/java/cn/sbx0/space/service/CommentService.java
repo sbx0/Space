@@ -16,15 +16,22 @@ public class CommentService extends BaseService {
     @Resource
     private CommentDao commentDao;
 
+    /**
+     * 根据id查找评论
+     */
+    public Comment findById(Integer id) {
+        return commentDao.findById(id).get();
+    }
+
+    /**
+     * 保存
+     */
     public void save(Comment comment) {
         commentDao.save(comment);
     }
 
     /**
      * 查询最新的limit条评论
-     *
-     * @param limit 条数
-     * @return 评论列表
      */
     public List<Comment> findNew(Integer limit) {
         if (limit == null) limit = 1;
