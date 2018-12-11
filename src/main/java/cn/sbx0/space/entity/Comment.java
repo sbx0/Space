@@ -93,7 +93,6 @@ public class Comment implements Serializable {
     }
 
     public String getUser_ip() {
-        user_ip = BaseService.hideFullIp(user_ip);
         return user_ip;
     }
 

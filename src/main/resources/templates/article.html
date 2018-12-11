@@ -55,14 +55,13 @@
 
     <main role="main" class="container">
 
-        <div th:if="${article.introduction ne null}"
-             class="d-flex align-items-center p-3 my-3 text-white-50 bg-light rounded box-shadow">
+        <div th:if="${article.introduction ne null}" class="my-3 p-3 bg-white rounded box-shadow">
             <div class="lh-100">
                 <p class="mb-0 text-dark lh-100" th:text="${article.introduction}"></p>
             </div>
         </div>
 
-        <div class="my-3 p-3 bg-white rounded box-shadow">
+        <div class="mt-3 p-3 bg-white rounded box-shadow">
             <h5 th:if="${article.top < 0}" class="text-danger mb-2">
                 <strong>
                     该文章已被隐藏
@@ -103,7 +102,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-primary" onclick="attitude(1)" href="javascript:void(0)">
+                    <a class="nav-link text-primary" href="javascript:void(0)">
                         <i class="far fa-comments"></i>
                         评
                         <span id="comments" th:text="${article.comments}">0</span>
@@ -148,7 +147,7 @@
 
         </div>
 
-        <div class="my-3 p-3 bg-white rounded box-shadow">
+        <div class="mt-3 p-3 bg-white rounded box-shadow">
             <h6 class="border-bottom border-gray pb-2 mb-2">版权声明</h6>
             <p>
                 作者:
@@ -172,7 +171,7 @@
             </p>
         </div>
 
-        <div th:if="${manage == 1}" class="my-3 p-3 bg-white rounded box-shadow">
+        <div th:if="${manage == 1}" class="mt-3 p-3 bg-white rounded box-shadow">
             <h6 class="pb-2 mb-2">管理</h6>
             <a th:href="'../article/updateOne?id='+${article.id}" class="btn btn-sm btn-outline-success"
                role="button">
@@ -195,7 +194,7 @@
             (adsbygoogle = window.adsbygoogle || []).push({});
         </script>
 
-        <div class="my-3 p-3 bg-white rounded box-shadow">
+        <div class="mt-3 p-3 bg-white rounded box-shadow">
             <a id="c"></a>
             <h6 class="pb-2 mb-2">评论</h6>
             <form id="commentForm">

@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -46,18 +48,28 @@ public class LogController extends BaseController {
      */
     @ResponseBody
     @RequestMapping(value = "/data/views")
-    public ArrayNode g2Views() {
+    public ArrayNode g2Views(Integer day) {
+        if (day == null) {
+            day = 7;
+        } else if (day < 0) {
+            day = 7;
+        } else if (day > 360) {
+            day = 360;
+        }
         Date now = BaseService.getEndOfDay(new Date());
         Calendar calendar = Calendar.getInstance(); // 得到日历
         calendar.setTime(now); // 把当前时间赋给日历
-        calendar.add(Calendar.DAY_OF_MONTH, -30); // 30天
+        calendar.add(Calendar.DAY_OF_MONTH, -day); // 自定义天数
         Date begin = BaseService.getStartOfDay(calendar.getTime());
         List<Object[]> views = logService.countIpByTime(begin, now);
         ArrayNode arrayNode = mapper.createArrayNode();
+        DateFormat dateFormat = new SimpleDateFormat("MM-dd");
+
         for (Object[] view : views) {
             ObjectNode objectNode = mapper.createObjectNode();
-            objectNode.put("time", view[0].toString());
+            objectNode.put("time", dateFormat.format(view[0]));
             objectNode.put("number", Integer.parseInt(view[1].toString().trim()));
+            System.out.println(dateFormat.format(view[0]) + ":" + view[1].toString().trim());
             arrayNode.add(objectNode);
         }
         return arrayNode;

@@ -20,57 +20,106 @@ var main = new Vue({
     },
 });
 
-var data = [];
-
-// var chart = new G2.Chart({
-//     id: 'c1',
-//     forceFit: true,
-//     height: 450,
-// });
-//
-// G2.track(false);
-
-GM.Global.pixelRatio = 2;
-var Util = GM.Util;
-var chart = new GM.Chart({
-    id: 'c1'
+var view_7_data = [];
+var view_7 = new G2.Chart({
+    id: 'view_7',
+    forceFit: true,
+    height: 400,
 });
-var defs = {
-    time: {
-        type: 'timeCat',
-        mask: 'yyyy-mm-dd',
-        tickCount: 3,
-        range: [0, 1]
-    },
-    number: {
-        tickCount: 5,
-        min: 0
-    }
-};
-//配置刻度文字大小，供PC端显示用(移动端可以使用默认值20px)
-chart.axis('number', {
-    label: {
-        fontSize: 14
-    }
-});
-chart.axis('time', {
-    label: {
-        fontSize: 14
-    }
-});
-
+G2.track(false);
 $.ajax({
-    url: "../log/data/views",
+    url: "../log/data/views?day=7",
     type: "GET",
-    async: true,
-    success: function (json) {
-        chart.source(json, defs);
-        chart.line().position('time*number');
-        chart.render();
-        // chart.line().position('time*number').size(3);
-        // chart.render();
+    async: false,
+    success: function (d) {
+        view_7_data = d;
+        view_7.source(view_7_data, {
+            time: {
+                alias: '日期',
+            },
+            number: {
+                alias: '访问数',
+            }
+        });
+        view_7.line().position('time*number').size(3);
+        view_7.render();
     },
-    error: function () {
-        alert("网络异常")
-    }
+});
+
+var view_30_data = [];
+var view_30 = new G2.Chart({
+    id: 'view_30',
+    forceFit: true,
+    height: 400,
+});
+G2.track(false);
+$.ajax({
+    url: "../log/data/views?day=30",
+    type: "GET",
+    async: false,
+    success: function (d) {
+        view_30_data = d;
+        view_30.source(view_30_data, {
+            time: {
+                alias: '日期',
+            },
+            number: {
+                alias: '访问数',
+            }
+        });
+        view_30.line().position('time*number').size(3);
+        view_30.render();
+    },
+});
+
+var view_90_data = [];
+var view_90 = new G2.Chart({
+    id: 'view_90',
+    forceFit: true,
+    height: 400,
+});
+G2.track(false);
+$.ajax({
+    url: "../log/data/views?day=90",
+    type: "GET",
+    async: false,
+    success: function (d) {
+        view_90_data = d;
+        view_90.source(view_90_data, {
+            time: {
+                alias: '日期',
+            },
+            number: {
+                alias: '访问数',
+            }
+        });
+        view_90.line().position('time*number').size(3);
+        view_90.render();
+    },
+});
+
+var view_360_data = [];
+var view_360 = new G2.Chart({
+    id: 'view_360',
+    forceFit: true,
+    height: 400,
+});
+G2.track(false);
+$.ajax({
+    url: "../log/data/views?day=360",
+    type: "GET",
+    async: false,
+    success: function (d) {
+        view_360_data = d;
+        view_360.source(view_360_data, {
+            time: {
+                alias: '日期',
+            },
+            number: {
+                alias: '访问数',
+            }
+        });
+        view_360.line().position('time*number').size(3);
+        view_360.render();
+    },
 });

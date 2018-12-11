@@ -84,8 +84,7 @@ public class CommentController extends BaseController {
         List<Comment> comments = commentService.findNew(10);
         ArrayNode arrayNode = mapper.createArrayNode();
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        for (int i = 0; i < comments.size(); i++) {
-            Comment comment = comments.get(i);
+        for (Comment comment : comments) {
             json = mapper.createObjectNode();
             json.put("entity_id", comment.getEntity_id());
             json.put("entity_type", comment.getEntity_type());
@@ -164,8 +163,7 @@ public class CommentController extends BaseController {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         if (commentPage != null && commentPage.getTotalElements() > 0) {
             List<Comment> comments = commentPage.getContent();
-            for (int i = 0; i < comments.size(); i++) {
-                Comment comment = comments.get(i);
+            for (Comment comment : comments) {
                 json = mapper.createObjectNode();
                 json.put("content", comment.getContent());
                 json.put("floor", comment.getFloor());
