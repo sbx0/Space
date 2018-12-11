@@ -162,7 +162,7 @@ public class CommentController extends BaseController {
         Page<Comment> commentPage = commentService.findByEntity(type, id, page - 1, size);
         ArrayNode jsons = mapper.createArrayNode();
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        if (commentPage.getTotalElements() > 0) {
+        if (commentPage != null && commentPage.getTotalElements() > 0) {
             List<Comment> comments = commentPage.getContent();
             for (int i = 0; i < comments.size(); i++) {
                 Comment comment = comments.get(i);

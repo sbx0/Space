@@ -217,7 +217,7 @@
                                 v-bind:comment="comment"
                                 v-bind:key="comment.id">
             </comment_components>
-            <nav class="nav justify-content-center mt-3">
+            <nav v-if="comment_data.length > 0" class="nav justify-content-center mt-3">
                 <ul class="pagination">
                     <li class="page-item"><a class="page-link" href="javascript:loadCommentsByPage(-2)">上一页</a></li>
                     <paeg_components v-for="page in page_data"
