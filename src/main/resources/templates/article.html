@@ -55,7 +55,8 @@
 
     <main role="main" class="container">
 
-        <div th:if="${article.introduction ne null}" class="d-flex align-items-center p-3 my-3 text-white-50 bg-light rounded box-shadow">
+        <div th:if="${article.introduction ne null}"
+             class="d-flex align-items-center p-3 my-3 text-white-50 bg-light rounded box-shadow">
             <div class="lh-100">
                 <p class="mb-0 text-dark lh-100" th:text="${article.introduction}"></p>
             </div>
@@ -195,6 +196,7 @@
         </script>
 
         <div class="my-3 p-3 bg-white rounded box-shadow">
+            <a id="c"></a>
             <h6 class="pb-2 mb-2">评论</h6>
             <form id="commentForm">
                 <input name="entity_id" type="hidden" th:value="${article.id}">
@@ -215,6 +217,16 @@
                                 v-bind:comment="comment"
                                 v-bind:key="comment.id">
             </comment_components>
+            <nav class="nav justify-content-center mt-3">
+                <ul class="pagination">
+                    <li class="page-item"><a class="page-link" href="javascript:loadCommentsByPage(-2)">上一页</a></li>
+                    <paeg_components v-for="page in page_data"
+                                     v-bind:page="page"
+                                     v-bind:key="page">
+                    </paeg_components>
+                    <li class="page-item"><a class="page-link" href="javascript:loadCommentsByPage(-1)">下一页</a></li>
+                </ul>
+            </nav>
         </div>
 
         <input id="id" type="hidden" th:value="${article.id}">

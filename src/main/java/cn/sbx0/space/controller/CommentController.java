@@ -142,6 +142,7 @@ public class CommentController extends BaseController {
                 commentService.save(comment);
                 Article article = articleService.findById(comment.getEntity_id(), 1);
                 article.setComments(article.getComments() + 1);
+                articleService.save(article);
                 json.put(STATUS_NAME, STATUS_CODE_SUCCESS);
             } catch (Exception e) {
                 json.put(STATUS_NAME, STATUS_CODE_EXCEPTION);
@@ -157,12 +158,35 @@ public class CommentController extends BaseController {
      */
     @ResponseBody
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public List list(String type, Integer id, Integer page, Integer size) {
+    public ObjectNode list(String type, Integer id, Integer page, Integer size) {
         Page<Comment> commentPage = commentService.findByEntity(type, id, page - 1, size);
-        if (commentPage != null) {
-            return commentPage.getContent();
+        ArrayNode jsons = mapper.createArrayNode();
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        if (commentPage.getTotalElements() > 0) {
+            List<Comment> comments = commentPage.getContent();
+            for (int i = 0; i < comments.size(); i++) {
+                Comment comment = comments.get(i);
+                json = mapper.createObjectNode();
+                json.put("content", comment.getContent());
+                json.put("floor", comment.getFloor());
+                if (comment.getUser_id() != null) {
+                    json.put("user_id", comment.getUser_id());
+                }
+                json.put("user_ip", BaseService.hideFullIp(comment.getUser_ip()));
+                json.put("user_name", comment.getUser_name());
+                json.put("time", dateFormat.format(comment.getTime()));
+                json.put("id", comment.getId());
+                jsons.add(json);
+            }
+            json = mapper.createObjectNode();
+            json.set("comments", jsons);
+            json.put("totalPage", commentPage.getTotalPages());
+            json.put("currentPage", page);
+            return json;
         } else {
-            return null;
+            json = mapper.createObjectNode();
+            json.put(STATUS_NAME, STATUS_CODE_NOT_FOUND);
+            return json;
         }
     }
 }

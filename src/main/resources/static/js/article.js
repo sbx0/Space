@@ -1,5 +1,4 @@
-var page = 1, size = 10;
-
+var page = 1, size = 10, totalPage = 0;
 var main = new Vue({
     el: '#main',
     data: {
@@ -18,8 +17,13 @@ var main = new Vue({
         nav_bar_data: i18N.nav_bar_data,
         nav_scroller_data: i18N.nav_scroller_data,
         comment_data: [],
+        page_data: [1],
     },
     components: {
+        'paeg_components': {
+            props: ['page'],
+            template: '<li class="page-item"><a class="page-link" :href="\'javascript:loadCommentsByPage(\' + page + \')\'">{{page}}</a></li>',
+        },
         'nav_bar_components': {
             props: ['nav_bar'],
             template: '<li class="nav-item"><a class="nav-link" :href="nav_bar.url" v-html="nav_bar.text"></a></li>',
@@ -31,23 +35,23 @@ var main = new Vue({
         'comment_components': {
             props: ['comment'],
             template:
-                '<div class="media text-muted pt-3">' +
-                '   <div class="media-body mb-0 small lh-125 border-bottom border-gray">' +
-                '       <div class="d-flex justify-content-between align-items-center w-100">' +
-                '           <strong class="text-gray-dark">' +
-                '               <span>#{{comment.floor}}&nbsp;' +
-                '               <i class="fas fa-user"></i>' +
-                '               <a v-if="comment.user_id != null" :href="\'../user/\' + comment.user_id">{{comment.user_name}}</a>' +
-                '               <a v-else>{{comment.user_name}} : {{comment.user_ip}}</a>' +
-                '           </strong>' +
-                '           {{comment.time}}' +
-                '           <a :href="\'javascript:reply(\' + comment.id + \')\'">' +
-                '               <i class="fas fa-reply"></i>' +
-                '               回复' +
-                '           </a>' +
-                '       </div>' +
-                '       <p class="d-block mt-3">{{comment.content}}</p>' +
-                '   </div>' +
+                '<div class="media text-muted pt-3">\n    ' +
+                '<div class="media-body mb-0 small lh-125 border-bottom border-gray">\n        ' +
+                '<div class="d-flex justify-content-between align-items-center w-100">\n            ' +
+                '<strong class="text-gray-dark">\n                ' +
+                '<span>#{{comment.floor}}&nbsp;\n                    ' +
+                '<i class="fas fa-user"></i>\n                    ' +
+                '<a v-if="comment.user_id != null" :href="\'../user/\' + comment.user_id">{{comment.user_name}}</a>\n                    ' +
+                '<a v-else>{{comment.user_name}} : {{comment.user_ip}}</a>\n                </span>\n            ' +
+                '</strong>\n            ' +
+                '{{comment.time}}' +
+                '<a :href="\'javascript:reply(\' + comment.id + \')\'">\n            ' +
+                '<i class="fas fa-reply"></i>\n            ' +
+                '回复\n        ' +
+                '</a>\n        ' +
+                '</div>\n        ' +
+                '<p class="d-block mt-3">{{comment.content}}</p>\n    ' +
+                '</div>\n' +
                 '</div>',
         },
     },
@@ -136,6 +140,8 @@ var viewer = new Viewer(document.getElementById('markdown'), {
 
 // 评论
 function comment() {
+    page = 1;
+    loadComments();
     $.ajax({
         url: '../comment/post',
         type: 'POST',
@@ -145,8 +151,10 @@ function comment() {
             if (statusCodeToBool(status)) {
                 $("#content").val("");
                 loadComments();
+                var comments = parseInt($("#comments").html());
+                $("#comments").html(comments + 1);
             }
-            alert(statusCodeToAlert(status))
+            alert(statusCodeToAlert(status));
         },
         error: function () {
             alert("网络异常")
@@ -155,13 +163,52 @@ function comment() {
     return false;
 }
 
+// 加载第几页的评论
+function loadCommentsByPage(p) {
+    if (p == page) return false;
+    if (p == -1) {
+        page = page + 1;
+        if (page > totalPage) {
+            page = totalPage;
+            alert("已经是最后一页了");
+            return false;
+        }
+    } else if (p == -2) {
+        page = page - 1;
+        if (page < 1) {
+            page = 1;
+            alert("已经是第一页了");
+            return false;
+        }
+    } else {
+        page = p;
+    }
+    if (page < 1) page = 1;
+    if (page > totalPage) page = totalPage;
+    window.location.href = "#c";
+    loadComments();
+}
+
 // 加载评论
 function loadComments() {
     $.ajax({
         url: '../comment/list?type=article&id=' + $("#id").val() + '&page=' + page + '&size=' + size,
         type: 'GET',
         success: function (json) {
-            main.comment_data = formate(json);
+            main.comment_data = formate(json.comments);
+            totalPage = json.totalPage;
+            var pageNum = [];
+            if (totalPage > 5) {
+                pageNum.push(1);
+                pageNum.push(parseInt(totalPage / 2));
+                pageNum.push(totalPage);
+            } else {
+                for (var i = 0; i < totalPage; i++) {
+                    pageNum.push(i + 1);
+                }
+            }
+            main.page_data = pageNum;
+            page = json.currentPage;
         },
         error: function () {
             alert("网络异常")

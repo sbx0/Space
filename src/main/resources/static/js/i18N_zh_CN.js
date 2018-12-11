@@ -26,6 +26,7 @@ var i18N = {
             save: 'article/save',
         },
     },
+    loadding: '<div class="spinner">\n    <div class="bounce1"></div>\n    <div class="bounce2"></div>\n    <div class="bounce3"></div>\n</div>',
     space: '空间站',
     index: '首页',
     tools: '工具',
