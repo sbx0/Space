@@ -14,12 +14,8 @@ public interface MessageDao extends PagingAndSortingRepository<Message, Integer>
 
     /**
      * 某时间段的消息
-     *
-     * @param begin 开始日期
-     * @param end   结束日期
-     * @return 消息列表
      */
-    @Query(value = "SELECT * FROM messages m WHERE m.send_time > ?1 AND m.send_time < ?2", nativeQuery = true)
-    List<Message> findByTime(Date begin, Date end);
+    @Query(value = "SELECT m FROM Message m WHERE m.sendTime > ?1 AND m.sendTime < ?2 AND m.type = ?3")
+    List<Message> findByTime(Date begin, Date end, String type);
 
 }

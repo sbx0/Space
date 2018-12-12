@@ -1,6 +1,7 @@
 package cn.sbx0.space.controller;
 
 import cn.sbx0.space.entity.Message;
+import cn.sbx0.space.entity.Notification;
 import cn.sbx0.space.entity.User;
 import cn.sbx0.space.service.BaseService;
 import cn.sbx0.space.service.LogService;
@@ -9,6 +10,7 @@ import cn.sbx0.space.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.sun.org.apache.regexp.internal.RE;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
@@ -48,34 +50,65 @@ public class MessageController extends BaseController {
      */
     @ResponseBody
     @RequestMapping("/receive")
-    public ArrayNode receive(HttpServletRequest request) {
+    public ObjectNode receive(String type, HttpServletRequest request) {
         json = mapper.createObjectNode();
         // 从cookie中获取登陆用户信息
         User user = userService.getCookieUser(request);
         // 日志记录
         logService.log(user, request);
-        Date end = new Date();
-        end = BaseService.getEndOfDay(end);
-        Calendar calendar = Calendar.getInstance(); // 得到日历
-        calendar.setTime(end); // 把当前时间赋给日历
-        calendar.add(Calendar.DAY_OF_MONTH, -1); // 1天
-        Date begin = calendar.getTime();
-        begin = BaseService.getStartOfDay(begin);
-        List<Message> messages = messageService.findByTime(begin, end);
-        ArrayNode arrayNode = mapper.createArrayNode();
-        for (Message message : messages) {
-            json = mapper.createObjectNode();
-            if (message.getSendUser() != null) {
-                json.put("u_id", message.getSendUser().getId());
-                json.put("u_name", message.getSendUser().getName());
+        if (BaseService.checkNullStr(type)) {
+            json.put(STATUS_NAME, STATUS_CODE_NOT_FOUND);
+            return json;
+        } else if (type.trim().equals("public")) {
+            Date end = new Date();
+            end = BaseService.getEndOfDay(end);
+            Calendar calendar = Calendar.getInstance(); // 得到日历
+            calendar.setTime(end); // 把当前时间赋给日历
+            calendar.add(Calendar.DAY_OF_MONTH, -1); // 1天
+            Date begin = calendar.getTime();
+            begin = BaseService.getStartOfDay(begin);
+            List<Message> messages = messageService.findByTime(begin, end, type);
+            ArrayNode arrayNode = mapper.createArrayNode();
+            for (Message message : messages) {
+                json = mapper.createObjectNode();
+                if (message.getSendUser() != null) {
+                    json.put("u_id", message.getSendUser().getId());
+                    json.put("u_name", message.getSendUser().getName());
+                }
+                DateFormat df = new SimpleDateFormat("HH:mm");
+                json.put("send_time", df.format(message.getSendTime()));
+                json.put("ip", BaseService.hideFullIp(message.getIp()));
+                json.put("content", message.getContent());
+                arrayNode.add(json);
             }
-            DateFormat df = new SimpleDateFormat("HH:mm");
-            json.put("send_time", df.format(message.getSendTime()));
-            json.put("ip", BaseService.hideFullIp(message.getIp()));
-            json.put("content", message.getContent());
-            arrayNode.add(json);
+            json = mapper.createObjectNode();
+            json.set("msgs", arrayNode);
+            json.put(STATUS_NAME, STATUS_CODE_SUCCESS);
+        } else if (type.trim().equals("notification")) {
+            json = mapper.createObjectNode();
+            if (user.getId() != null) {
+                // 查询该用户的所有系统通知
+                List<Notification> notifications = messageService.findAllByUser(user.getId(), "notification");
+                ArrayNode jsons = mapper.createArrayNode();
+                for (Notification n : notifications) {
+                    ObjectNode notificationNode = mapper.createObjectNode();
+                    notificationNode.put("id", n.getId());
+                    notificationNode.put("title", n.getTitle());
+                    notificationNode.put("content", n.getContent());
+                    notificationNode.put("time", n.getSendTime().toString());
+                    jsons.add(notificationNode);
+                }
+                json.set("notifications", jsons);
+                json.put(STATUS_NAME, STATUS_CODE_SUCCESS);
+            } else {
+                json.put(STATUS_NAME, STATUS_CODE_NOT_LOGIN);
+            }
+            json.put(STATUS_NAME, STATUS_CODE_SUCCESS);
+        } else {
+            json = mapper.createObjectNode();
+            json.put(STATUS_NAME, STATUS_CODE_NOT_FOUND);
         }
-        return arrayNode;
+        return json;
     }
 
     /**

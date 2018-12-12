@@ -8,6 +8,7 @@ var main = new Vue({
         space: i18N.space,
         nav_bar_data: i18N.nav_bar_data,
         nav_scroller_data: i18N.nav_scroller_data,
+        notification_data: [],
     },
     components: {
         'nav_bar_components': {
@@ -17,6 +18,20 @@ var main = new Vue({
         'nav_scroller_components': {
             props: ['nav_scroller'],
             template: '<a class="nav-link" :href="nav_scroller.url" v-html="nav_scroller.text"></a>',
+        },
+        'notification_components': {
+            props: ['notification'],
+            template: '<div class="card">\n    <div class="card-header" id="notification.id">\n        ' +
+                '<h5 class="mb-0">\n            ' +
+                '<button class="btn btn-link" type="button" ' +
+                'data-toggle="collapse" data-target="message.id"\n                    ' +
+                'aria-expanded="true" aria-controls="collapseOne">\n                ' +
+                '{{notification.title}}\n            ' +
+                '</button>\n        </h5>\n    </div>\n    ' +
+                '<div id="message.id" class="collapse show" aria-labelledby="message.id">\n' +
+                '        <div class="card-body"><p>{{notification.time}}</p>\n            ' +
+                '{{notification.content}}\n        </div>\n    ' +
+                '</div>\n</div>',
         },
     },
     created: function () {
@@ -28,17 +43,34 @@ window.location.hash = "#go";
 
 var reconnect_times = 0;
 
+// 获取系统通知
+getNotification();
+
+function getNotification() {
+    $.ajax({
+        url: '../message/receive?type=notification',
+        type: 'GET',
+        async: false,
+        success: function (json) {
+            main.notification_data = json.notifications;
+        },
+        error: function () {
+            alert("网络异常");
+        }
+    })
+}
+
 // 获取历史消息
 function history_chat() {
     $("#chat_content").html("");
     $.ajax({
-        url: '../message/receive',
+        url: '../message/receive?type=public',
         type: 'GET',
         async: false,
         success: function (json) {
-            var history = json;
+            var history = json.msgs;
             for (var i = 0; i < history.length; i++) {
-                printMessage(json[i]);
+                printMessage(history[i]);
                 scrollToBottom();
             }
         },

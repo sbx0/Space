@@ -9,10 +9,11 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "MESSAGES")
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Message implements Serializable {
     private static final long serialVersionUID = 310841855975160801L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id; // 消息ID
     @Column(nullable = false, length = 233)
     private String content; // 消息内容

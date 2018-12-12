@@ -2,6 +2,7 @@ package cn.sbx0.space.controller;
 
 import cn.sbx0.space.entity.Article;
 import cn.sbx0.space.entity.Comment;
+import cn.sbx0.space.entity.Notification;
 import cn.sbx0.space.entity.User;
 import cn.sbx0.space.service.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,6 +11,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -35,6 +38,8 @@ public class CommentController extends BaseController {
     private LogService logService;
     @Resource
     private ArticleService articleService;
+    @Resource
+    private MessageService messageService;
     private ObjectMapper mapper;
     private ObjectNode json;
 
@@ -105,6 +110,7 @@ public class CommentController extends BaseController {
      * 发布评论
      */
     @ResponseBody
+    @Transactional(timeout = 5)
     @RequestMapping(value = "/post", method = RequestMethod.POST)
     public ObjectNode post(Comment comment, HttpServletRequest request) {
         json = mapper.createObjectNode();
@@ -138,12 +144,22 @@ public class CommentController extends BaseController {
                 else
                     floor = 0;
                 comment.setFloor(floor + 1);
-                commentService.save(comment);
+                commentService.save(comment); // 评论保存
                 Article article = articleService.findById(comment.getEntity_id(), 1);
                 article.setComments(article.getComments() + 1);
-                articleService.save(article);
+                articleService.save(article); // 文章保存
                 json.put(STATUS_NAME, STATUS_CODE_SUCCESS);
+                // 系统评论通知
+                Notification notification = new Notification();
+                notification.setTitle("您收到了一条评论");
+                notification.setContent(comment.getContent());
+                notification.setIp(BaseService.getIpAddress(request));
+                notification.setSendTime(new Date());
+                notification.setReceiveUser(article.getAuthor());
+                notification.setType("notifacation");
+                messageService.save(notification);
             } catch (Exception e) {
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly(); // 事务回滚
                 json.put(STATUS_NAME, STATUS_CODE_EXCEPTION);
             }
         }

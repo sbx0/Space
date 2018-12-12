@@ -31,7 +31,7 @@ public interface ArticleDao extends PagingAndSortingRepository<Article, Integer>
      * @param u_id 用户ID
      * @return 该作者的上一篇文章
      */
-    @Query(value = "SELECT * FROM articles a WHERE a.id < ?1 AND a.author_id = ?2 AND a.top >= 0 ORDER BY a.id DESC limit 1", nativeQuery = true)
+    @Query(value = "SELECT * FROM articles a WHERE a.id < ?1 AND a.author_id = ?2 AND a.top >= 0 ORDER BY a.id DESC LIMIT 1", nativeQuery = true)
     Article prev(Integer id, Integer u_id);
 
     /**
@@ -40,7 +40,7 @@ public interface ArticleDao extends PagingAndSortingRepository<Article, Integer>
      * @param id 文章ID
      * @return 该篇文章的上一篇文章
      */
-    @Query(value = "SELECT * FROM articles a WHERE a.id < ?1 AND a.top >= 0 ORDER BY a.id DESC limit 1", nativeQuery = true)
+    @Query(value = "SELECT * FROM articles a WHERE a.id < ?1 AND a.top >= 0 ORDER BY a.id DESC LIMIT 1", nativeQuery = true)
     Article prev(Integer id);
 
     /**
@@ -49,7 +49,7 @@ public interface ArticleDao extends PagingAndSortingRepository<Article, Integer>
      * @param id 文章ID
      * @return 该篇文章的下一篇文章
      */
-    @Query(value = "SELECT * FROM articles a WHERE a.id > ?1 AND a.top >= 0 ORDER BY a.id ASC limit 1", nativeQuery = true)
+    @Query(value = "SELECT * FROM articles a WHERE a.id > ?1 AND a.top >= 0 ORDER BY a.id ASC LIMIT 1", nativeQuery = true)
     Article next(Integer id);
 
     /**
@@ -59,7 +59,7 @@ public interface ArticleDao extends PagingAndSortingRepository<Article, Integer>
      * @param u_id 作者ID
      * @return 该作者的下一篇文章
      */
-    @Query(value = "SELECT * FROM articles a WHERE a.id > ?1 AND a.author_id = ?2 AND a.top >= 0 ORDER BY a.id ASC limit 1", nativeQuery = true)
+    @Query(value = "SELECT * FROM articles a WHERE a.id > ?1 AND a.author_id = ?2 AND a.top >= 0 ORDER BY a.id ASC LIMIT 1", nativeQuery = true)
     Article next(Integer id, Integer u_id);
 
     /**
@@ -153,7 +153,7 @@ public interface ArticleDao extends PagingAndSortingRepository<Article, Integer>
      *
      * @return 最大置顶数
      */
-    @Query(value = "SELECT a.top FROM articles a WHERE a.top >= 0 ORDER BY a.top DESC limit 1", nativeQuery = true)
+    @Query(value = "SELECT a.top FROM articles a WHERE a.top >= 0 ORDER BY a.top DESC LIMIT 1", nativeQuery = true)
     Integer getMaxTop();
 
     /**
@@ -170,6 +170,6 @@ public interface ArticleDao extends PagingAndSortingRepository<Article, Integer>
      * @param size 置顶文章条数
      * @return 相应的置顶文章列表
      */
-    @Query(value = "SELECT * FROM articles a WHERE a.top > 0 ORDER BY a.top DESC,a.id DESC limit ?1", nativeQuery = true)
+    @Query(value = "SELECT * FROM articles a WHERE a.top > 0 ORDER BY a.top DESC,a.id DESC LIMIT ?1", nativeQuery = true)
     List<Article> top(Integer size);
 }
