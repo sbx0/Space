@@ -105,7 +105,7 @@ public interface ArticleDao extends PagingAndSortingRepository<Article, Integer>
      * @param pageable 分页查询
      * @return 对应页数和条数的文章列表
      */
-    @Query(value = "SELECT * FROM articles a WHERE a.top >= 0 AND (a.title LIKE ?1 OR a.introduction LIKE ?1) ORDER BY LENGTH(REPLACE(a.title,?1,''))", nativeQuery = true)
+    @Query(value = "SELECT * FROM articles a WHERE a.top >= 0 AND (UPPER(a.title) LIKE upper(?1) OR upper(a.introduction) LIKE upper(?1)) ORDER BY LENGTH(REPLACE(a.title,?1,''))", nativeQuery = true)
     Page<Article> findByKeyword(String keyword, Pageable pageable);
 
     /**
