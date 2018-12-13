@@ -46,6 +46,7 @@ var reconnect_times = 0;
 // 获取系统通知
 getNotification();
 
+// 获取系统通知
 function getNotification() {
     $.ajax({
         url: '../message/receive?type=notification',

@@ -8,10 +8,10 @@ var i18N = {
         {id: 0, text: '地图', url: '../site_map.xml'},
     ],
     nav_scroller_data: [
-        {id: 0, text: '<strong>反馈</strong> <span class="badge badge-success">新</span>', url: '../bugs.html'},
         {id: 0, text: '首页', url: '../index.html'},
         {id: 0, text: '搜索', url: '../article/search'},
         {id: 0, text: '消息', url: '../message.html'},
+        {id: 0, text: '反馈', url: '../bugs.html'},
         {id: 0, text: '数据', url: '../data.html'},
         {id: 0, text: '工具', url: '../tools.html'},
         {id: 0, text: '登陆', url: '../login.html'},

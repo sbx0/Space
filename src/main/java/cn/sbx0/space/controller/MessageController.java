@@ -86,7 +86,7 @@ public class MessageController extends BaseController {
             json.put(STATUS_NAME, STATUS_CODE_SUCCESS);
         } else if (type.trim().equals("notification")) {
             json = mapper.createObjectNode();
-            if (user.getId() != null) {
+            if (user != null && user.getId() != null) {
                 // 查询该用户的所有系统通知
                 List<Notification> notifications = messageService.findAllByUser(user.getId(), "notification");
                 ArrayNode jsons = mapper.createArrayNode();

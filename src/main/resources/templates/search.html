@@ -62,7 +62,14 @@
             </form>
         </div>
 
-        <div th:if="${articles != null}" class="my-3 p-3 bg-white rounded box-shadow">
+        <div th:if="${(articles == null || #lists.size(articles) == 0)&& keyword != null}"
+             class="my-3 p-3 bg-white rounded box-shadow">
+            <h5 class="pb-0 mb-0 text-center">
+                未匹配到结果。
+            </h5>
+        </div>
+
+        <div th:if="${articles != null && #lists.size(articles) > 0}" class="my-3 p-3 bg-white rounded box-shadow">
 
             <nav class="mb-3 text-center">
                 <a th:if="${prev_page != null}"
@@ -86,9 +93,8 @@
                 </a>
             </nav>
 
-            <div class="media text-muted pt-3"
-                 th:each="article,stat:${articles}">
-                <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+            <div class="media text-muted pt-3" th:each="article,stat:${articles}">
+                <div class="media-body pb-0 mb-0 lh-125 border-bottom border-gray">
                     <div class="align-items-center w-100">
                         <h6>
                             <strong class="text-gray-dark">
@@ -99,41 +105,77 @@
                             </strong>
                         </h6>
                         <p>
+                            <i class="fas fa-user"></i>
                             <a th:text="${article?.author?.name}"
                                th:href="'../user/' + ${article?.author?.id} + '?page=1&size=10'">
                             </a>
-                            &nbsp;
+                            &nbsp;<i class="far fa-clock"></i>
                             <span th:text="${#dates.format(article?.time,'yyyy-MM-dd HH:mm')}">
                             </span>
                         </p>
-                        <p th:utext="${article?.content}"></p>
-                        <a th:href="'../article/' + ${article?.id}"
-                           class="text-dark">
-                            阅[<span th:text="${article?.views}">0</span>]
-                            &nbsp;&nbsp;&nbsp;
-                            评[<span th:text="${article?.comments}">0</span>]
-                            &nbsp;&nbsp;&nbsp;
-                            赞[<span th:text="${article?.likes}">0</span>]
-                            &nbsp;&nbsp;&nbsp;
-                            踩[<span th:text="${article?.dislikes}">0</span>]
-                        </a>
+                        <p th:utext="${article?.content}" class="mb-1"></p>
+                        <ul class="nav float-left mb-2">
+                            <li class="nav-item">
+                                <a class="nav-link text-success article-nav-link"
+                                   th:href="'../article/' + ${article?.id}">
+                                    <i class="fas fa-book"></i>
+                                    阅
+                                    <span th:text="${article.views}">0</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-primary article-nav-link"
+                                   th:href="'../article/' + ${article?.id}">
+                                    <i class="far fa-comments"></i>
+                                    评
+                                    <span id="comments" th:text="${article.comments}">0</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-danger article-nav-link"
+                                   th:href="'../article/' + ${article?.id}">
+                                    <i class="far fa-thumbs-up"></i>
+                                    赞
+                                    <span id="likes" th:text="${article.likes}">0</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark article-nav-link" th:href="'../article/' + ${article?.id}">
+                                    <i class="far fa-thumbs-down"></i>
+                                    踩
+                                    <span id="dislikes" th:text="${article.dislikes}">0</span>
+                                </a>
+                            </li>
+                            <li class="nav-item" hidden>
+                                <a class="nav-link disabled" href="javascript:void(0)">
+                                    喜欢
+                                    <span>0</span>
+                                </a>
+                            </li>
+                            <li class="nav-item" hidden>
+                                <a class="nav-link disabled" href="javascript:void(0)">
+                                    收藏
+                                    <span>0</span>
+                                </a>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
 
             <nav class="mt-3 text-center">
                 <a th:if="${prev_page != null}"
-                   th:href="'?page=' + ${prev_page} + '&size=' + ${size}"
+                   th:href="'?keyword='+${keyword}+'&page='+${prev_page}+'&size='+${size}"
                    class="btn btn-sm btn-outline-primary float-left">
                     上一页
                 </a>
-                <a th:unless="${prev_page != null}"
+                <a th:unless="${prev_page!=null}"
                    class="btn btn-sm btn-outline-primary float-left disabled">
                     上一页
                 </a>
                 <a th:if="${page != null}" href="javascript:void(0)" th:text="${page} + '/' + ${totalPages}"></a>
                 <a th:if="${next_page != null}"
-                   th:href="'?page=' + ${next_page} + '&size=' + ${size}"
+                   th:href="'?keyword='+${keyword}+'&page='+${next_page}+'&size='+${size}"
                    class="btn btn-sm btn-outline-primary float-right">
                     下一页
                 </a>
@@ -142,10 +184,23 @@
                     下一页
                 </a>
             </nav>
-
         </div>
 
-        <div th:if="${articles != null}" class="my-3 p-3 bg-white rounded box-shadow">
+        <div class="mt-3 p-3 bg-white rounded box-shadow">
+            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <!-- Google Adsense -->
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-7377922292358202"
+                 data-ad-slot="2325273723"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+        <div th:if="${articles != null && #lists.size(articles) > 0}" class="my-3 p-3 bg-white rounded box-shadow">
             <h6 class="border-bottom border-gray pb-2 mb-3">日志</h6>
             <p class="mb-0" th:text="'共 ' + ${totalElements} + ' 篇日志'"></p>
             <br>
@@ -166,18 +221,6 @@
             <button class="btn btn-sm btn-primary" onclick="javascript:jump_page();">跳页</button>
         </div>
 
-        <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-        <!-- Google Adsense -->
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-client="ca-pub-7377922292358202"
-             data-ad-slot="2325273723"
-             data-ad-format="auto"
-             data-full-width-responsive="true"></ins>
-        <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
-
     </main>
 
 </div>
@@ -186,6 +229,7 @@
 <script th:src="@{~/js/popper.min.js}"></script>
 <script th:src="@{~/js/bootstrap.min.js}"></script>
 <script th:src="@{~/js/vue.min.js}"></script>
+<script th:src="@{~/js/fontawesome.js}"></script>
 <script th:src="@{~/js/messenger.min.js}"></script>
 <script th:src="@{~/js/messenger-theme-flat.js}"></script>
 <script th:src="@{~/js/viewer.min.js}"></script>
