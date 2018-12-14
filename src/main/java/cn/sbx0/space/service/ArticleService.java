@@ -7,13 +7,12 @@ import cn.sbx0.space.entity.User;
 import com.redfin.sitemapgenerator.ChangeFreq;
 import com.redfin.sitemapgenerator.WebSitemapGenerator;
 import com.redfin.sitemapgenerator.WebSitemapUrl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -24,9 +23,15 @@ import java.util.List;
  * 文章服务层
  */
 @Service
-public class ArticleService extends BaseService {
-    @Resource
+public class ArticleService extends BaseService<Article, Integer> {
+    @Autowired
     private ArticleDao articleDao;
+
+    @Override
+    public PagingAndSortingRepository<Article, Integer> getDao() {
+        return articleDao;
+    }
+
     @Resource
     private UserDao userDao;
     @Value("${sbx0.SITE_MAP.DOMAIN}")
@@ -76,17 +81,7 @@ public class ArticleService extends BaseService {
     public Page<Article> findByKeyword(String keyword, Integer page, Integer size) {
         if (BaseService.checkNullStr(keyword))
             return null;
-        keyword = "%" + keyword + "%";
-        // 页数控制
-        if (page > 9999) page = 9999;
-        if (page < 0) page = 0;
-        // 条数控制
-        if (size > 1000) size = 1000;
-        if (size < 1) size = 1;
-        if (size == 0) size = 10;
-        // 分页配置
-        Sort sort = new Sort(Sort.Direction.DESC, "id");
-        Pageable pageable = PageRequest.of(page, size, sort);
+        Pageable pageable = buildPageable(page, size, buildSort("id", "DESC"));
         try {
             // 分页查询
             return articleDao.findByKeyword(keyword, pageable);
@@ -99,16 +94,7 @@ public class ArticleService extends BaseService {
      * 查询被隐藏的文章列表 根据用户
      */
     public Page<Article> findTrashByUser(Integer id, Integer page, Integer size) {
-        // 页数控制
-        if (page > 9999) page = 9999;
-        if (page < 0) page = 0;
-        // 条数控制
-        if (size > 1000) size = 1000;
-        if (size < 1) size = 1;
-        if (size == 0) size = 10;
-        // 分页配置
-        Sort sort = new Sort(Sort.Direction.DESC, "id");
-        Pageable pageable = PageRequest.of(page, size, sort);
+        Pageable pageable = buildPageable(page, size, buildSort("id", "DESC"));
         try {
             // 分页查询
             Page<Article> articlePage = articleDao.findTrashByUser(id, pageable);
@@ -125,16 +111,7 @@ public class ArticleService extends BaseService {
      * 查询被隐藏的文章列表
      */
     public Page<Article> findTrash(Integer page, Integer size) {
-        // 页数控制
-        if (page > 9999) page = 9999;
-        if (page < 0) page = 0;
-        // 条数控制
-        if (size > 1000) size = 1000;
-        if (size < 1) size = 1;
-        if (size == 0) size = 10;
-        // 分页配置
-        Sort sort = new Sort(Sort.Direction.DESC, "id");
-        Pageable pageable = PageRequest.of(page, size, sort);
+        Pageable pageable = buildPageable(page, size, buildSort("id", "DESC"));
         try {
             // 分页查询
             return articleDao.findTrash(pageable);
@@ -171,16 +148,7 @@ public class ArticleService extends BaseService {
      * 用户文章列表
      */
     public Page<Article> findByUser(Integer id, Integer page, Integer size) {
-        // 页数控制
-        if (page > 9999) page = 9999;
-        if (page < 0) page = 0;
-        // 条数控制
-        if (size > 1000) size = 1000;
-        if (size < 1) size = 1;
-        if (size == 0) size = 10;
-        // 分页配置
-        Sort sort = new Sort(Sort.Direction.DESC, "id");
-        Pageable pageable = PageRequest.of(page, size, sort);
+        Pageable pageable = buildPageable(page, size, buildSort("id", "DESC"));
         // 分页查询
         Page<Article> articlePage = articleDao.findByUser(id, pageable);
         if (id < 1) return null;
@@ -217,16 +185,7 @@ public class ArticleService extends BaseService {
      * 查询文章列表
      */
     public Page<Article> findAll(Integer page, Integer size, Integer type) {
-        // 页数控制
-        if (page > 9999) page = 9999;
-        if (page < 0) page = 0;
-        // 条数控制
-        if (size > 1000) size = 1000;
-        if (size < 1) size = 1;
-        if (size == 0) size = 10;
-        // 分页配置
-        Sort sort = new Sort(Sort.Direction.DESC, "id");
-        Pageable pageable = PageRequest.of(page, size, sort);
+        Pageable pageable = buildPageable(page, size, buildSort("id", "DESC"));
         try {
             // 分页查询
             Page<Article> articlePage;
@@ -240,19 +199,6 @@ public class ArticleService extends BaseService {
                 return null;
         } catch (Exception e) {
             return null;
-        }
-    }
-
-    /**
-     * 保存文章
-     */
-    @Transactional
-    public boolean save(Article article) {
-        try {
-            articleDao.save(article);
-            return true;
-        } catch (Exception e) {
-            return false;
         }
     }
 

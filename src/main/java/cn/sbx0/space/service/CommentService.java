@@ -2,32 +2,22 @@ package cn.sbx0.space.service;
 
 import cn.sbx0.space.dao.CommentDao;
 import cn.sbx0.space.entity.Comment;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 @Service
-public class CommentService extends BaseService {
-    @Resource
+public class CommentService extends BaseService<Comment, Integer> {
+    @Autowired
     private CommentDao commentDao;
 
-    /**
-     * 根据id查找评论
-     */
-    public Comment findById(Integer id) {
-        return commentDao.findById(id).get();
-    }
-
-    /**
-     * 保存
-     */
-    public void save(Comment comment) {
-        commentDao.save(comment);
+    @Override
+    public PagingAndSortingRepository<Comment, Integer> getDao() {
+        return commentDao;
     }
 
     /**
@@ -61,16 +51,7 @@ public class CommentService extends BaseService {
      * 加载评论 根据实体
      */
     public Page<Comment> findByEntity(String entity_type, Integer entity_id, Integer page, Integer size) {
-        // 页数控制
-        if (page > 9999) page = 9999;
-        if (page < 0) page = 0;
-        // 条数控制
-        if (size > 1000) size = 1000;
-        if (size < 1) size = 1;
-        if (size == 0) size = 10;
-        // 分页配置
-        Sort sort = new Sort(Sort.Direction.DESC, "id");
-        Pageable pageable = PageRequest.of(page, size, sort);
+        Pageable pageable = buildPageable(page, size, buildSort("id", "DESC"));
         try {
             // 分页查询
             Page<Comment> commentPage = commentDao.findByEntity(entity_type, entity_id, pageable);

@@ -2,9 +2,10 @@ package cn.sbx0.space.service;
 
 import cn.sbx0.space.dao.UrlDao;
 import cn.sbx0.space.entity.Url;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 
@@ -12,9 +13,14 @@ import java.util.List;
  * 链接服务层
  */
 @Service
-public class UrlService extends BaseService {
-    @Resource
+public class UrlService extends BaseService<Url,Integer> {
+    @Autowired
     private UrlDao urlDao;
+
+    @Override
+    public PagingAndSortingRepository<Url, Integer> getDao() {
+        return urlDao;
+    }
 
     /**
      * 设置链接顺序
@@ -45,4 +51,5 @@ public class UrlService extends BaseService {
             return null;
         return urlDao.findHiddenByPage(page);
     }
+
 }

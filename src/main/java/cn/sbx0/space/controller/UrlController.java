@@ -10,10 +10,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -38,6 +36,35 @@ public class UrlController extends BaseController {
     @Autowired
     public UrlController(ObjectMapper mapper) {
         this.mapper = mapper;
+    }
+
+    /**
+     * 添加链接
+     */
+    @ResponseBody
+    @PostMapping("/saveOrUpdate")
+    public ObjectNode saveOrUpdate(@ModelAttribute Url url, BindingResult b, HttpServletRequest request) {
+        User user = userService.getCookieUser(request);
+        json = mapper.createObjectNode();
+        if (user != null) {
+            if (user.getAuthority() == 0) {
+                if (!BaseService.checkNullStr(url.getPath()) && !BaseService.checkNullStr(url.getText())) {
+                    url.setTop(0);
+                    if (urlService.save(url)) {
+                        json.put(STATUS_NAME, STATUS_CODE_SUCCESS);
+                    } else {
+                        json.put(STATUS_NAME, STATUS_CODE_FILED);
+                    }
+                } else {
+                    json.put(STATUS_NAME, STATUS_CODE_NOT_FOUND);
+                }
+            } else {
+                json.put(STATUS_NAME, STATUS_CODE_NO_PERMISSION);
+            }
+        } else {
+            json.put(STATUS_NAME, STATUS_CODE_NOT_LOGIN);
+        }
+        return json;
     }
 
     /**

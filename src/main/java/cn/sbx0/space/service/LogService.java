@@ -3,14 +3,12 @@ package cn.sbx0.space.service;
 import cn.sbx0.space.dao.LogDao;
 import cn.sbx0.space.entity.Log;
 import cn.sbx0.space.entity.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,9 +18,14 @@ import java.util.List;
  * 用户服务层
  */
 @Service
-public class LogService extends BaseService {
-    @Resource
+public class LogService extends BaseService<Log, Integer> {
+    @Autowired
     private LogDao logDao;
+
+    @Override
+    public PagingAndSortingRepository<Log, Integer> getDao() {
+        return logDao;
+    }
 
     /**
      * 某个时间段统计访问ip数
@@ -69,16 +72,7 @@ public class LogService extends BaseService {
      * 查询全部
      */
     public Page<Log> findAll(Integer page, Integer size, String ip) {
-        // 页数控制
-        if (page > 9999) page = 9999;
-        if (page < 0) page = 0;
-        // 条数控制
-        if (size > 1000) size = 1000;
-        if (size < 1) size = 1;
-        if (size == 0) size = 10;
-        // 分页配置
-        Sort sort = new Sort(Sort.Direction.DESC, "id");
-        Pageable pageable = PageRequest.of(page, size, sort);
+        Pageable pageable = buildPageable(page, size, buildSort("id", "DESC"));
         try {
             if (BaseService.checkNullStr(ip))
                 return logDao.findAll(pageable); // 普通查询
@@ -86,19 +80,6 @@ public class LogService extends BaseService {
                 return logDao.findByIp(ip, pageable); // 按照IP查询
         } catch (Exception e) {
             return null;
-        }
-    }
-
-    /**
-     * 保存日志
-     */
-    @Transactional
-    public boolean save(Log log) {
-        try {
-            logDao.save(log);
-            return true;
-        } catch (Exception e) {
-            return false;
         }
     }
 

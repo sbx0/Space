@@ -182,9 +182,6 @@ function Format(now, mask) {
     })
 }
 
-// // img 添加 class = "img-responsive"
-// $("img").addClass("img-responsive");
-
 // 防止浏览器缓存
 function noCache(url) {
     //  var getTimestamp = Math.random()
@@ -240,31 +237,3 @@ function alert(msg, type) {
         showCloseButton: false
     })
 }
-
-// 关于
-var blog_about = new Vue({
-    el: '#blog-about',
-    data: {
-        about: i18N.about,
-        about_content: i18N.about_content,
-        isAuthority: false,
-    }
-})
-
-// 页脚
-var blog_footer = new Vue({
-    el: '#blog-footer',
-    data: {
-        copyright: i18N.copyright,
-        back_to_top: i18N.back_to_top,
-    },
-})
-
-// 页面头部
-var blog_header = new Vue({
-    el: '#blog-header',
-    data: {
-        space: i18N.space,
-        login: i18N.login,
-    }
-})

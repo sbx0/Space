@@ -5,10 +5,12 @@ import cn.sbx0.space.dao.NotificationDao;
 import cn.sbx0.space.entity.Message;
 import cn.sbx0.space.entity.Notification;
 import cn.sbx0.space.entity.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -21,11 +23,18 @@ import java.util.List;
  * 消息服务层
  */
 @Service
-public class MessageService extends BaseService {
-    @Resource
+public class MessageService extends BaseService<Message, Integer> {
+    @Autowired
     private MessageDao messageDao;
+
+    @Override
+    public PagingAndSortingRepository<Message, Integer> getDao() {
+        return messageDao;
+    }
+
     @Resource
     private NotificationDao notificationDao;
+
 
     /**
      * 根据用户查询消息
@@ -62,13 +71,6 @@ public class MessageService extends BaseService {
                 ipOrName + "&nbsp;" +
                 "</p><p class=\"chat-receive\">" + df.format(message.getSendTime()) + "："
                 + message.getContent() + "</p>";
-    }
-
-    /**
-     * 保存
-     */
-    public void save(Message message) {
-        messageDao.save(message);
     }
 
     /**

@@ -1,23 +1,29 @@
 var i18N = {
     nav_bar_data: [
-        {id: 0, text: '登陆', url: '../login.html'},
-        {id: 0, text: '工具', url: '../tools.html'},
-        {id: 0, text: '日志', url: '../log/list'},
-        {id: 0, text: '发布', url: '../markdown.html'},
-        {id: 0, text: '回收', url: '../article/trash'},
-        {id: 0, text: '地图', url: '../site_map.xml'},
+        {id: 0, text: '登陆', path: '../login.html'},
+        {id: 0, text: '工具', path: '../tools.html'},
+        {id: 0, text: '日志', path: '../log/list'},
+        {id: 0, text: '发布', path: '../markdown.html'},
+        {id: 0, text: '回收', path: '../article/trash'},
+        {id: 0, text: '地图', path: '../site_map.xml'},
     ],
+    'nav_bar_components':
+        '<li class="nav-item">\n    ' +
+        '<a class="nav-link" :href="nav_bar.path" v-html="nav_bar.text" :title="nav_bar.title"></a>\n' +
+        '</li>',
     nav_scroller_data: [
-        {id: 0, text: '首页', url: '../index.html'},
-        {id: 0, text: '搜索', url: '../article/search'},
-        {id: 0, text: '消息', url: '../message.html'},
-        {id: 0, text: '反馈', url: '../bugs.html'},
-        {id: 0, text: '数据', url: '../data.html'},
-        {id: 0, text: '工具', url: '../tools.html'},
-        {id: 0, text: '登陆', url: '../login.html'},
-        {id: 0, text: '上传', url: 'http://upload.sbx0.cn/'},
-        {id: 0, text: '开源', url: 'https://github.com/sbx0'},
+        {id: 0, text: '首页', path: '../index.html'},
+        {id: 0, text: '搜索', path: '../article/search'},
+        {id: 0, text: '消息', path: '../message.html'},
+        {id: 0, text: '反馈', path: '../bugs.html'},
+        {id: 0, text: '数据', path: '../data.html'},
+        {id: 0, text: '工具', path: '../tools.html'},
+        {id: 0, text: '登陆', path: '../login.html'},
+        {id: 0, text: '上传', path: 'http://upload.sbx0.cn/'},
+        {id: 0, text: '开源', path: 'https://github.com/sbx0'},
     ],
+    'nav_scroller_components':
+        '<a class="nav-link" :href="nav_scroller.path" v-html="nav_scroller.text" :title="nav_scroller.title"></a>',
     json: {
         article: {
             list: 'article/index',

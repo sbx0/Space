@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="sbx0 管理中心">
+    <meta name="author" content="sbx0">
+    <link rel="icon" href="img/favicon.png">
+
+    <title>管理中心 | sbx0</title>
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+
+    <!-- 消息提示 -->
+    <link href="css/messenger.css" rel="stylesheet">
+    <link href="css/messenger-theme-flat.css" rel="stylesheet">
+    <link href="css/offcanvas.css" rel="stylesheet">
+
+</head>
+
+<body class="bg-light">
+
+<div id="main" v-cloak>
+
+    <nav class="navbar navbar-expand-md fixed-top navbar-dark bg-dark">
+        <a class="navbar-brand" href="../index.html">{{space}}</a>
+        <button class="navbar-toggler p-0 border-0" type="button" data-toggle="offcanvas">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="navbar-collapse offcanvas-collapse">
+            <ul class="navbar-nav mr-auto">
+                <nav_bar_components v-for="nav_bar in nav_bar_data"
+                                    v-bind:nav_bar="nav_bar"
+                                    v-bind:key="nav_bar.id">
+                </nav_bar_components>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="nav-scroller bg-white box-shadow">
+        <nav class="nav nav-underline">
+            <nav_scroller_components v-for="nav_scroller in nav_scroller_data"
+                                     v-bind:nav_scroller="nav_scroller"
+                                     v-bind:key="nav_scroller.id">
+            </nav_scroller_components>
+        </nav>
+    </div>
+
+    <main role="main" class="container">
+
+        <div class="row">
+            <div class="col-xl-8">
+                <div class="my-3 p-3 bg-white rounded box-shadow">
+                    <h6 class="border-bottom border-gray pb-2 mb-0">总体设置</h6>
+
+                </div>
+
+                <div class="my-3 p-3 bg-white rounded box-shadow">
+                    <h6 class="border-bottom border-gray pb-2 mb-0">新增导航</h6>
+                    <form id="add_nav_form" class="mt-2">
+                        <input name="id" type="text" hidden>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="url_path">
+                                    网址
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <input id="url_path" name="path"
+                                       placeholder="index.html" v-model="url_url"
+                                       type="text" class="form-control" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="url_page">
+                                    页面
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <select id="url_page" name="page"
+                                        class="form-control">
+                                    <option value="nav1">导航栏1</option>
+                                    <option value="nav2">导航栏2</option>
+                                    <option value="tools">工具栏</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="url_text">
+                                    网址名
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <input id="url_text" name="text"
+                                       placeholder="首页" v-model="url_text"
+                                       type="text" class="form-control" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="url_title">链接标题</label>
+                                <input id="url_title" name="title"
+                                       placeholder="网站首页" v-model="url_title"
+                                       type="text" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="url_begin_time">开始时间</label>
+                                <input id="url_begin_time" name="begin"
+                                       type="date" class="form-control">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="url_end_time">结束时间</label>
+                                <input id="url_end_time" name="end"
+                                       type="date" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="url_badge">徽章</label>
+                                <input id="url_badge" name="badge" v-model="url_badge"
+                                       placeholder="Beta"
+                                       type="text" class="form-control" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="url_badge">效果</label>
+                                <div class="list-group">
+                                    <a :href="url_url" target="_blank" :title="url_title"
+                                       class="list-group-item d-flex justify-content-between align-items-center">
+                                        {{url_text}}
+                                        <span class="badge badge-primary badge-pill">{{url_badge}}</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <button id="add_nav_button" type="submit" class="btn btn-primary" data-loading-text="操作中..."
+                                autocomplete="off">添加到导航栏
+                        </button>
+                    </form>
+                </div>
+
+                <div class="my-3 p-3 bg-white rounded box-shadow">
+                    <h6 class="border-bottom border-gray pb-2 mb-0">数据设置</h6>
+
+                </div>
+
+                <div class="my-3 p-3 bg-white rounded box-shadow">
+                    <h6 class="border-bottom border-gray pb-2 mb-0">日志设置</h6>
+
+                </div>
+
+                <div class="my-3 p-3 bg-white rounded box-shadow">
+                    <h6 class="border-bottom border-gray pb-2 mb-0">访问设置</h6>
+
+                </div>
+            </div>
+            <div class="col-xl-4">
+                <div class="my-3 p-3 bg-white rounded box-shadow">
+                    <h6 class="border-bottom border-gray pb-2 mb-0">快速链接</h6>
+                    <small class="d-block text-right mt-3">
+
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-3 p-3 bg-white rounded box-shadow">
+            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <!-- Google Adsense -->
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-7377922292358202"
+                 data-ad-slot="2325273723"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+
+    </main>
+
+</div>
+
+<script src="js/jquery.min.js"></script>
+<script src="js/popper.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/holder.min.js"></script>
+<script src="js/messenger.min.js"></script>
+<script src="js/messenger-theme-flat.js"></script>
+<script src="js/vue.min.js"></script>
+<!--<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>-->
+<script src="js/fontawesome.js"></script>
+<script src="js/Sortable.min.js"></script>
+<script src="js/i18N_zh_CN.js"></script>
+<script src="js/base.js"></script>
+<script src="js/admin.js"></script>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-129309220-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'UA-129309220-1');
+</script>
+
+</body>
+</html>

@@ -1,6 +1,13 @@
 package cn.sbx0.space.service;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.Cookie;
@@ -17,10 +24,13 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class BaseService {
+public abstract class BaseService<T, ID> {
     private static String DOMAIN; // 域名
     private static String KEY; // KEY
     public static List<String> COOKIE_NAMES = Arrays.asList("ID", "KEY", "NAME");
+    public static final Integer PAGESIZE = 10;
+
+    public abstract PagingAndSortingRepository<T, ID> getDao();
 
     /**
      * 提取request中的json
@@ -187,6 +197,9 @@ public class BaseService {
         return ip;
     }
 
+    // 都有的方法
+
+
     // 公用方法
 
     /**
@@ -221,13 +234,241 @@ public class BaseService {
         return null;
     }
 
+    /**
+     * 设置域名 配置cookie
+     */
     @Value("${sbx0.DOMAIN}")
     public void setDomain(String domain) {
         DOMAIN = domain;
     }
 
+    /**
+     * 设置KEY 用于加密
+     */
     @Value("${sbx0.KEY}")
     public void setKEY(String key) {
         KEY = key;
     }
+
+    /**
+     * 保存
+     *
+     * @param entity 实体类
+     * @return 操作是否成功
+     */
+    @Transactional
+    public boolean save(T entity) {
+        try {
+            getDao().save(entity);
+            return true;
+        } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return false;
+        }
+    }
+
+    /**
+     * 批量保存
+     *
+     * @param entities 实体类列表
+     * @return 操作是否成功
+     */
+    @Transactional
+    public boolean saveAll(Iterable<T> entities) {
+        try {
+            getDao().saveAll(entities);
+            return true;
+        } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return false;
+        }
+    }
+
+    /**
+     * 根据ID查询实体
+     *
+     * @param id
+     * @return
+     */
+    public T findById(ID id) {
+        try {
+            return (T) getDao().findById(id);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * 根据ID查询存不存在
+     *
+     * @param id
+     * @return 操作是否成功
+     */
+    public boolean existsById(ID id) {
+        return getDao().existsById(id);
+    }
+
+    /**
+     * 查询全部
+     *
+     * @return
+     */
+    public Iterable<T> findAll() {
+        try {
+            return getDao().findAll();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * 根据ID列表查询全部
+     *
+     * @param ids
+     * @return
+     */
+    public Iterable<T> findAllById(Iterable<ID> ids) {
+        try {
+            return getDao().findAllById(ids);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * 计数
+     *
+     * @return
+     */
+    public long count() {
+        return getDao().count();
+    }
+
+    /**
+     * 根据ID删除实体类
+     *
+     * @param id
+     * @return 操作是否成功
+     */
+    @Transactional
+    public boolean deleteById(ID id) {
+        try {
+            getDao().deleteById(id);
+            return true;
+        } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return false;
+        }
+    }
+
+    /**
+     * 删除指定的实体
+     *
+     * @param entity
+     * @return 操作是否成功
+     */
+    @Transactional
+    public boolean delete(T entity) {
+        try {
+            getDao().delete(entity);
+            return true;
+        } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return false;
+        }
+    }
+
+    /**
+     * 根据实体类删除
+     *
+     * @param entities
+     * @return 操作是否成功
+     */
+    @Transactional
+    public boolean deleteAll(Iterable<? extends T> entities) {
+        try {
+            getDao().deleteAll(entities);
+            return true;
+        } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return false;
+        }
+    }
+
+    /**
+     * 删除所有
+     *
+     * @return 操作是否成功
+     */
+    @Transactional
+    public boolean deleteAll() {
+        try {
+            getDao().deleteAll();
+            return true;
+        } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return false;
+        }
+    }
+
+    /**
+     * 分页查询全部
+     *
+     * @param pageable
+     * @return
+     */
+    public Page<T> findAll(Pageable pageable) {
+        return getDao().findAll(pageable);
+    }
+
+    /**
+     * 排序查询全部
+     *
+     * @param sort
+     * @return
+     */
+    public Iterable<T> findAll(Sort sort) {
+        return getDao().findAll(sort);
+    }
+
+    /**
+     * 拼接Pageable
+     *
+     * @param page 页码
+     * @param size 条数
+     * @param sort 排序
+     * @return
+     */
+    public Pageable buildPageable(Integer page, Integer size, Sort sort) {
+        // 页数控制
+        if (page == null) page = 1;
+        else if (page > 999) page = 999;
+        else if (page < 1) page = 1;
+        // 条数控制
+        if (size == null) size = PAGESIZE;
+        if (size > 999) size = 999;
+        if (size < 1) size = PAGESIZE;
+        // 分页配置
+        Pageable pageable = PageRequest.of(page - 1, size, sort);
+        return pageable;
+    }
+
+    /**
+     * 构建Sort
+     *
+     * @param attribute 属性
+     * @param direction 排序
+     * @return
+     */
+    public Sort buildSort(String attribute, String direction) {
+        switch (direction) {
+            case "ASC": // 升序
+                return new Sort(Sort.Direction.ASC, attribute);
+            case "DESC": // 降序
+                return new Sort(Sort.Direction.DESC, attribute);
+            default: // 默认降序
+                return new Sort(Sort.Direction.DESC, attribute);
+        }
+    }
+
 }

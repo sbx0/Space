@@ -32,14 +32,14 @@ public class Url implements Serializable {
     private Integer top; // 置顶
     @JsonView(Json.class)
     @Column(nullable = false)
-    private String path; // 路径
+    private String path; // 网址
     @Column(nullable = false)
     private String page; // 所在页面
     @JsonView(Json.class)
     @Column(nullable = false)
-    private String text; // 链接名
+    private String text; // 网址名
     @JsonView(Json.class)
-    private String title; // 链接悬浮名
+    private String title; // 网址悬浮名
     @JsonView(Json.class)
     private String badge; // 徽章
     private Date begin; // 开始时间
