@@ -292,7 +292,7 @@ public abstract class BaseService<T, ID> {
      */
     public T findById(ID id) {
         try {
-            return (T) getDao().findById(id);
+            return getDao().findById(id).get();
         } catch (Exception e) {
             return null;
         }
