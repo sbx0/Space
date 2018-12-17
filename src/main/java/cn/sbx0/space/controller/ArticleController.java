@@ -173,7 +173,7 @@ public class ArticleController extends BaseController {
             map.put("keyword", keyword.trim());
             map.put("articles", articles);
             map.put("size", articlePage.getPageable().getPageSize());
-            map.put("page", page);
+            map.put("page", articlePage.getPageable().getPageNumber() + 1);
             map.put("totalPages", articlePage.getTotalPages());
             map.put("totalElements", articlePage.getTotalElements());
             // 判断上下页
@@ -344,15 +344,10 @@ public class ArticleController extends BaseController {
         // 分页查询
         if (page == null) page = 1;
         if (size == null) size = 10;
-        Page<Article> articlePage = articleService.findTrashByUser(id, page - 1, size);
+        Page<Article> articlePage = articleService.findTrashByUser(id, page, size);
         // 取出文章列表
         if (articlePage != null) {
             List<Article> articles = articleService.filter(articlePage.getContent());
-            // 当页数大于总页数时，查询最后一页的数据
-            if (page > articlePage.getTotalPages()) {
-                articlePage = articleService.findTrashByUser(id, articlePage.getTotalPages() - 1, size);
-                articles = articleService.filter(articlePage.getContent());
-            }
             // 将数据返回到页面
             map.put("articles", articles);
             map.put("size", articlePage.getPageable().getPageSize());
@@ -619,11 +614,6 @@ public class ArticleController extends BaseController {
         if (articlePage != null) {
             // 取出文章列表
             List<Article> articles = articleService.filter(articlePage.getContent());
-            // 当页数大于总页数时，查询最后一页的数据
-            if (page > articlePage.getTotalPages()) {
-                articlePage = articleService.findAll(articlePage.getTotalPages() - 1, size, 0);
-                articles = articleService.filter(articlePage.getContent());
-            }
             // 将数据返回到页面
             map.put("articles", articles);
             map.put("size", articlePage.getPageable().getPageSize());

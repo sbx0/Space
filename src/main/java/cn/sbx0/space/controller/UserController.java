@@ -50,14 +50,14 @@ public class UserController extends BaseController {
         if (page == null) page = 1;
         if (size == null) size = 10;
         // 分页查询
-        Page<Article> articlePage = articleService.findByUser(id, page - 1, size);
+        Page<Article> articlePage = articleService.findByUser(id, page, size);
         User u = userService.findById(id);
         if (articlePage != null) {
             // 取出文章列表
             List<Article> articles = articleService.filter(articlePage.getContent());
             // 当页数大于总页数时，查询最后一页的数据
             if (page > articlePage.getTotalPages()) {
-                articlePage = articleService.findAll(articlePage.getTotalPages() - 1, size, 0);
+                articlePage = articleService.findAll(articlePage.getTotalPages(), size, 0);
                 articles = articleService.filter(articlePage.getContent());
             }
             // 将数据返回到页面
