@@ -79,7 +79,8 @@ public class ArticleService extends BaseService<Article, Integer> {
      * 根据关键词查询
      */
     public Page<Article> findByKeyword(String keyword, Integer page, Integer size) {
-        keyword = "%" + keyword + "%";
+        if (keyword == null) return null;
+        else keyword = "%" + keyword + "%";
         if (BaseService.checkNullStr(keyword))
             return null;
         try {
