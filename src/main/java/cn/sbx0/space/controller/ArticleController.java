@@ -163,22 +163,17 @@ public class ArticleController extends BaseController {
         logService.log(user, request);
         if (keyword != null && keyword.length() > 20) return "error";
         if (page == null) page = 1;
-        if (size == null) size = 10;
+        if (size == null) size = BaseService.PAGESIZE;
         // 分页查询
-        Page<Article> articlePage = articleService.findByKeyword(keyword, page - 1, size);
+        Page<Article> articlePage = articleService.findByKeyword(keyword, page, size);
         if (articlePage != null) {
             // 取出文章列表
             List<Article> articles = articleService.filter(articlePage.getContent());
-            // 当页数大于总页数时，查询最后一页的数据
-            if (page > articlePage.getTotalPages()) {
-                articlePage = articleService.findByKeyword(keyword, articlePage.getTotalPages() - 1, size);
-                articles = articleService.filter(articlePage.getContent());
-            }
             // 将数据返回到页面
             map.put("keyword", keyword.trim());
             map.put("articles", articles);
             map.put("size", articlePage.getPageable().getPageSize());
-            map.put("page", articlePage.getPageable().getPageNumber() + 1);
+            map.put("page", page);
             map.put("totalPages", articlePage.getTotalPages());
             map.put("totalElements", articlePage.getTotalElements());
             // 判断上下页
@@ -620,7 +615,7 @@ public class ArticleController extends BaseController {
         if (page == null) page = 1;
         if (size == null) size = 10;
         // 分页查询
-        Page<Article> articlePage = articleService.findAll(page - 1, size, 0);
+        Page<Article> articlePage = articleService.findAll(page, size, 0);
         if (articlePage != null) {
             // 取出文章列表
             List<Article> articles = articleService.filter(articlePage.getContent());

@@ -79,12 +79,12 @@ public class ArticleService extends BaseService<Article, Integer> {
      * 根据关键词查询
      */
     public Page<Article> findByKeyword(String keyword, Integer page, Integer size) {
+        keyword = "%" + keyword + "%";
         if (BaseService.checkNullStr(keyword))
             return null;
-        Pageable pageable = buildPageable(page, size, buildSort("id", "DESC"));
         try {
             // 分页查询
-            return articleDao.findByKeyword(keyword, pageable);
+            return articleDao.findByKeyword(keyword, BaseService.buildPageable(page, size, buildSort("id", "DESC")));
         } catch (Exception e) {
             return null;
         }

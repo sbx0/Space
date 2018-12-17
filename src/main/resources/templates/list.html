@@ -242,14 +242,11 @@
             components: {
                 'nav_bar_components': {
                     props: ['nav_bar'],
-                    template:
-                        '<li class="nav-item">' +
-                        '   <a class="nav-link" :href="nav_bar.url" v-html="nav_bar.text"></a>' +
-                        '</li>',
+                    template: i18N.nav_bar_components,
                 },
                 'nav_scroller_components': {
                     props: ['nav_scroller'],
-                    template: '<a class="nav-link" :href="nav_scroller.url" v-html="nav_scroller.text"></a>',
+                    template: i18N.nav_scroller_components,
                 },
             },
             created: function () {

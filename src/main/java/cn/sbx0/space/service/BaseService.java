@@ -439,18 +439,17 @@ public abstract class BaseService<T, ID> {
      * @param sort 排序
      * @return
      */
-    public Pageable buildPageable(Integer page, Integer size, Sort sort) {
+    public static Pageable buildPageable(Integer page, Integer size, Sort sort) {
         // 页数控制
-        if (page == null) page = 1;
-        else if (page > 999) page = 999;
-        else if (page < 1) page = 1;
+        if (page == null) page = 0;
+        else if ((page - 1) >= 0) page = page - 1;
+        else page = 0;
         // 条数控制
         if (size == null) size = PAGESIZE;
         if (size > 999) size = 999;
         if (size < 1) size = PAGESIZE;
         // 分页配置
-        Pageable pageable = PageRequest.of(page - 1, size, sort);
-        return pageable;
+        return PageRequest.of(page, size, sort);
     }
 
     /**
