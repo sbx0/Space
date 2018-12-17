@@ -174,7 +174,7 @@ public class CommentController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public ObjectNode list(String type, Integer id, Integer page, Integer size) {
-        Page<Comment> commentPage = commentService.findByEntity(type, id, page - 1, size);
+        Page<Comment> commentPage = commentService.findByEntity(type, id, page, size);
         ArrayNode jsons = mapper.createArrayNode();
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         if (commentPage != null && commentPage.getTotalElements() > 0) {
