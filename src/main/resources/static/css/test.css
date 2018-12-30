@@ -1,19 +1,41 @@
-.game_div {
-    min-height: 50px;
-    height: 100px;
-    width: 100%;
+body {
+    background-color: #2c2c2c;
+    color: #a9b6c2;
+    font-size: 20px;
+    margin: auto 30px;
 }
 
-.game_main_div {
+p {
     margin: 5px;
-    display: inline-block;
-    border: 1px black solid;
-    height: 50px;
-    width: 50px;
-    padding: 5px;
 }
 
-.game_main_div img {
-    margin: 0px auto;
-    display: block;
+a {
+    color: #a9b6c2;
+    text-decoration: none;
 }
+
+.article {
+    margin-bottom: 50px;
+}
+
+.title {
+    color: #cd7832;
+}
+
+.time {
+    color: #e8bf69;
+}
+
+.content {
+    text-indent: 25px;
+}
+
+.other {
+    color: #619753;
+}
+
+.foot {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
