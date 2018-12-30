@@ -187,8 +187,6 @@ a:hover {
 .editormd-html-preview pre.prettyprint, .editormd-preview-container pre.prettyprint {
     padding: 10px;
     border: 1px solid #ddd;
-    white-space: nowrap;
-    word-wrap: break-word;
 }
 
 [v-cloak] {

@@ -14,6 +14,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
@@ -24,13 +26,48 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * 公用基础 服务层
+ *
+ * @param <T>  实体类类型
+ * @param <ID> 一般为Integer
+ */
 public abstract class BaseService<T, ID> {
     private static String DOMAIN; // 域名
     private static String KEY; // KEY
     public static List<String> COOKIE_NAMES = Arrays.asList("ID", "KEY", "NAME");
     public static final Integer PAGESIZE = 10;
+    // 对象指定对象的get方法
+    public static final String[] NOT_NULL_METHODS = {};
 
     public abstract PagingAndSortingRepository<T, ID> getDao();
+
+    // 检查对象指定属性是否为空字符或NULL 需要为属性设置get方法
+    public static boolean checkObjectFieldsIsNull(Object object) {
+        // 获取对象下所有方法名
+        Method[] methods = object.getClass().getMethods();
+        for (int i = 0; i < methods.length; i++) {
+            for (int j = 0; j < NOT_NULL_METHODS.length; j++) {
+                // 匹配指定不为空的属性的get方法
+                if (methods[i].getName().equals(NOT_NULL_METHODS[j])) {
+                    try {
+                        Object[] args = new Object[0];
+                        // 执行get方法并获取返回结果
+                        Object result = methods[i].invoke(object, args);
+                        // 判断返回结构是否为null 或 空字符串
+                        if (checkNullStr(result.toString())) {
+                            return false;
+                        }
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    } catch (InvocationTargetException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        return true;
+    }
 
     /**
      * 提取request中的json
@@ -210,8 +247,7 @@ public abstract class BaseService<T, ID> {
         if (str.length() == 0) return true;
         if (str.trim().equals("")) return true;
         if (str.trim().length() == 0) return true;
-        // 纯html标签
-        if (killHTML(str).trim().length() == 0) return false;
+        if (killHTML(str).trim().length() == 0) return true;
         return false;
     }
 
@@ -459,7 +495,7 @@ public abstract class BaseService<T, ID> {
      * @param direction 排序
      * @return
      */
-    public Sort buildSort(String attribute, String direction) {
+    public static Sort buildSort(String attribute, String direction) {
         switch (direction) {
             case "ASC": // 升序
                 return new Sort(Sort.Direction.ASC, attribute);

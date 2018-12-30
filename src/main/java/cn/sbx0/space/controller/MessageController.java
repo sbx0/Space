@@ -27,17 +27,20 @@ import java.util.List;
 
 @RequestMapping("/message")
 @Controller
-public class MessageController extends BaseController {
-    @Resource
-    private SimpMessagingTemplate simpMessagingTemplate;
+public class MessageController extends BaseController<Message, Integer> {
+    @Autowired
+    MessageService messageService;
     @Resource
     LogService logService;
     @Resource
     UserService userService;
     @Resource
-    MessageService messageService;
-    private ObjectMapper mapper;
-    private ObjectNode json;
+    private SimpMessagingTemplate simpMessagingTemplate;
+
+    @Override
+    public BaseService<Message, Integer> getService() {
+        return messageService;
+    }
 
     @Autowired
     public MessageController(ObjectMapper mapper) {

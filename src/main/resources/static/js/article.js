@@ -267,7 +267,7 @@ function formate(json) {
 // 删除
 function del() {
     $.ajax({
-        url: '/article/delete?id=' + $("#id").val() + '&type=0',
+        url: '/article/hide?id=' + $("#id").val(),
         type: 'GET',
         success: function (json) {
             var status = json.status;

@@ -29,8 +29,8 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("/comment")
-public class CommentController extends BaseController {
-    @Resource
+public class CommentController extends BaseController<Comment, Integer> {
+    @Autowired
     private CommentService commentService;
     @Resource
     private UserService userService;
@@ -40,8 +40,11 @@ public class CommentController extends BaseController {
     private ArticleService articleService;
     @Resource
     private MessageService messageService;
-    private ObjectMapper mapper;
-    private ObjectNode json;
+
+    @Override
+    public BaseService<Comment, Integer> getService() {
+        return commentService;
+    }
 
     @Autowired
     public CommentController(ObjectMapper mapper) {
@@ -61,8 +64,8 @@ public class CommentController extends BaseController {
         User user = userService.getCookieUser(request);
         if (user != null) {
             Comment comment = commentService.findById(id);
-            if (comment.getUser_id() != null) {
-                User replyTo = userService.findById(comment.getUser_id());
+            if (comment.getUser() != null) {
+                User replyTo = userService.findById(comment.getUser().getId());
                 json.put("reply_to_user_name", replyTo.getName());
                 json.put("reply_to_user_id", replyTo.getId());
             } else {
@@ -94,8 +97,8 @@ public class CommentController extends BaseController {
             json.put("entity_id", comment.getEntity_id());
             json.put("entity_type", comment.getEntity_type());
             json.put("content", comment.getContent());
-            if (comment.getUser_id() != null) {
-                json.put("user_id", comment.getUser_id());
+            if (comment.getUser() != null) {
+                json.put("user_id", comment.getUser().getId());
             }
             json.put("user_ip", BaseService.hideFullIp(comment.getUser_ip()));
             json.put("user_name", comment.getUser_name());
@@ -110,7 +113,6 @@ public class CommentController extends BaseController {
      * 发布评论
      */
     @ResponseBody
-    @Transactional(timeout = 5)
     @RequestMapping(value = "/post", method = RequestMethod.POST)
     public ObjectNode post(Comment comment, HttpServletRequest request) {
         json = mapper.createObjectNode();
@@ -124,7 +126,8 @@ public class CommentController extends BaseController {
         } else {
             // 若登录
             if (user != null) {
-                comment.setUser_id(user.getId());
+                comment.setUser(user);
+                comment.setUser_name(user.getName());
                 comment.setUser_name(BaseService.killHTML(user.getName()));
             } else if (BaseService.checkNullStr(comment.getUser_name())) {
                 comment.setUser_name("匿名");
@@ -183,8 +186,8 @@ public class CommentController extends BaseController {
                 json = mapper.createObjectNode();
                 json.put("content", comment.getContent());
                 json.put("floor", comment.getFloor());
-                if (comment.getUser_id() != null) {
-                    json.put("user_id", comment.getUser_id());
+                if (comment.getUser() != null) {
+                    json.put("user_id", comment.getUser().getId());
                 }
                 json.put("user_ip", BaseService.hideFullIp(comment.getUser_ip()));
                 json.put("user_name", comment.getUser_name());

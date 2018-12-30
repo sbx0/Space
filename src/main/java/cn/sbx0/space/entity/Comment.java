@@ -1,7 +1,5 @@
 package cn.sbx0.space.entity;
 
-import cn.sbx0.space.service.BaseService;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -17,7 +15,8 @@ public class Comment implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private Integer user_id; // 用户ID
+    @ManyToOne(cascade = {CascadeType.MERGE}, fetch = FetchType.LAZY, targetEntity = User.class)
+    private User user; // 用户ID
     @Column(nullable = false, length = 30)
     private String user_name; // 用户名称
     @Column(length = 100)
@@ -45,25 +44,6 @@ public class Comment implements Serializable {
     @Column(nullable = false)
     private Integer top; // 置顶排序
 
-    @Override
-    public String toString() {
-        return "Comment{" +
-                "id=" + id +
-                ", user_id=" + user_id +
-                ", user_name='" + user_name + '\'' +
-                ", user_ip='" + user_ip + '\'' +
-                ", floor=" + floor +
-                ", content='" + content + '\'' +
-                ", time=" + time +
-                ", lastChangeTime=" + lastChangeTime +
-                ", likes=" + likes +
-                ", dislikes=" + dislikes +
-                ", entity_type='" + entity_type + '\'' +
-                ", entity_id=" + entity_id +
-                ", top=" + top +
-                '}';
-    }
-
     public static long getSerialVersionUID() {
         return serialVersionUID;
     }
@@ -76,12 +56,12 @@ public class Comment implements Serializable {
         this.id = id;
     }
 
-    public Integer getUser_id() {
-        return user_id;
+    public User getUser() {
+        return user;
     }
 
-    public void setUser_id(Integer user_id) {
-        this.user_id = user_id;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getUser_name() {

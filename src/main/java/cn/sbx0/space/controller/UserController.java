@@ -25,21 +25,23 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/user")
-public class UserController extends BaseController {
-    @Resource
+public class UserController extends BaseController<User, Integer> {
+    @Autowired
     private UserService userService;
     @Resource
     private ArticleService articleService;
     @Resource
     private LogService logService;
-    private ObjectMapper mapper;
-    private ObjectNode json;
+
+    @Override
+    public BaseService<User, Integer> getService() {
+        return userService;
+    }
 
     @Autowired
     public UserController(ObjectMapper mapper) {
         this.mapper = mapper;
     }
-
 
     /**
      * 获取用户详情

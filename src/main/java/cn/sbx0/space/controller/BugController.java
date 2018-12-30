@@ -20,13 +20,16 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/bug")
-public class BugController extends BaseController {
-    @Resource
+public class BugController extends BaseController<Bug, Integer> {
+    @Autowired
     private BugService bugService;
     @Resource
     private UserService userService;
-    private ObjectMapper mapper;
-    private ObjectNode json;
+
+    @Override
+    public BaseService<Bug, Integer> getService() {
+        return bugService;
+    }
 
     @Autowired
     public BugController(ObjectMapper mapper) {

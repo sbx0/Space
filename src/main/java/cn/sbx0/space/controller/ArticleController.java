@@ -25,16 +25,19 @@ import java.util.Map;
  * 文章控制类
  */
 @Controller
-@RequestMapping("")
-public class ArticleController extends BaseController {
-    @Resource
+@RequestMapping("/article")
+public class ArticleController extends BaseController<Article, Integer> {
+    @Autowired
     private ArticleService articleService;
     @Resource
     private UserService userService;
     @Resource
     private LogService logService;
-    private ObjectMapper mapper;
-    private ObjectNode json;
+
+    @Override
+    public BaseService<Article, Integer> getService() {
+        return articleService;
+    }
 
     @Autowired
     public ArticleController(ObjectMapper mapper) {
@@ -45,7 +48,7 @@ public class ArticleController extends BaseController {
      * 文章排行
      */
     @ResponseBody
-    @RequestMapping(value = "/article/rank", method = RequestMethod.GET)
+    @RequestMapping(value = "/rank", method = RequestMethod.GET)
     public ArrayNode rank(Integer days, Integer size) {
         ArrayNode articles = mapper.createArrayNode();
         List<Article> articleList = articleService.rank(days, size);
@@ -59,7 +62,7 @@ public class ArticleController extends BaseController {
      * 给文章点踩
      */
     @ResponseBody
-    @RequestMapping(value = "/article/dislike", method = RequestMethod.GET)
+    @RequestMapping(value = "/dislike", method = RequestMethod.GET)
     public ObjectNode dislike(Integer id, HttpServletRequest request) {
         json = mapper.createObjectNode();
         // 检测重复操作
@@ -96,7 +99,7 @@ public class ArticleController extends BaseController {
      * 给文章点赞
      */
     @ResponseBody
-    @RequestMapping(value = "/article/like", method = RequestMethod.GET)
+    @RequestMapping(value = "/like", method = RequestMethod.GET)
     public ObjectNode like(Integer id, HttpServletRequest request) {
         json = mapper.createObjectNode();
         // 检测重复操作
@@ -135,7 +138,7 @@ public class ArticleController extends BaseController {
      * 如果u_id为空 查询的是不限用户的上一篇下一篇
      */
     @ResponseBody
-    @RequestMapping(value = "/article/prevAndNext", method = RequestMethod.GET)
+    @RequestMapping(value = "/prevAndNext", method = RequestMethod.GET)
     public ObjectNode prevAndNext(Integer id, Integer u_id) {
         json = mapper.createObjectNode();
         if (u_id == null) u_id = -1;
@@ -155,7 +158,7 @@ public class ArticleController extends BaseController {
     /**
      * 文章搜索
      */
-    @RequestMapping(value = "/article/search")
+    @RequestMapping(value = "/search")
     public String search(String keyword, Integer page, Integer size, Map<String, Object> map, HttpServletRequest request) {
         // 从cookie中获取登陆用户信息
         User user = userService.getCookieUser(request);
@@ -190,7 +193,7 @@ public class ArticleController extends BaseController {
      * 为文章移除密码
      */
     @ResponseBody
-    @RequestMapping(value = "/article/removePassword", method = RequestMethod.GET)
+    @RequestMapping(value = "/removePassword", method = RequestMethod.GET)
     public ObjectNode removePassword(Integer id, HttpServletRequest request) {
         json = mapper.createObjectNode();
         // 从cookie中获取登陆用户信息
@@ -220,7 +223,7 @@ public class ArticleController extends BaseController {
     /**
      * 密码文章验证密码
      */
-    @RequestMapping(value = "/article/checkPassword", method = RequestMethod.POST)
+    @RequestMapping(value = "/checkPassword", method = RequestMethod.POST)
     public String checkPassword(Article article, Map<String, Object> map, HttpServletRequest request) {
         // 从cookie中获取登陆用户信息
         User user = userService.getCookieUser(request);
@@ -266,7 +269,7 @@ public class ArticleController extends BaseController {
      * 为文章设置密码
      */
     @ResponseBody
-    @RequestMapping(value = "/article/addPassword", method = RequestMethod.POST)
+    @RequestMapping(value = "/addPassword", method = RequestMethod.POST)
     public ObjectNode addPassword(Integer id, String password, HttpServletRequest request) {
         json = mapper.createObjectNode();
         // 从cookie中获取登陆用户信息
@@ -302,7 +305,7 @@ public class ArticleController extends BaseController {
      * 从回收站恢复文章
      */
     @ResponseBody
-    @RequestMapping(value = "/article/recover", method = RequestMethod.GET)
+    @RequestMapping(value = "/recover", method = RequestMethod.GET)
     public ObjectNode recover(Integer id, HttpServletRequest request) {
         json = mapper.createObjectNode();
         // 从cookie中获取登陆用户信息
@@ -334,7 +337,7 @@ public class ArticleController extends BaseController {
     /**
      * 回收站
      */
-    @RequestMapping(value = "/article/trash", method = RequestMethod.GET)
+    @RequestMapping(value = "/trash", method = RequestMethod.GET)
     public String trash(Integer page, Integer size, HttpServletRequest request, Map<String, Object> map) {
         // 从cookie中获取登陆用户信息
         User user = userService.getCookieUser(request);
@@ -367,33 +370,25 @@ public class ArticleController extends BaseController {
     }
 
     /**
-     * 删除 / 隐藏文章
+     * 隐藏文章
      */
     @ResponseBody
-    @RequestMapping(value = "/article/delete", method = RequestMethod.GET)
-    public ObjectNode delete(Integer id, Integer type, HttpServletRequest request) {
+    @RequestMapping(value = "/hide", method = RequestMethod.GET)
+    public ObjectNode hide(Integer id, HttpServletRequest request) {
         json = mapper.createObjectNode();
         // 从cookie中获取登陆用户
         User user = userService.getCookieUser(request);
         // 查询文章信息
         Article article = articleService.findById(id, 1);
-        switch (type) {
-            // 不是真的删除，只是隐藏文章
-            case 0:
-                if (userService.checkAuthority(user, article.getAuthor().getId(), 0)) {
-                    article.setTop(-1);
-                    try {
-                        articleService.save(article);
-                        json.put(STATUS_NAME, STATUS_CODE_SUCCESS);
-                    } catch (Exception e) {
-                        json.put(STATUS_NAME, STATUS_CODE_EXCEPTION);
-                    }
-                }
-                break;
-            // 真删除
-            case 1:
-            default:
-                json.put(STATUS_NAME, STATUS_CODE_FILED);
+
+        if (userService.checkAuthority(user, article.getAuthor().getId(), 0)) {
+            article.setTop(-1);
+            try {
+                articleService.save(article);
+                json.put(STATUS_NAME, STATUS_CODE_SUCCESS);
+            } catch (Exception e) {
+                json.put(STATUS_NAME, STATUS_CODE_EXCEPTION);
+            }
         }
         // 日志记录
         logService.log(user, request);
@@ -404,7 +399,7 @@ public class ArticleController extends BaseController {
      * 移除置顶 只有最高权限管理员可以做
      */
     @ResponseBody
-    @RequestMapping(value = "/article/removeTop", method = RequestMethod.GET)
+    @RequestMapping(value = "/removeTop", method = RequestMethod.GET)
     public ObjectNode removeTop(HttpServletRequest request, Integer id) {
         json = mapper.createObjectNode();
         // 从cookie中获取登陆用户
@@ -429,7 +424,7 @@ public class ArticleController extends BaseController {
      * 设置置顶 只有最高权限管理员可以做
      */
     @ResponseBody
-    @RequestMapping(value = "/article/setTop", method = RequestMethod.GET)
+    @RequestMapping(value = "/setTop", method = RequestMethod.GET)
     public ObjectNode setTop(HttpServletRequest request, Integer id) {
         json = mapper.createObjectNode();
         // 从cookie中获取登陆用户
@@ -455,7 +450,7 @@ public class ArticleController extends BaseController {
     /**
      * 显示修改文章
      */
-    @RequestMapping(value = "/article/updateOne", method = RequestMethod.GET)
+    @RequestMapping(value = "/updateOne", method = RequestMethod.GET)
     public String updateOne(HttpServletRequest request, Map<String, Object> map, Integer id) {
         // 从cookie中获取登陆用户
         User user = userService.getCookieUser(request);
@@ -484,7 +479,7 @@ public class ArticleController extends BaseController {
      * 发布文章
      */
     @ResponseBody
-    @RequestMapping(value = "/article/post", method = RequestMethod.POST)
+    @RequestMapping(value = "/post", method = RequestMethod.POST)
     public ObjectNode post(HttpServletRequest request, Article article) {
         json = mapper.createObjectNode();
         // 从cookie中获取登陆用户
@@ -542,7 +537,7 @@ public class ArticleController extends BaseController {
     /**
      * 获取文章详情
      */
-    @RequestMapping(value = "/article/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public String one(HttpServletRequest request, Map<String, Object> map, @PathVariable("id") Integer id) {
         // 从cookie中获取登陆用户
         User user = userService.getCookieUser(request);
@@ -574,7 +569,7 @@ public class ArticleController extends BaseController {
      */
     @JsonView({Article.Top.class})
     @ResponseBody
-    @RequestMapping(value = "/article/top", method = RequestMethod.GET)
+    @RequestMapping(value = "/top", method = RequestMethod.GET)
     public List top() {
         return articleService.top(2);
     }
@@ -584,7 +579,7 @@ public class ArticleController extends BaseController {
      */
     @JsonView({Article.Index.class})
     @ResponseBody
-    @RequestMapping(value = "/article/index", method = RequestMethod.GET)
+    @RequestMapping(value = "/index", method = RequestMethod.GET)
     public List index(HttpServletRequest request) {
         json = mapper.createObjectNode();
         // 从 Cookie 中获取登陆信息
@@ -601,7 +596,7 @@ public class ArticleController extends BaseController {
     /**
      * 获取文章列表
      */
-    @RequestMapping(value = "/article/list")
+    @RequestMapping(value = "/list")
     public String list(Map<String, Object> map, Integer page, Integer size, HttpServletRequest request) {
         // 从 Cookie 中获取登陆信息
         User user = userService.getCookieUser(request);

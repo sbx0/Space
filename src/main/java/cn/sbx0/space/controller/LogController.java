@@ -27,8 +27,8 @@ import java.util.*;
  */
 @Controller
 @RequestMapping("/log")
-public class LogController extends BaseController {
-    @Resource
+public class LogController extends BaseController<Log, Integer> {
+    @Autowired
     LogService logService;
     @Resource
     UserService userService;
@@ -36,7 +36,11 @@ public class LogController extends BaseController {
     ArticleService articleService;
     @Resource
     private SimpMessagingTemplate simpMessagingTemplate;
-    private ObjectMapper mapper;
+
+    @Override
+    public BaseService<Log, Integer> getService() {
+        return logService;
+    }
 
     @Autowired
     public LogController(ObjectMapper mapper) {

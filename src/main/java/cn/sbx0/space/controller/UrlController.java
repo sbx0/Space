@@ -23,15 +23,16 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("/url")
-public class UrlController extends BaseController {
-    @Resource
+public class UrlController extends BaseController<Url, Integer> {
+    @Autowired
     private UrlService urlService;
     @Resource
     private UserService userService;
-    @Resource
-    private LogService logService;
-    private ObjectMapper mapper;
-    private ObjectNode json;
+
+    @Override
+    public BaseService<Url, Integer> getService() {
+        return urlService;
+    }
 
     @Autowired
     public UrlController(ObjectMapper mapper) {

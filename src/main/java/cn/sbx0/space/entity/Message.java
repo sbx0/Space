@@ -13,15 +13,15 @@ import java.util.Date;
 public class Message implements Serializable {
     private static final long serialVersionUID = 310841855975160801L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id; // 消息ID
     @Column(nullable = false, length = 233)
     private String content; // 消息内容
     @Column(nullable = false, length = 30)
     private String ip; // IP
-    @ManyToOne(cascade = {CascadeType.MERGE}, fetch = FetchType.LAZY, targetEntity = User.class, optional = true)
+    @ManyToOne(cascade = {CascadeType.MERGE}, fetch = FetchType.LAZY, targetEntity = User.class)
     private User sendUser; // 发送者
-    @ManyToOne(cascade = {CascadeType.MERGE}, fetch = FetchType.LAZY, targetEntity = User.class, optional = true)
+    @ManyToOne(cascade = {CascadeType.MERGE}, fetch = FetchType.LAZY, targetEntity = User.class)
     private User receiveUser; // 接受者
     @Column(nullable = false)
     private Date sendTime; // 发送时间
