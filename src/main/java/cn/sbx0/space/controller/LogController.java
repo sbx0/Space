@@ -57,8 +57,8 @@ public class LogController extends BaseController<Log, Integer> {
             day = 7;
         } else if (day < 0) {
             day = 7;
-        } else if (day > 360) {
-            day = 360;
+        } else if (day > 30) {
+            day = 30;
         }
         Date now = BaseService.getEndOfDay(new Date());
         Calendar calendar = Calendar.getInstance(); // 得到日历

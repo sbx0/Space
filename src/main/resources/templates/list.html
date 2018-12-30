@@ -173,20 +173,6 @@
 
         </div>
 
-        <div class="mt-3 p-3 bg-white rounded box-shadow">
-            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-            <!-- Google Adsense -->
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-client="ca-pub-7377922292358202"
-                 data-ad-slot="2325273723"
-                 data-ad-format="auto"
-                 data-full-width-responsive="true"></ins>
-            <script>
-                (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
-        </div>
-
         <div th:if="${articles != null}" class="my-3 p-3 bg-white rounded box-shadow">
             <h6 class="border-bottom border-gray pb-2 mb-3">日志</h6>
             <p class="mb-0" th:text="'共 ' + ${totalElements} + ' 篇日志'"></p>
@@ -206,6 +192,20 @@
                        th:min="1">
             </div>
             <button class="btn btn-sm btn-primary" onclick="javascript:jump_page();">跳页</button>
+        </div>
+
+        <div class="my-3 p-3">
+            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <!-- Google Adsense -->
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-7377922292358202"
+                 data-ad-slot="2325273723"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
         </div>
 
     </main>

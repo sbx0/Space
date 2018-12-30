@@ -28,24 +28,6 @@ var editor = editormd("editor", {
     watch: false,
 });
 
-// 自动登陆
-if (login()) {
-    $.ajax({
-        url: 'user/info',
-        type: 'GET',
-        success: function (json) {
-            if (statusCodeToBool(json.status)) {
-                blog_header.login = json.username;
-            }
-        },
-        error: function () {
-            alert("网络异常")
-        }
-    })
-} else {
-    location.replace("../login.html")
-}
-
 // 发布文章
 function post() {
     // 判断标题是否存在

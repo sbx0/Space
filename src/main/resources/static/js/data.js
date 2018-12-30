@@ -72,54 +72,54 @@ $.ajax({
     },
 });
 
-var view_90_data = [];
-var view_90 = new G2.Chart({
-    id: 'view_90',
-    forceFit: true,
-    height: 400,
-});
-G2.track(false);
-$.ajax({
-    url: "../log/data/views?day=90",
-    type: "GET",
-    async: false,
-    success: function (d) {
-        view_90_data = d;
-        view_90.source(view_90_data, {
-            time: {
-                alias: '日期',
-            },
-            number: {
-                alias: '访问数',
-            }
-        });
-        view_90.line().position('time*number').size(3);
-        view_90.render();
-    },
-});
-
-var view_360_data = [];
-var view_360 = new G2.Chart({
-    id: 'view_360',
-    forceFit: true,
-    height: 400,
-});
-G2.track(false);
-$.ajax({
-    url: "../log/data/views?day=360",
-    type: "GET",
-    async: false,
-    success: function (d) {
-        view_360_data = d;
-        view_360.source(view_360_data, {
-            time: {
-                alias: '日期',
-            },
-            number: {
-                alias: '访问数',
-            }
-        });
-        view_360.line().position('time*number').size(3);
-        view_360.render();
-    },
-});
+// var view_90_data = [];
+// var view_90 = new G2.Chart({
+//     id: 'view_90',
+//     forceFit: true,
+//     height: 400,
+// });
+// G2.track(false);
+// $.ajax({
+//     url: "../log/data/views?day=90",
+//     type: "GET",
+//     async: false,
+//     success: function (d) {
+//         view_90_data = d;
+//         view_90.source(view_90_data, {
+//             time: {
+//                 alias: '日期',
+//             },
+//             number: {
+//                 alias: '访问数',
+//             }
+//         });
+//         view_90.line().position('time*number').size(3);
+//         view_90.render();
+//     },
+// });
+//
+// var view_360_data = [];
+// var view_360 = new G2.Chart({
+//     id: 'view_360',
+//     forceFit: true,
+//     height: 400,
+// });
+// G2.track(false);
+// $.ajax({
+//     url: "../log/data/views?day=360",
+//     type: "GET",
+//     async: false,
+//     success: function (d) {
+//         view_360_data = d;
+//         view_360.source(view_360_data, {
+//             time: {
+//                 alias: '日期',
+//             },
+//             number: {
+//                 alias: '访问数',
+//             }
+//         });
+//         view_360.line().position('time*number').size(3);
+//         view_360.render();
+//     },
+// });

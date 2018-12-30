@@ -3,7 +3,7 @@ var i18N = {
         {id: 0, text: '登陆', path: '../login.html'},
         {id: 0, text: '工具', path: '../tools.html'},
         {id: 0, text: '日志', path: '../log/list'},
-        {id: 0, text: '发布', path: '../markdown.html'},
+        {id: 0, text: '发布', path: '../post.html'},
         {id: 0, text: '回收', path: '../article/trash'},
         {id: 0, text: '地图', path: '../site_map.xml'},
     ],
