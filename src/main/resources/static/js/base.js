@@ -12,6 +12,30 @@ $(function () {
     $('[data-toggle="offcanvas"]').on('click', function () {
         $('.offcanvas-collapse').toggleClass('open')
     })
+    $.ajax({
+        url: '../url/get?page=nav1',
+        type: 'GET',
+        success: function (json) {
+            if (json.urls.length > 0) {
+                main.nav_bar_data = json.urls;
+            }
+        },
+        error: function () {
+            alert("网络异常")
+        }
+    });
+    $.ajax({
+        url: '../url/get?page=nav2',
+        type: 'GET',
+        success: function (json) {
+            if (json.urls.length > 0) {
+                main.nav_bar_data = json.urls;
+            }
+        },
+        error: function () {
+            alert("网络异常")
+        }
+    });
 });
 
 //  状态码转换成语句

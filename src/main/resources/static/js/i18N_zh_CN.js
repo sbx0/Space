@@ -1,26 +1,26 @@
 var i18N = {
     nav_bar_data: [
-        {id: 0, text: '登陆', path: '../login.html'},
-        {id: 0, text: '工具', path: '../tools.html'},
-        {id: 0, text: '日志', path: '../log/list'},
-        {id: 0, text: '发布', path: '../post.html'},
-        {id: 0, text: '回收', path: '../article/trash'},
-        {id: 0, text: '地图', path: '../site_map.xml'},
+        {id: 1, text: '登陆', path: '../login.html'},
+        {id: 2, text: '工具', path: '../tools.html'},
+        {id: 3, text: '日志', path: '../log/list'},
+        {id: 4, text: '发布', path: '../post.html'},
+        {id: 5, text: '回收', path: '../article/trash'},
+        {id: 6, text: '地图', path: '../site_map.xml'},
     ],
     'nav_bar_components':
         '<li class="nav-item">\n    ' +
         '<a class="nav-link" :href="nav_bar.path" v-html="nav_bar.text" :title="nav_bar.title"></a>\n' +
         '</li>',
     nav_scroller_data: [
-        {id: 0, text: '首页', path: '../index.html'},
-        {id: 0, text: '搜索', path: '../article/search'},
-        {id: 0, text: '消息', path: '../message.html'},
-        {id: 0, text: '反馈', path: '../bugs.html'},
-        {id: 0, text: '数据', path: '../data.html'},
-        {id: 0, text: '工具', path: '../tools.html'},
-        {id: 0, text: '登陆', path: '../login.html'},
-        {id: 0, text: '上传', path: 'http://upload.sbx0.cn/'},
-        {id: 0, text: '开源', path: 'https://github.com/sbx0'},
+        {id: 1, text: '首页', path: '../index.html'},
+        {id: 2, text: '搜索', path: '../article/search'},
+        {id: 3, text: '消息', path: '../message.html'},
+        {id: 4, text: '反馈', path: '../bugs.html'},
+        {id: 5, text: '数据', path: '../data.html'},
+        {id: 6, text: '工具', path: '../tools.html'},
+        {id: 7, text: '登陆', path: '../login.html'},
+        {id: 8, text: '上传', path: 'http://upload.sbx0.cn/'},
+        {id: 9, text: '开源', path: 'https://github.com/sbx0'},
     ],
     'nav_scroller_components':
         '<a class="nav-link" :href="nav_scroller.path" v-html="nav_scroller.text" :title="nav_scroller.title"></a>',

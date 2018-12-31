@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="sbx0 个人博客 首页">
+    <meta name="author" content="sbx0">
+    <link rel="icon" href="img/favicon.png">
+
+    <title>空间站 | sbx0</title>
+
+    <link href="css/test.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div id="main" v-cloak>
+    <h2>sbx0's Blog</h2>
+    <article_components v-for="article in article_data"
+                        v-bind:article="article"
+                        v-bind:key="article.id">
+    </article_components>
+    <div class="foot">
+        <p>
+            <a href="old_index.html">Old Index</a>
+        </p>
+        <p>
+            sbx0.cn 2018-2019
+        </p>
+        <p>
+            Beta Page!!!
+        </p>
+    </div>
+</div>
+
+
+<script src="js/jquery.min.js"></script>
+<script src="js/popper.min.js"></script>
+<script src="js/vue.min.js"></script>
+<script src="js/i18N_zh_CN.js"></script>
+<script src="js/base.js"></script>
+<script src="js/test.js"></script>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-129309220-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'UA-129309220-1');
+</script>
+
+</body>
+</html>

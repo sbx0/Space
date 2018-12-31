@@ -103,8 +103,10 @@ public class UrlController extends BaseController<Url, Integer> {
                 Integer value = Integer.parseInt(hideJson.getString(key));
                 urlService.setUrlTopById(Integer.parseInt(key), value);
             }
+            json.put(STATUS_NAME, STATUS_CODE_SUCCESS);
         } catch (JSONException e) {
-            e.printStackTrace();
+            json.put(STATUS_NAME, STATUS_CODE_EXCEPTION);
+            json.put("msg", e.getMessage());
         }
         return json;
     }
@@ -117,20 +119,22 @@ public class UrlController extends BaseController<Url, Integer> {
      */
     @ResponseBody
     @GetMapping("/get")
-    public ArrayNode get(String page) {
-        ArrayNode arrayNode = mapper.createArrayNode();
+    public ObjectNode get(String page) {
+        json = mapper.createObjectNode();
+        ArrayNode jsons = mapper.createArrayNode();
         List<Url> urlList = urlService.findByPage(page);
         for (Url url : urlList) {
-            json = mapper.createObjectNode();
-            json.put("id", url.getId());
-            json.put("text", url.getText());
-            json.put("title", url.getTitle());
-            json.put("path", url.getPath());
-            json.put("badge", url.getBadge());
-            json.put("top", url.getTop());
-            arrayNode.add(json);
+            ObjectNode temp = mapper.createObjectNode();
+            temp.put("id", url.getId());
+            temp.put("text", url.getText());
+            temp.put("title", url.getTitle());
+            temp.put("path", url.getPath());
+            temp.put("badge", url.getBadge());
+            temp.put("top", url.getTop());
+            jsons.add(temp);
         }
-        return arrayNode;
+        json.set("urls", jsons);
+        return json;
     }
 
     /**
@@ -138,20 +142,22 @@ public class UrlController extends BaseController<Url, Integer> {
      */
     @ResponseBody
     @GetMapping("/getHidden")
-    public ArrayNode getHidden(String page) {
-        ArrayNode arrayNode = mapper.createArrayNode();
+    public ObjectNode getHidden(String page) {
+        json = mapper.createObjectNode();
+        ArrayNode jsons = mapper.createArrayNode();
         List<Url> urlList = urlService.findHiddenByPage(page);
         for (Url url : urlList) {
-            json = mapper.createObjectNode();
-            json.put("id", url.getId());
-            json.put("text", url.getText());
-            json.put("title", url.getTitle());
-            json.put("path", url.getPath());
-            json.put("badge", url.getBadge());
-            json.put("top", url.getTop());
-            arrayNode.add(json);
+            ObjectNode temp = mapper.createObjectNode();
+            temp.put("id", url.getId());
+            temp.put("text", url.getText());
+            temp.put("title", url.getTitle());
+            temp.put("path", url.getPath());
+            temp.put("badge", url.getBadge());
+            temp.put("top", url.getTop());
+            jsons.add(temp);
         }
-        return arrayNode;
+        json.set("urls", jsons);
+        return json;
     }
 
 }

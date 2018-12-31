@@ -3,6 +3,8 @@ var main_data = {
     hide: {},
 };
 
+var select_page = 'tools';
+
 var main = new Vue({
     el: '#main',
     data: {
@@ -26,10 +28,10 @@ var main = new Vue({
         'tool_list_components': {
             props: ['tool_list'],
             template:
-                '<a :href="tool_list.path" class="list-group-item d-flex justify-content-between align-items-center">' +
-                '   {{tool_list.text}}' +
-                '   <span class="badge badge-primary badge-pill">{{tool_list.badge}}</span>' +
-                '   <input type="text" :id="tool_list.id" :value="tool_list.top" hidden>' +
+                '<a :href="tool_list.path" class="list-group-item d-flex justify-content-between align-items-center">\n    ' +
+                '{{tool_list.text}}\n ' +
+                '   <span class="badge badge-primary badge-pill">{{tool_list.badge}}</span>\n    ' +
+                '<input type="text" :id="tool_list.id" :value="tool_list.top" hidden>\n' +
                 '</a>',
         },
     },
@@ -38,15 +40,24 @@ var main = new Vue({
     },
 });
 
+$("#select_page").change(function () {
+    select_page = $("#select_page").val();
+    main.first_get = true;
+    main.tool_list_data = '';
+    main.tool_hide_data = '';
+    main.hide_show = false;
+    getUrl();
+});
+
 // 获取未被隐藏的链接
 function getUrl() {
     $.ajax({
-        url: '../url/get?page=tools',
+        url: '../url/get?page=' + select_page,
         type: 'GET',
         async: true,
         success: function (json) {
-            if (json.length > 0) {
-                main.tool_list_data = json;
+            if (json.urls != null && json.urls.length > 0) {
+                main.tool_list_data = json.urls;
             } else {
                 getHiddenUrl();
                 main.hide_show = true;
@@ -83,12 +94,12 @@ function getUrl() {
 function getHiddenUrl() {
     if (main.first_get) {
         $.ajax({
-            url: '../url/getHidden?page=tools',
+            url: '../url/getHidden?page=' + select_page,
             type: 'GET',
             async: true,
             success: function (json) {
-                if (json.length > 0) {
-                    main.tool_hide_data = json;
+                if (json.urls != null && json.urls.length > 0) {
+                    main.tool_hide_data = json.urls;
                     main.hide_show = true;
                 }
                 var tool_hide_div = document.getElementById('tool_hide_div');

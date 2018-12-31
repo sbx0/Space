@@ -48,8 +48,14 @@
     </div>
 
     <main role="main" class="container">
-
         <div class="my-3 p-3 bg-white rounded box-shadow">
+            <form class="mb-3">
+                <select id="select_page" class="form-control">
+                    <option value="tools">工具页</option>
+                    <option value="nav1">导航条1</option>
+                    <option value="nav2">导航条2</option>
+                </select>
+            </form>
             <div id="tool_list_div" class="list-group" style="min-height: 48px">
                 <tool_list_components v-for="tool_list in tool_list_data"
                                       v-bind:tool_list="tool_list"
@@ -68,20 +74,6 @@
             </div>
         </div>
 
-        <div class="mt-3 p-3 bg-white rounded box-shadow">
-            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-            <!-- Google Adsense -->
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-client="ca-pub-7377922292358202"
-                 data-ad-slot="2325273723"
-                 data-ad-format="auto"
-                 data-full-width-responsive="true"></ins>
-            <script>
-                (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
-        </div>
-
     </main>
 
 </div>
@@ -95,8 +87,8 @@
 <script src="js/holder.min.js"></script>
 <script src="js/messenger.min.js"></script>
 <script src="js/messenger-theme-flat.js"></script>
-<script src="js/vue.min.js"></script>
 <script src="js/Sortable.min.js"></script>
+<script src="js/vue.min.js"></script>
 <!--<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>-->
 <script src="js/i18N_zh_CN.js"></script>
 <script src="js/base.js"></script>

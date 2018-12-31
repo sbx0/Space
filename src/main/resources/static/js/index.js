@@ -115,7 +115,7 @@ var main = new Vue({
             error: function () {
                 alert("网络异常")
             }
-        })
+        });
         $.ajax({
             url: '../article/index',
             type: 'GET',

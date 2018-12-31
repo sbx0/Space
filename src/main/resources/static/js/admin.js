@@ -45,10 +45,8 @@ $("#add_nav_button").click(function () {
         success: function (json) {
             var status = json.status;
             if (statusCodeToBool(status)) {
-                alert("success");
-            } else {
-                alert(statusCodeToAlert(status));
             }
+            alert(statusCodeToAlert(status));
         },
         error: function () {
             alert("网络异常");
