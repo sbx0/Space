@@ -2,17 +2,17 @@ package cn.sbx0.space.service;
 
 import cn.sbx0.space.dao.CommentDao;
 import cn.sbx0.space.entity.Comment;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 @Service
 public class CommentService extends BaseService<Comment, Integer> {
-    @Autowired
+    @Resource
     private CommentDao commentDao;
 
     @Override

@@ -3,12 +3,12 @@ package cn.sbx0.space.service;
 import cn.sbx0.space.dao.LogDao;
 import cn.sbx0.space.entity.Log;
 import cn.sbx0.space.entity.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,7 +19,7 @@ import java.util.List;
  */
 @Service
 public class LogService extends BaseService<Log, Integer> {
-    @Autowired
+    @Resource
     private LogDao logDao;
 
     @Override

@@ -2,10 +2,10 @@ package cn.sbx0.space.service;
 
 import cn.sbx0.space.dao.UrlDao;
 import cn.sbx0.space.entity.Url;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 
@@ -14,7 +14,7 @@ import java.util.List;
  */
 @Service
 public class UrlService extends BaseService<Url,Integer> {
-    @Autowired
+    @Resource
     private UrlDao urlDao;
 
     @Override

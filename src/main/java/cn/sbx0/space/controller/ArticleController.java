@@ -27,7 +27,7 @@ import java.util.Map;
 @Controller
 @RequestMapping("/article")
 public class ArticleController extends BaseController<Article, Integer> {
-    @Autowired
+    @Resource
     private ArticleService articleService;
     @Resource
     private UserService userService;

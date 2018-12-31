@@ -21,7 +21,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/bug")
 public class BugController extends BaseController<Bug, Integer> {
-    @Autowired
+    @Resource
     private BugService bugService;
     @Resource
     private UserService userService;

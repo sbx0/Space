@@ -30,7 +30,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/comment")
 public class CommentController extends BaseController<Comment, Integer> {
-    @Autowired
+    @Resource
     private CommentService commentService;
     @Resource
     private UserService userService;

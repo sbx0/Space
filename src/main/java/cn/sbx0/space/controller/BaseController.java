@@ -18,18 +18,18 @@ import java.util.Date;
 
 @Controller
 public abstract class BaseController<T, ID> {
-    public static final String STATUS_NAME = "status"; // JSON返回状态字段名
+    static final String STATUS_NAME = "status"; // JSON返回状态字段名
     // JSON返回操作状态一览 Begin
-    public static final int STATUS_CODE_SUCCESS = 0; // 成功
-    public static final int STATUS_CODE_FILED = 1; // 失败
-    public static final int STATUS_CODE_EXCEPTION = 2; // 异常
-    public static final int STATUS_CODE_NOT_LOGIN = 3; // 未登录
-    public static final int STATUS_CODE_TIMES_LIMIT = 4; // 限制
-    public static final int STATUS_CODE_NOT_FOUND = 5; // 不存在
-    public static final int STATUS_CODE_NO_PERMISSION = 6; // 无权限
-    public static final int STATUS_CODE_REPEAT = 7; // 重复操作
+    static final int STATUS_CODE_SUCCESS = 0; // 成功
+    static final int STATUS_CODE_FILED = 1; // 失败
+    static final int STATUS_CODE_EXCEPTION = 2; // 异常
+    static final int STATUS_CODE_NOT_LOGIN = 3; // 未登录
+    static final int STATUS_CODE_TIMES_LIMIT = 4; // 限制
+    static final int STATUS_CODE_NOT_FOUND = 5; // 不存在
+    static final int STATUS_CODE_NO_PERMISSION = 6; // 无权限
+    static final int STATUS_CODE_REPEAT = 7; // 重复操作
     // JSON返回操作状态一览 End
-    protected ObjectMapper mapper;
+    ObjectMapper mapper;
     protected ObjectNode json;
 
     public abstract BaseService<T, ID> getService();

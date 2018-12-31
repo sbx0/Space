@@ -24,7 +24,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/url")
 public class UrlController extends BaseController<Url, Integer> {
-    @Autowired
+    @Resource
     private UrlService urlService;
     @Resource
     private UserService userService;

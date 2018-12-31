@@ -2,13 +2,12 @@ package cn.sbx0.space.service;
 
 import cn.sbx0.space.dao.UserDao;
 import cn.sbx0.space.entity.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-
+import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
@@ -17,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Service
 public class UserService extends BaseService<User, Integer> {
-    @Autowired
+    @Resource
     private UserDao userDao;
 
     @Override

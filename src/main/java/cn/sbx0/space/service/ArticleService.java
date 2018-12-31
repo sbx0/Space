@@ -24,7 +24,7 @@ import java.util.List;
  */
 @Service
 public class ArticleService extends BaseService<Article, Integer> {
-    @Autowired
+    @Resource
     private ArticleDao articleDao;
 
     @Override
