@@ -5,7 +5,7 @@ var i18N = {
         {id: 3, text: '日志', path: '../log/list'},
         {id: 4, text: '发布', path: '../post.html'},
         {id: 5, text: '回收', path: '../article/trash'},
-        {id: 6, text: '地图', path: '../site_map.xml'},
+        {id: 6, text: '地图', path: '../article/site_map.xml'},
     ],
     'nav_bar_components':
         '<li class="nav-item">\n    ' +
@@ -76,6 +76,6 @@ var i18N = {
         '前端框架:Bootstrap<br>' +
         '后端框架:Spring Boot<br>' +
         'JavaScript框架:Vue.js<br>',
-    copyright: '<a href="https://github.com/sbx0/" target="_blank">sbx0</a> 个人网站 2017 - 2018',
+    copyright: '<a href="https://github.com/sbx0/" target="_blank">sbx0</a> 个人网站 2017 - 2019',
     back_to_top: '返回顶部',
 }

@@ -9,7 +9,7 @@
     <meta name="author" content="sbx0">
     <link rel="icon" th:href="@{~/img/favicon.png}">
 
-    <title th:text="${article.title} + ' | sbx0'"></title>
+    <title th:text="${article.title}+' | '+${article.author.name}+'的个人博客'"></title>
 
     <link rel="stylesheet" th:href="@{~/css/bootstrap.min.css}">
 

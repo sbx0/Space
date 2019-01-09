@@ -9,13 +9,13 @@
     <packaging>jar</packaging>
 
     <name>space</name>
-    <description>Space build by Spring Boot</description>
+    <description>Java Web Project build by Spring Boot</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.0.4.RELEASE</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath/>
     </parent>
 
     <properties>
@@ -23,6 +23,15 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
     </properties>
+
+    <!-- 阿里云Maven仓库 -->
+    <repositories>
+        <repository>
+            <id>alimaven</id>
+            <name>aliyun maven</name>
+            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+        </repository>
+    </repositories>
 
     <dependencies>
         <dependency>
@@ -53,7 +62,7 @@
             <artifactId>mysql-connector-java</artifactId>
             <scope>runtime</scope>
         </dependency>
-        <!-- sitemap -->
+        <!-- SiteMap -->
         <dependency>
             <groupId>com.github.dfabulich</groupId>
             <artifactId>sitemapgen4j</artifactId>
@@ -72,6 +81,7 @@
             <version>RELEASE</version>
             <scope>compile</scope>
         </dependency>
+        <!-- WebSocket -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-websocket</artifactId>
