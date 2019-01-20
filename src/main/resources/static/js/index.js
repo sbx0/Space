@@ -4,9 +4,89 @@ var main = new Vue({
         space: i18N.space,
         nav_bar_data: i18N.nav_bar_data,
         nav_scroller_data: i18N.nav_scroller_data,
-        top_data: [],
-        article_data: [],
-        comment_data: [],
+        top_data: [{
+            "id": 2,
+            "title": "加载中",
+            "time": "1997-11-19 04:52",
+            "author": {"id": 1, "name": "加载中"}
+        }, {
+            "id": 1,
+            "title": "加载中",
+            "time": "1997-11-19 04:52",
+            "author": {"id": 1, "name": "加载中"}
+        }],
+        article_data: [{
+            "id": 5,
+            "title": "加载中",
+            "time": "1997-11-19 04:52",
+            "author": {"id": 1, "name": "加载中"}
+        }, {
+            "id": 4,
+            "title": "加载中",
+            "time": "1997-11-19 04:52",
+            "author": {"id": 1, "name": "加载中"}
+        }, {
+            "id": 3,
+            "title": "加载中",
+            "time": "1997-11-19 04:52",
+            "author": {"id": 1, "name": "加载中"}
+        }, {
+            "id": 2,
+            "title": "加载中",
+            "time": "1997-11-19 04:52",
+            "author": {"id": 1, "name": "加载中"}
+        }, {
+            "id": 1,
+            "title": "加载中",
+            "time": "1997-11-19 04:52",
+            "author": {"id": 1, "name": "加载中"}
+        }],
+        comment_data: [{
+            "entity_id": 1,
+            "entity_type": "article",
+            "content": "加载中",
+            "user_id": 1,
+            "user_ip": "192.*.*.1",
+            "user_name": "加载中",
+            "time": "1997-11-19 04:52",
+            "id": 5
+        }, {
+            "entity_id": 1,
+            "entity_type": "article",
+            "content": "加载中",
+            "user_id": 1,
+            "user_ip": "192.*.*.1",
+            "user_name": "加载中",
+            "time": "1997-11-19 04:52",
+            "id": 4
+        }, {
+            "entity_id": 1,
+            "entity_type": "article",
+            "content": "加载中",
+            "user_id": 1,
+            "user_ip": "192.*.*.1",
+            "user_name": "加载中",
+            "time": "1997-11-19 04:52",
+            "id": 3
+        }, {
+            "entity_id": 1,
+            "entity_type": "article",
+            "content": "加载中",
+            "user_id": 1,
+            "user_ip": "192.*.*.1",
+            "user_name": "加载中",
+            "time": "1997-11-19 04:52",
+            "id": 2
+        }, {
+            "entity_id": 1,
+            "entity_type": "article",
+            "content": "加载中",
+            "user_id": 1,
+            "user_ip": "192.*.*.1",
+            "user_name": "加载中",
+            "time": "1997-11-19 04:52",
+            "id": 1
+        }],
     },
     components: {
         'nav_bar_components': {
