@@ -14,6 +14,9 @@ import java.util.Optional;
  */
 public interface ArticleDao extends PagingAndSortingRepository<Article, Integer> {
 
+    @Query(value = "SELECT * FROM articles a ORDER BY a.last_change_time DESC LIMIT 5", nativeQuery = true)
+    List<Article> renew();
+
     /**
      * 查询某文章发布时间之后的文章条数
      *

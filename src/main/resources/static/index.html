@@ -56,6 +56,13 @@
 
         <div class="row">
             <div class="col-xl-8">
+                <div v-if="article_renew_data_show" class="my-3 p-3 bg-white rounded box-shadow">
+                    <h6 class="border-bottom border-gray pb-2 mb-0">最近更新</h6>
+                    <article_components v-for="article in article_renew_data"
+                                        v-bind:article="article"
+                                        v-bind:key="article.id">
+                    </article_components>
+                </div>
                 <div class="my-3 p-3 bg-white rounded box-shadow">
                     <h6 class="border-bottom border-gray pb-2 mb-0">日志</h6>
                     <article_components v-for="article in article_data"

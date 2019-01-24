@@ -4,7 +4,6 @@ import cn.sbx0.space.entity.*;
 import cn.sbx0.space.service.*;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -47,15 +46,16 @@ public class ArticleController extends BaseController<Article, Integer> {
     /**
      * 文章排行
      */
+    @JsonView({Article.Index.class})
     @ResponseBody
-    @RequestMapping(value = "/rank", method = RequestMethod.GET)
-    public ArrayNode rank(Integer days, Integer size) {
-        ArrayNode articles = mapper.createArrayNode();
-        List<Article> articleList = articleService.rank(days, size);
-        for (int i = 0; i < articleList.size(); i++) {
-            json = mapper.createObjectNode();
-        }
-        return articles;
+    @RequestMapping(value = "/renew", method = RequestMethod.GET)
+    public List<Article> renew(HttpServletRequest request) {
+        json = mapper.createObjectNode();
+        // 从 Cookie 中获取登陆信息
+        User user = userService.getCookieUser(request);
+        // 日志记录
+        logService.log(user, request);
+        return articleService.filter(articleService.renew());
     }
 
     /**
@@ -589,8 +589,9 @@ public class ArticleController extends BaseController<Article, Integer> {
         Page<Article> articlePage = articleService.findAll(0, 10, 0);
         if (articlePage != null) {
             return articleService.filter(articlePage.getContent());
-        } else
+        } else {
             return null;
+        }
     }
 
     /**

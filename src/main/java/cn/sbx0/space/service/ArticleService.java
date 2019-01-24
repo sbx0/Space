@@ -37,6 +37,10 @@ public class ArticleService extends BaseService<Article, Integer> {
     @Value("${sbx0.SITE_MAP.DOMAIN}")
     private String SITE_MAP_DOMAIN;
 
+    public List<Article> renew() {
+        return articleDao.renew();
+    }
+
     /**
      * 文章排行
      *
